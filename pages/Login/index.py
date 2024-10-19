@@ -2,18 +2,77 @@ from tkinter import *
 import tkinter as tk
 from pages.Inicio.index import Init
 
+color_left = '#02CEE0'
+typografic = 'Istok Web'
+color_button = '#4FB7C9'
+
 class login: 
     def abrirInicio(self):
         Init(self.root)
 
     def __init__(self, window):
         self.root = window
-        self.root.title("Mi Aplicación")
-        self.root.geometry("300x200")
+        self.root.title("Farmazul")
+        self.root.geometry("1200x900")
 
-        self.label = tk.Label(self.root, text="¡Bienvenido a la App!")
-        self.label.pack(pady=10)
+        #FRAME IZQUIERDO
+        leftFrame = Frame(self.root, width=500, bg=color_left)
+        leftFrame.pack(side=tk.LEFT, fill=tk.BOTH)
+        leftFrame.pack_propagate(False)
 
-        self.button = tk.Button(self.root, text="Click Me", command=self.abrirInicio)
-        self.button.pack(pady=10)
-    
+        labelLeft = Label(leftFrame, 
+                          text='Bienvenido a Farmazul', 
+                          fg='#fff', 
+                          bg=color_left, 
+                          font=(typografic, 30),
+                          anchor=CENTER)
+        labelLeft.pack(pady=20, expand=True)
+
+
+        #FRAME DERECHO
+        rigthFrame = Frame(self.root, bg='#fff', width=1000)
+        rigthFrame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        rigthFrame.pack_propagate(False)
+
+        labelLogin = Label(rigthFrame, text='Login', bg='#fff', font=(typografic, 30))
+        labelLogin.pack(pady=(40, 0), padx=37, anchor=NW,)
+
+        labelIngresaDatos = Label(rigthFrame, 
+                                  text='Ingresa tus datos para acceder a tu cuenta',
+                                  bg='#fff',
+                                  font=(typografic, 11))
+        labelIngresaDatos.pack(padx=40, anchor=NW, pady=(5, 0))
+
+        #SECCION USUARIO
+
+        labelUsuario = Label(rigthFrame, text='Usuario', bg='#fff', font=(typografic, 12))
+        labelUsuario.pack(anchor=NW, padx=40, pady=(80, 0))
+
+        inputUsuario = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13))
+        inputUsuario.pack(anchor=NW, padx=45, pady=(10, 0))
+
+        barraBaja = Frame(rigthFrame, height=2, bg='black')
+        barraBaja.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
+
+        #SECCION CONTRASEÑA
+
+        labelContrasena = Label(rigthFrame, text='Contraseña', bg='#fff', font=(typografic, 12))
+        labelContrasena.pack(anchor=NW, padx=40, pady=(100, 0))
+
+        inputContrasena = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13))
+        inputContrasena.pack(anchor=NW, padx=45, pady=(10, 0))
+
+        barraBaja = Frame(rigthFrame, height=2, bg='black')
+        barraBaja.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
+
+        #SECCION BUTTON
+
+        buttonIngresar = Button(rigthFrame, 
+                                text='Ingresar', 
+                                width=40, 
+                                pady=6, 
+                                bg=color_button, 
+                                bd=0,
+                                fg='#fff',
+                                font=(typografic, 13))
+        buttonIngresar.pack(anchor=CENTER, pady=120)
