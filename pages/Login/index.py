@@ -1,19 +1,17 @@
 from tkinter import *
 import tkinter as tk
-from pages.Inicio.index import Init
+from pages.Login.scripts.index import SearchUser
 
 color_left = '#02CEE0'
 typografic = 'Istok Web'
 color_button = '#4FB7C9'
 
-class login: 
-    def abrirInicio(self):
-        Init(self.root)
-
+class login:
     def __init__(self, window):
         self.root = window
         self.root.title("Farmazul")
-        self.root.geometry("1200x900")
+        self.root.geometry("1200x700")
+        self.root.resizable(0,0)
 
         #FRAME IZQUIERDO
         leftFrame = Frame(self.root, width=500, bg=color_left)
@@ -26,7 +24,7 @@ class login:
                           bg=color_left, 
                           font=(typografic, 30),
                           anchor=CENTER)
-        labelLeft.pack(pady=20, expand=True)
+        labelLeft.pack(expand=True)
 
 
         #FRAME DERECHO
@@ -48,8 +46,8 @@ class login:
         labelUsuario = Label(rigthFrame, text='Usuario', bg='#fff', font=(typografic, 12))
         labelUsuario.pack(anchor=NW, padx=40, pady=(80, 0))
 
-        inputUsuario = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13))
-        inputUsuario.pack(anchor=NW, padx=45, pady=(10, 0))
+        self.inputUsuario = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13))
+        self.inputUsuario.pack(anchor=NW, padx=45, pady=(10, 0))
 
         barraBaja = Frame(rigthFrame, height=2, bg='black')
         barraBaja.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
@@ -59,8 +57,8 @@ class login:
         labelContrasena = Label(rigthFrame, text='Contraseña', bg='#fff', font=(typografic, 12))
         labelContrasena.pack(anchor=NW, padx=40, pady=(100, 0))
 
-        inputContrasena = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13))
-        inputContrasena.pack(anchor=NW, padx=45, pady=(10, 0))
+        self.inputContrasena = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13), show='*')
+        self.inputContrasena.pack(anchor=NW, padx=45, pady=(10, 0))
 
         barraBaja = Frame(rigthFrame, height=2, bg='black')
         barraBaja.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
@@ -74,5 +72,6 @@ class login:
                                 bg=color_button, 
                                 bd=0,
                                 fg='#fff',
-                                font=(typografic, 13))
+                                font=(typografic, 13),
+                                command=lambda: SearchUser(self.inputUsuario.get(), self.inputContrasena.get(), self.root))
         buttonIngresar.pack(anchor=CENTER, pady=120)
