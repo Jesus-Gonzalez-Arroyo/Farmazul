@@ -1,12 +1,10 @@
 from connection.conection import run_query
 from pages.Inicio.index import Init
 from alerts.UserExist import ExistUser
-
-def Buscador(user, password, window):
-    SearchUser(user, password, window)
+from consults.consult import consult_login_searchUser
 
 def SearchUser(user, password, wind):
-    users = run_query('SELECT * FROM Users WHERE User = ? AND Password = ?', (user, password, ))
+    users = run_query(consult_login_searchUser, (user, password, ))
     validateUsersExist = users.fetchall()
 
     if(validateUsersExist):
@@ -15,4 +13,6 @@ def SearchUser(user, password, wind):
             wind.destroy()
     else:
         ExistUser()
-    
+
+def viewPassword(password):
+    password.config(show="")

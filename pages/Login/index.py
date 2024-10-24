@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter as tk
-from pages.Login.scripts.index import SearchUser
+from pages.Login.scripts.Login_script import SearchUser, viewPassword
 
 color_left = '#02CEE0'
 typografic = 'Istok Web'
@@ -13,7 +13,7 @@ class login:
         self.root.geometry("1200x700")
         self.root.resizable(0,0)
 
-        #FRAME IZQUIERDO
+        #FRAME LEFT
         leftFrame = Frame(self.root, width=500, bg=color_left)
         leftFrame.pack(side=tk.LEFT, fill=tk.BOTH)
         leftFrame.pack_propagate(False)
@@ -27,7 +27,7 @@ class login:
         labelLeft.pack(expand=True)
 
 
-        #FRAME DERECHO
+        #FRAME RIGHT
         rigthFrame = Frame(self.root, bg='#fff', width=1000)
         rigthFrame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         rigthFrame.pack_propagate(False)
@@ -60,18 +60,28 @@ class login:
         self.inputContrasena = Entry(rigthFrame, width=100, bd=0, font=(typografic, 13), show='*')
         self.inputContrasena.pack(anchor=NW, padx=45, pady=(10, 0))
 
-        barraBaja = Frame(rigthFrame, height=2, bg='black')
-        barraBaja.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
+        barraBajaPass = Frame(rigthFrame, height=2, bg='black')
+        barraBajaPass.pack(anchor=NW, padx=45, pady=(5, 0), fill=tk.X)
+
+        mostrarPass = Button(rigthFrame, 
+                             text='Ver contraseña', 
+                             padx=10, 
+                             pady=5, 
+                             bg=color_button, 
+                             border=0, fg="#fff", 
+                             command=lambda: viewPassword(self.inputContrasena))
+        mostrarPass.pack(anchor=NW, pady=20, padx=45)
 
         #SECCION BUTTON
 
         buttonIngresar = Button(rigthFrame, 
                                 text='Ingresar', 
-                                width=40, 
+                                width=40,
+                                height=40, 
                                 pady=6, 
                                 bg=color_button, 
                                 bd=0,
                                 fg='#fff',
                                 font=(typografic, 13),
                                 command=lambda: SearchUser(self.inputUsuario.get(), self.inputContrasena.get(), self.root))
-        buttonIngresar.pack(anchor=CENTER, pady=120)
+        buttonIngresar.pack(anchor=CENTER, pady=85)
