@@ -4,3 +4,4 @@ Marshmallow
 python-dotenv
 flask-jwt-extended
 werkzeug
+flask_cors

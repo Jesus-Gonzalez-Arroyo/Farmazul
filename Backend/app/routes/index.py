@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from flask import request, jsonify
 from services.login_services import LoginService
 
-users_bp = Blueprint('index', __name__, url_prefix="/index")
+users_bp = Blueprint('index', __name__, url_prefix="/index/API/v1")
 
 @users_bp.route('/users', methods=['GET'])
 def users():
@@ -25,7 +25,7 @@ def login():
         return login_user(request.get_json())
 
 @cross_origin(origins='*')
-@users_bp.route('/protect', methods=['GET', 'OPTIONS'])
+@users_bp.route('/getInfoUser', methods=['GET', 'OPTIONS'])
 @jwt_required()
 def protect():
     if request.method == 'OPTIONS':

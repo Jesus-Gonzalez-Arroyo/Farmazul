@@ -1,0 +1,12 @@
+.childrens {
+    width: 400px;
+    height: 150px;
+}
+
+.card-content-left {
+    width: 70%;
+}
+
+.card-content-right {
+    width: 30%;
+}

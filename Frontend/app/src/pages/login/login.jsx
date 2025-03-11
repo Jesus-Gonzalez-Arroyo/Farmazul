@@ -11,7 +11,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('http://127.0.0.1:5000/index/login', {
+      const response = await fetch('http://127.0.0.1:5000/index/API/v1/login', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -22,7 +22,7 @@ function Login() {
       const data = await response.json()
       if(data.error === true) return console.error(data) 
       
-      const userResponse = await fetch("http://127.0.0.1:5000/index/protect", {
+      const userResponse = await fetch("http://127.0.0.1:5000/index/API/v1/getInfoUser", {
         method: "GET",
         headers: { "Authorization": `Bearer ${data.info}`},
       });
@@ -33,7 +33,7 @@ function Login() {
 
       if (userData.info.rol === "admin") {
         setTimeout(()=>{
-          navigate('/index')
+          navigate('/Home')
         }, 5000)
         navigate("/loader");
       }
