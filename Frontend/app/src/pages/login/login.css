@@ -1,89 +1,23 @@
-
-/* * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.end-1 {
+    right: 20px;
 }
 
-.container-general {
-    display: grid;
-    place-items: center;
-    height: 100vh;
+.w-20 {
+    width: 20%;
 }
 
-.container-items-form-login {
-    width: 60%;
-    height: 80%;
-    display: flex;
-    box-shadow: 0px 13px 53px -16px rgba(0,0,0,0.54);
-    border-radius: 5px;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.container-login-left {
-    width: 40%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px 0 0 5px;
-    background-color: aqua;
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
 }
-
-.container-login-left p {
-    font-size: 30px;
-}
-
-.title-form {
-    font-size: 20px;
-    padding: 0 0 30px 0;
-    font-weight: 600;
-    display: block;
-    text-align: center;
-}
-
-.container-login-rigth {
-    width: 60%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-form {
-    width: 80%;
-}
-
-input {
-    width: 95%;
-    display: block;
-    margin: 10px auto;
-    padding: 8px;
-    border: 1px solid #838383;
-    border-radius: 3px;
-}
-
-label {
-    font-size: 15px;
-    font-weight: 400;
-}
-
-.container-item-user, .container-item-pass {
-    width: 70%;
-    margin: 30px auto;
-    display: block;
-}
-
-
-.container-item-btn {
-    width: 70%;
-    margin: auto;
-} */
-
-/* button {
-    width: 100%;
-    margin: 100px auto 0;
-    display: block;
-    padding: 10px 0;
-    border: 0;
-    border-radius: 4px;
-    font-weight: 500;
-    background-color: aqua;
-} */

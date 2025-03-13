@@ -10,13 +10,13 @@ def login_user(data):
         user_find = LoginService.login(data['email'])
 
         if user_find is None:
-            return jsonify(ResponseModel('Usuario no encontrado', True, 404)), 404
+            return jsonify(ResponseModel('Usuario incorrecto', True, 404)), 404
 
         if not check_password_hash(user_find['password'], data['password']):
             return jsonify(ResponseModel('Contraseña incorrecta', True, 401))
         
         access_token = create_access_token(identity=user_find['_id'], expires_delta=datetime.timedelta(hours=1))
-        return jsonify(ResponseModel(access_token))
+        return jsonify(ResponseModel({'access_token': access_token, 'rol_user': user_find['rol']}))
 
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401)),
@@ -27,7 +27,7 @@ def protected_user():
         user = LoginService.get_user_by_id(current_user_id)
 
         if not user or user is None:
-            return jsonify(ResponseModel('Usuario no encontrado', True, 404))
+            return jsonify(ResponseModel('Usuario incorrecto', True, 404))
         
         return jsonify(ResponseModel({
             'name': user['name'],

@@ -18,10 +18,10 @@ export function Home() {
             changeStyle={true}
           />
         </div>
-        <div className="d-flex justify-content-around mt-5 gap-5 mx-4">
-          <div className="shadow-sm p-3 rounded" style={{width: '40%'}}>
+        <div className="d-flex justify-content-around my-5 gap-5 mx-4" style={{height: "calc(100% - 30%)"}}>
+          <div className="shadow-sm p-3 rounded overflow-auto" style={{width: '40%'}}>
             <p className="h6 mb-4">Usuarios activos</p>
-            <table class="table">
+            <table class="table" style={{maxHeight: '50px'}}>
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -46,7 +46,7 @@ export function Home() {
               </tbody>
             </table>
           </div>
-          <div className="shadow-sm p-3 rounded" style={{width: '30%'}}>
+          <div className="shadow-sm p-3 rounded overflow-auto" style={{width: '30%'}}>
             <p className="h6 mb-4">Productos mas vendidos</p>
             <table class="table">
               <thead>
@@ -71,14 +71,14 @@ export function Home() {
               </tbody>
             </table>
           </div>
-          <div className="shadow-sm p-3 rounded" style={{width: '30%'}}>
+          <div className="shadow-sm p-3 rounded overflow-auto" style={{width: '30%'}}>
             <p className="h6 mb-4">Productos en agotamiento</p>
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Cantidad actual</th>
+                  <th scope="col position-sticky">#</th>
+                  <th scope="col position-sticky">Nombre</th>
+                  <th scope="col position-sticky">Cantidad actual</th>
                 </tr>
               </thead>
               <tbody>

@@ -36,32 +36,42 @@ export function Navigation(props) {
       <div className="d-block">
         <div className="d-flex">
           <div style={{ width: "15%", height: "calc(100vh - 70px)", background: "#B5CFD8" }}>
-            <ul style={{ listStyleType: "none" }} className="p-0 pt-5">
-              <li className="py-3" /* style={{background: '#E4E0E1'}} */>
-                <p className="mx-5 m-0 h6">Inicio</p>
-                <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Un resumen de tus secciones</p>
-              </li>
-              <li className="py-3" /* style={{background: '#E4E0E1'}} */>
-                <p className="mx-5 m-0 h6">Ventas</p>
-                <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Realiza y registra tus ventas</p>
-              </li>
-              <li className="py-3" /* style={{background: '#E4E0E1'}} */ /* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
-                <p className="mx-5 m-0 h6">Inventario</p>
-                <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Lleva un control de tus productos</p>
-              </li>
-              <li className="py-3" /* style={{background: '#E4E0E1'}} */>
-                <p className="mx-5 m-0 h6">Gastos</p>
-                <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Obten un registro de tus gastos</p>
-              </li>
-              <li className="py-3" /* style={{background: '#E4E0E1'}} */>
-                <p className="mx-5 m-0 h6">Usuarios</p>
-                <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Registra y vizualiza los usuarios</p>
-              </li>
+            <ul style={{ listStyleType: "none" }} className="p-0 pt-5 text-decoration-none">
+              <a href="/home" className='text-decoration-none text-dark'>
+                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                  <p className="mx-5 m-0 h6">Inicio</p>
+                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Un resumen de tus secciones</p>
+                </li>
+              </a>
+              <a href="/ventas" className='text-decoration-none text-dark'>
+                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                  <p className="mx-5 m-0 h6">Ventas</p>
+                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Realiza y registra tus ventas</p>
+                </li>
+              </a>
+              <a href="/inventario" className='text-decoration-none text-dark'>
+                <li className="py-3" /* style={{background: '#E4E0E1'}} */ /* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
+                  <p className="mx-5 m-0 h6">Inventario</p>
+                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Lleva un control de tus productos</p>
+                </li>
+              </a>
+              <a href="/gastos" className='text-decoration-none text-dark'>
+                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                  <p className="mx-5 m-0 h6">Gastos</p>
+                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Obten un registro de tus gastos</p>
+                </li>
+              </a>
+              <a href="/users" className='text-decoration-none text-dark'>
+                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                  <p className="mx-5 m-0 h6">Usuarios</p>
+                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Registra y vizualiza los usuarios</p>
+                </li>
+              </a>
             </ul>
           </div>
           <div
             className="px-4 py-2"
-            style={{ width: "calc(100% - 15%)" }}
+            style={{ width: "calc(100% - 15%)", height: "calc(100vh - 70px)" }}
           >
             {props.children}
           </div>
