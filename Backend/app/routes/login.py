@@ -15,7 +15,7 @@ def login_user(data):
         if not check_password_hash(user_find['password'], data['password']):
             return jsonify(ResponseModel('Contraseña incorrecta', True, 401))
         
-        access_token = create_access_token(identity=user_find['_id'], expires_delta=datetime.timedelta(hours=1))
+        access_token = create_access_token(identity=user_find['_id'])
         return jsonify(ResponseModel({'access_token': access_token, 'rol_user': user_find['rol']}))
 
     except Exception as e:

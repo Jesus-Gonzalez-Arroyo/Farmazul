@@ -1,9 +1,17 @@
 import {useState, useEffect} from 'react'
+import { useNavigate } from "react-router";
 
 export function Navigation(props) {
   const [UserInfo, setUserInfo] = useState({})
+  const navigate = useNavigate()
 
   useEffect(()=>{
+    const user = localStorage.getItem('infoUser')
+
+    if(user) {
+      return setUserInfo(JSON.parse(user))
+    }
+
     const InfoUserGet = async () => {
       const token = localStorage.getItem('TOKEN')
       const userResponse = await fetch("http://127.0.0.1:5000/index/API/v1/getInfoUser", {
@@ -14,10 +22,16 @@ export function Navigation(props) {
       const userData = await userResponse.json();
       if (userData.error) return console.error(userData.info);
       setUserInfo(userData.info)
+      localStorage.setItem('infoUser', JSON.stringify(userData.info))
     }
 
     InfoUserGet()
   }, [])
+
+  function handleLoguot() {
+    navigate('/')
+    localStorage.clear()
+  }
 
   return (
     <div>
@@ -30,7 +44,7 @@ export function Navigation(props) {
         </div>
         <div className="d-flex gap-4 px-4">
           <p className="m-0">Hola, {UserInfo.name}</p>
-          <p className="m-0">Cerrar sesion</p>
+          <p onClick={handleLoguot} className="m-0">Cerrar sesion</p>
         </div>
       </div>
       <div className="d-block">

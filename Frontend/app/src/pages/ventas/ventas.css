@@ -1,0 +1,22 @@
+.h-15 {
+    height: calc(100% - 9%);
+}
+
+
+.h-15-table {
+    height: calc();
+}
+
+.h-85 {
+    height: 80%;
+}
+
+.custom-scroll {
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    display: none;
+}
