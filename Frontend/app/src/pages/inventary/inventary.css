@@ -1,0 +1,9 @@
+.h-90 {
+    height: 90%;
+}
+
+.required::after {
+    margin: 0 2px;
+    content: '*';
+    color: red;
+}

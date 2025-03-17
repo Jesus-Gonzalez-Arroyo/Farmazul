@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import "./login.css";
 
-function Login() {
+export function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -70,9 +70,9 @@ function Login() {
           </div>
           <div className="w-50 d-flex align-items-center justify-content-center">
             <form className="w-75" onSubmit={handleLogin}>
-            <div className={`alert alert-danger text-center w-75 m-auto mb-3 ${alert.block ? 'd-block':'d-none'}`} role="alert">
-              {alert.text}
-            </div>
+              <div className={`alert alert-danger text-center w-75 m-auto mb-3 ${alert.block ? 'd-block' : 'd-none'}`} role="alert">
+                {alert.text}
+              </div>
               <p className="text-center display-6 mb-3">Log in</p>
               <div className="m-auto w-75 mb-4">
                 <label className="d-block mb-2" htmlFor="">
@@ -81,11 +81,10 @@ function Login() {
                 <input
                   value={formData.email}
                   name="email"
-                  className={`w-100 form-control ${
-                    alert.text === "Usuario incorrecto"
-                      ? "border border-danger"
-                      : ""
-                  }`}
+                  className={`w-100 form-control ${alert.text === "Usuario incorrecto"
+                    ? "border border-danger"
+                    : ""
+                    }`}
                   placeholder="user@gmail.com"
                   type="text"
                   onChange={handleChange}
@@ -98,11 +97,10 @@ function Login() {
                 <input
                   value={formData.password}
                   name="password"
-                  className={`w-100 form-control ${
-                    alert.text === "Contraseña incorrecta"
-                      ? "border border-danger"
-                      : ""
-                  }`}
+                  className={`w-100 form-control ${alert.text === "Contraseña incorrecta"
+                    ? "border border-danger"
+                    : ""
+                    }`}
                   type="password"
                   placeholder="Ingrese su contraseña"
                   onChange={handleChange}
@@ -123,5 +121,3 @@ function Login() {
     </>
   );
 }
-
-export default Login;

@@ -28,9 +28,19 @@ export function Ventas() {
         <Navigation>
             <div className="d-flex w-100 h-15 gap-4">
                 <div className="w-75">
-                    <p className="my-3 h5">Tus productos disponibles</p>
-                    <div className="shadow-sm p-3 rounded custom-scroll h-100">
-                        <table class="table">
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div>
+                            <p className="m-0 my-3 h5">Tus productos disponibles</p>
+                        </div>
+                        <div className='w-25'>
+                            <div class="input-group my-3">
+                                <input type="text" className="form-control w-75" placeholder="Nombre del producto" aria-label="Nombre del producto" aria-describedby="button-addon2" />
+                                <button className="btn btn-primary" type="button" id="button-addon2">Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="shadow-sm p-3 rounded overflow-auto h-100">
+                        <table className="table">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -68,7 +78,7 @@ export function Ventas() {
                     </div>
                 </div>
                 <div className="w-25">
-                    <p className="h5 my-3">Carrito de compras</p>
+                    <p className="h5 m-0 my-4">Carrito de compras</p>
                     <div className="p-3 shadow-sm rounded h-100">
                         <p className="h6 mb-3">Productos agregados</p>
                         <div className="h-85 position-relative custom-scroll">
@@ -148,7 +158,7 @@ export function Ventas() {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-success">Finalizar</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Finalizar</button>
                         </div>
                     </div>
                 </div>
