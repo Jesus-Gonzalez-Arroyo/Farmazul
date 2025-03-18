@@ -9,6 +9,7 @@ import { Loader } from './components/Loader';
 import { Ventas } from './pages/ventas/ventas'
 import { Inventary } from './pages/inventary/inventary'
 import { Gastos } from './pages/gastos/gastos'
+import { Users } from './pages/users/users'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -22,6 +23,7 @@ root.render(
       <Route path='/ventas' element={<Ventas />} />
       <Route path='/inventario' element={<Inventary />} />
       <Route path='/gastos' element={<Gastos />} />
+      <Route path='/users' element={<Users />} />
     </Routes>
   </BrowserRouter>
 );

@@ -1,28 +1,28 @@
 import { Navigation } from "../../components/Navigation";
+import { useState, useEffect } from 'react'
 import "./ventas.css";
 
-const productos = [
-    {
-        id: 1,
-        nombre: "Acetaminofen",
-        precio: 1500,
-        cantidad: 7,
-        estancia: "Estante 2",
-    },
-    {
-        id: 2,
-        nombre: "Aspirina",
-        precio: 10100,
-        cantidad: 7,
-        estancia: "Estante 1",
-    },
-    { id: 3, nombre: "Dolex", precio: 4250, cantidad: 10, estancia: "Estante 6" },
-];
-
 export function Ventas() {
+    const [products, setProducts] = useState([])
     function handleAddProduct(product) {
         console.log("event", product);
     }
+
+
+    useEffect(() => {
+        const productsGet = async () => {
+            const products = await fetch('http://127.0.0.1:5000//index/API/v1/get_products_all', {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" }
+            })
+            const responseProducts = await products.json()
+            if (responseProducts.error) return console.error(responseProducts.info);
+            console.table(responseProducts.info)
+            setProducts(responseProducts.info)
+        }
+
+        productsGet()
+    }, [])
 
     return (
         <Navigation>
@@ -52,13 +52,12 @@ export function Ventas() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productos.map((producto, index) => (
-                                    <tr key={producto.id}>
+                                {products.map((producto, index) => (
+                                    <tr key={producto._id}>
                                         <td>{index + 1}</td>
-                                        <td>{producto.nombre}</td>
+                                        <td>{producto.name}</td>
                                         <td>$
-                                            {producto.precio
-                                                .toString()
+                                            {producto.price_venta
                                                 .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                                         </td>
                                         <td>{producto.cantidad}</td>

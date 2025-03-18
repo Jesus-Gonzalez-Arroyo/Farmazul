@@ -1,35 +1,58 @@
 import { Navigation } from '../../components/Navigation'
+import { useState, useEffect } from 'react'
 import './inventary.css'
 
-const productos = [
-    {
-        id: 1,
-        nombre: "Acetaminofen",
-        precio: 1500,
-        precioVenta: 3000,
-        cantidad: 7,
-        cantidadActual: 6,
-        proveedor: 'Genfar',
-        estancia: "Estante 2",
-    },
-    {
-        id: 2,
-        nombre: "Aspirina",
-        precio: 10100,
-        precioVenta: 15500,
-        cantidad: 7,
-        cantidadActual: 3,
-        proveedor: 'Genfar',
-        estancia: "Estante 1",
-    },
-    { id: 3, nombre: "Dolex", precio: 4250, precioVenta: 6300, cantidad: 10, cantidadActual: 5, proveedor: 'Genfar', estancia: "Estante 6" },
-    { id: 3, nombre: "Dolex", precio: 4250, precioVenta: 6300, cantidad: 10, cantidadActual: 5, proveedor: 'Genfar', estancia: "Estante 6" },
-    { id: 3, nombre: "Dolex", precio: 4250, precioVenta: 6300, cantidad: 10, cantidadActual: 5, proveedor: 'Genfar', estancia: "Estante 6" },
-    { id: 3, nombre: "Dolex", precio: 4250, precioVenta: 6300, cantidad: 10, cantidadActual: 5, proveedor: 'Genfar', estancia: "Estante 6" },
-    { id: 3, nombre: "Dolex", precio: 4250, precioVenta: 6300, cantidad: 10, cantidadActual: 5, proveedor: 'Genfar', estancia: "Estante 6" },
-];
-
 export function Inventary() {
+    const [products, setProducts] = useState([])
+    const [formData, setFormData] = useState({
+        name: "",
+        price: "",
+        priceventa: "",
+        cant: "",
+        cant_actual: "",
+        estancia: "",
+        ganancia: "",
+        prov: ""
+    });
+
+    const newProduct = async (e) => {
+        e.preventDefault()
+
+        try {
+            formData.ganancia = String(Number(formData.priceventa) - Number(formData.price))
+            formData.cant_actual = formData.cant
+            const register_product = await fetch('http://127.0.0.1:5000//index/API/v1/register_product', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            })
+            const response_register = await register_product.json()
+            products.push(response_register.info[0])
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    useEffect(() => {
+        const productsGet = async () => {
+            const products = await fetch('http://127.0.0.1:5000//index/API/v1/get_products_all', {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" }
+            })
+            const responseProducts = await products.json()
+            if (responseProducts.error) return console.error(responseProducts.info);
+            console.table(responseProducts.info)
+            setProducts(responseProducts.info)
+        }
+
+        productsGet()
+    }, [])
+
     return (
         <div>
             <Navigation>
@@ -62,30 +85,28 @@ export function Inventary() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productos.map((producto, index) => (
-                                    <tr key={producto.id}>
+                                {products.map((producto, index) => (
+                                    <tr key={producto._id}>
                                         <td>{index + 1}</td>
-                                        <td>{producto.nombre}</td>
+                                        <td>{producto.name}</td>
                                         <td>$
-                                            {producto.precio
-                                                .toString()
+                                            {producto.price
                                                 .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                                         </td>
                                         <td>$
-                                            {producto.precioVenta
-                                                .toString()
+                                            {producto.price_venta
                                                 .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                                         </td>
                                         <td>{producto.cantidad}</td>
-                                        <td>{producto.cantidadActual}</td>
-                                        <td>${producto.precioVenta - producto.precio}</td>
+                                        <td>{producto.cantidad_actual}</td>
+                                        <td>${String(Number(producto.price_venta) - Number(producto.price)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
                                         <td>{producto.proveedor}</td>
                                         <td>{producto.estancia}</td>
                                         <td>
                                             <button
                                                 className="btn btn-primary"
-                                                type="button" 
-                                                data-bs-toggle="modal" 
+                                                type="button"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#editProduct"
                                             >
                                                 Editar
@@ -108,31 +129,31 @@ export function Inventary() {
                                 <h5 class="modal-title" id="exampleModalLabel">Registrar producto</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <form action="">
+                            <form action="" onSubmit={newProduct}>
+                                <div class="modal-body">
                                     <div className='mb-3'>
                                         <label className='h6 required'>Nombre</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='name' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                         <label className='h6 required'>Precio de compra</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='price' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                         <label className='h6 required'>Precio de venta</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='priceventa' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                         <label className='h6 required'>Cantidad</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='cant' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                     </div>
                                     <div>
                                         <label className='h6'>Proveedor</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='prov' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                         <label className='h6'>Lugar de estancia</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='estancia' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                     </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Escanear</button>
-                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary">Escanear</button>
+                                    <button type="submit" class="btn btn-success">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -154,7 +175,7 @@ export function Inventary() {
                                         <label className='h6 required'>Precio de compra</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Precio de venta</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <input name='priceventa' type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Cantidad</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
                                     </div>

@@ -2,8 +2,7 @@ from flask import Blueprint, jsonify, request
 from services.login_services import LoginService
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from responseModel.responsemodel import ResponseModel
-import datetime
+from utils.responseModel.responsemodel import ResponseModel
 
 def login_user(data):     
     try:

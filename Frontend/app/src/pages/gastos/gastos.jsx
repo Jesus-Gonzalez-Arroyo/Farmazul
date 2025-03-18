@@ -7,6 +7,7 @@ const productos = [
         precio: 1500,
         tipo: 'Pago',
         estado: 'Pagado',
+        deuda: 0,
         descripcion: 'Nomina'
     },
     {
@@ -15,6 +16,7 @@ const productos = [
         precio: 10100,
         tipo: 'Compra',
         estado: 'En deuda',
+        deuda: 5000,
         descripcion: 'Compra',
     }
 ];
@@ -35,6 +37,7 @@ export function Gastos () {
                                     <th scope="col">Precio</th>
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Estado</th>
+                                    <th scope="col">Valor deuda</th>
                                     <th scope="col">Descripcion</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
@@ -53,6 +56,8 @@ export function Gastos () {
                                         <td>
                                             <p className={`m-0 ${producto.estado === 'Pagado' ? "text-success" : "text-danger"}`}>{producto.estado}</p>
                                         </td>
+                                        <td className={`m-0 ${producto.estado === 'Pagado' ? "text-success" : "text-danger"}`}>{producto.deuda.toString()
+                                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
                                         <td>{producto.descripcion}</td>
                                         <td>
                                             <button
@@ -84,6 +89,8 @@ export function Gastos () {
                             <div class="modal-body">
                                 <form action="">
                                     <div className='mb-3'>
+                                        <label className='h6 required'>Fecha</label>
+                                        <input type="date" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Nombre</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Precio</label>
@@ -92,6 +99,10 @@ export function Gastos () {
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Estado</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
+                                        <div className={`${"d-block"}`}>
+                                            <label className='h6 required'>Valor deuda</label>
+                                            <input type="text" className="form-control mb-3 mt-1" />
+                                        </div>
                                         <label className='h6'>Descripcion</label>
                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style={{height: "100px"}}></textarea>
                                     </div>
@@ -115,6 +126,8 @@ export function Gastos () {
                             <div class="modal-body">
                                 <form action="">
                                     <div className='mb-3'>
+                                        <label className='h6 required'>Fecha</label>
+                                        <input type="date" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Nombre</label>
                                         <input type="text" value='Acetaminofen' className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Precio</label>
@@ -123,6 +136,10 @@ export function Gastos () {
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Estado</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
+                                        <div className={`${"d-block"}`}>
+                                            <label className='h6 required'>Valor deuda</label>
+                                            <input type="text" className="form-control mb-3 mt-1" />
+                                        </div>
                                         <label className='h6'>Descripcion</label>
                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style={{height: "100px"}}></textarea>
                                     </div>

@@ -15,6 +15,7 @@ class LoginService:
         user['_id'] = str(user['_id'])
         return user
     
+    @staticmethod
     def get_user_by_id(id):
         user = collection_users.find_one({'_id': ObjectId(id)})
         if not user:
