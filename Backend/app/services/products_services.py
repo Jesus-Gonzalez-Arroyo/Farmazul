@@ -1,6 +1,7 @@
 from database import Connect
 from bson.objectid import ObjectId
 from models import User_models
+from pymongo import ReturnDocument
 
 connect = Connect()
 collection_products = connect['Products']
@@ -14,11 +15,11 @@ class ProductsServices:
         return users
     
     @staticmethod
-    def register_product(name, price, priceventa, cant, cant_actual, estancia, ganancia, prov):
+    def register_product(name, price, priceventa, cant, cant_actual, estancia, ganancia, prov, fecha):
         if collection_products.find_one({'name': name}):
             return {'error': 'Producto ya registrado'}
         
-        new_product = collection_products.insert_one({'name': name, 'price': price, 'price_venta': priceventa, 'cantidad': cant, 'cantidad_actual': cant_actual, 'estancia': estancia, 'ganancia': ganancia, 'proveedor': prov}).inserted_id
+        new_product = collection_products.insert_one({'name': name, 'price': price, 'price_venta': priceventa, 'cantidad': cant, 'cantidad_actual': cant_actual, 'estancia': estancia, 'ganancia': ganancia, 'proveedor': prov, 'fecha': fecha}).inserted_id
         data_product = collection_products.find_one({'_id': new_product})
         data_product['_id'] = str(data_product['_id'])
         
@@ -42,3 +43,28 @@ class ProductsServices:
         if result.deleted_count == 1:
             return 'Eliminado con exito'
         return 'Ocurrio un error'
+
+    @staticmethod    
+    def update_products(name, price, priceventa, cant, cant_actual, estancia, ganancia, prov, id, fecha):
+        result = collection_products.find_one_and_update(
+            {'_id': ObjectId(id)},
+            {"$set": {
+                'name': name, 
+                'price': price, 
+                'price_venta': priceventa, 
+                'cantidad': cant, 
+                'cantidad_actual': cant_actual, 
+                'estancia': estancia,
+                'ganancia': ganancia, 
+                'proveedor': prov,
+                'fecha': fecha
+            }},
+            return_document=True
+        )
+
+        if result:
+            result['_id'] = str(result['_id'])             
+            return result, 201
+        else:
+            return None
+

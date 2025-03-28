@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
 from routes.users import get_users, user_register
-from routes.products import get_products_all, register_product, delete_product, search_product
+from routes.products import get_products_all, register_product, delete_product, search_product, update_products
 from flask_cors import cross_origin
 from flask import request, jsonify
 from services.login_services import LoginService
@@ -63,3 +63,10 @@ def product_delete():
 def product_search():
     if request.method == 'POST':
         return search_product(request.json)
+    
+@users_bp.route('/update_product', methods=['POST', 'OPTIONS']) 
+def products_udpdate():
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    if request.method == 'POST':
+        return update_products(request.json)
