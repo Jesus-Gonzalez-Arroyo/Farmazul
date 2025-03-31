@@ -43,8 +43,13 @@ export function Users() {
 
     return (
         <Navigation>
-            <div>
-                <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo usuario</button>
+            <div className='d-flex justify-content-between align-items-center'>
+                <div>
+                    <p className='m-0 h5'>Gestor de usuarios</p>
+                </div>
+                <div>
+                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo usuario</button>
+                </div>
             </div>
             <div className='h-90 d-flex gap-3'>
                 <div className="shadow-sm p-3 rounded overflow-auto w-60 h-100">

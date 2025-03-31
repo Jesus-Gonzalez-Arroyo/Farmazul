@@ -1,4 +1,5 @@
 import { Navigation } from '../../components/Navigation'
+import {TrashIcon, PencilIcon} from "@primer/octicons-react"
 
 const productos = [
     {
@@ -31,7 +32,7 @@ export function Gastos () {
                     <p className='m-0 h5'>Gestor de gastos</p>
                 </div>
                 <div>
-                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo gasto</button>
+                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo gasto</button>
                 </div>
             </div> 
             <div className='h-90'>
@@ -73,17 +74,16 @@ export function Gastos () {
                                         </td>
                                         <td>{producto.descripcion}</td>
                                         <td>
-                                            <button
-                                                className="btn btn-primary"
-                                                type="button" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#editProduct"
-                                            >
-                                                Editar
-                                            </button>
-                                            <button className='btn btn-danger mx-2'>
-                                                Eliminar
-                                            </button>
+                                        <div className='d-flex align-items-center gap-3'>
+                                                <PencilIcon
+                                                    size={16}
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editProduct"
+                                                />
+                                                <TrashIcon 
+                                                    size={16}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

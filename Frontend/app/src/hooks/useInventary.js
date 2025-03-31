@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {ProductInfo, ProductInfoUpdate} from '../models/index'
-import {consumServices} from '../utils/index'
+import {consumServices, keys} from '../utils/index'
+
 
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
@@ -11,7 +12,7 @@ export const useInventary = () => {
 
     const deleteProduct = async () => {
         
-        const res = await consumServices(productID, 'http://127.0.0.1:5000//index/API/v1/delete_product', 'DELETE')
+        const res = await consumServices(productID, keys.deleteProduct, 'DELETE')
 
         if(res.error) return console.error(res)
             
@@ -24,7 +25,7 @@ export const useInventary = () => {
         formData.ganancia = String(Number(formData.priceventa) - Number(formData.price))
         formData.cant_actual = formData.cant
 
-        const res = await consumServices(formData, 'http://127.0.0.1:5000//index/API/v1/register_product', 'POST')
+        const res = await consumServices(formData, keys.registerProduct, 'POST')
 
         if(res.error) return console.error(res)
 
@@ -38,7 +39,7 @@ export const useInventary = () => {
         infoUpdateProduct.cant_actual = String(Number(infoUpdateProduct.cant_actual) + Number(infoUpdateProduct.cant === "" ? 0 : infoUpdateProduct.cant))
         infoUpdateProduct.cant = infoUpdateProduct.cant === "" ? infoUpdateProduct.cant_copy : infoUpdateProduct.cant
         
-        const res = await consumServices(infoUpdateProduct, 'http://127.0.0.1:5000//index/API/v1/update_product', 'POST')
+        const res = await consumServices(infoUpdateProduct, keys.updateProduct, 'POST')
 
         if(res.error) return console.error(res)
 

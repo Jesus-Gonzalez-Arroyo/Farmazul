@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import {TrashIcon, PencilIcon} from "@primer/octicons-react"
 import { Navigation } from '../../components/Navigation'
-import {consumServices} from '../../utils/index'
+import {consumServices, keys} from '../../utils/index'
 import {useInventary} from '../../hooks/index'
 import './inventary.css'
 
@@ -24,7 +24,7 @@ export function Inventary() {
 
     useEffect(() => {
         const productsGet = async () => {
-            const responseProducts = await consumServices('', 'http://127.0.0.1:5000//index/API/v1/get_products_all', 'GET')
+            const responseProducts = await consumServices('', keys.getProducts, 'GET')
             if (responseProducts.error) return console.error(responseProducts.info);
             setProducts(responseProducts.info)
             setAllProducts(responseProducts.info)

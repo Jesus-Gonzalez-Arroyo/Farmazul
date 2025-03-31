@@ -1,5 +1,6 @@
 import { Navigation } from "../../components/Navigation";
 import { useState, useEffect } from 'react'
+import {PlusCircleIcon} from '@primer/octicons-react'
 import "./ventas.css";
 
 export function Ventas() {
@@ -56,12 +57,7 @@ export function Ventas() {
                                         <td>{producto.cantidad}</td>
                                         <td>{producto.estancia}</td>
                                         <td>
-                                            <button
-                                                className="btn btn-primary"
-                                                onClick={() => handleAddProduct(producto)}
-                                            >
-                                                Agregar
-                                            </button>
+                                            <PlusCircleIcon onClick={() => handleAddProduct(producto)} size={16}/>
                                         </td>
                                     </tr>
                                 ))}
