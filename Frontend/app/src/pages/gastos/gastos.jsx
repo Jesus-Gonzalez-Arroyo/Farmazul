@@ -8,7 +8,8 @@ const productos = [
         tipo: 'Pago',
         estado: 'Pagado',
         deuda: 0,
-        descripcion: 'Nomina'
+        descripcion: 'Nomina',
+        fecha: '03/31/2025'
     },
     {
         id: 2,
@@ -18,15 +19,21 @@ const productos = [
         estado: 'En deuda',
         deuda: 5000,
         descripcion: 'Compra',
+        fecha: '03/31/2025'
     }
 ];
 
 export function Gastos () {
     return (
-        <Navigation> 
-            <div>
-                <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo gasto</button>
-            </div>
+        <Navigation>
+            <div className='d-flex justify-content-between align-items-center'>
+                <div>
+                    <p className='m-0 h5'>Gestor de gastos</p>
+                </div>
+                <div>
+                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo gasto</button>
+                </div>
+            </div> 
             <div className='h-90'>
                     <div className="shadow-sm p-3 rounded overflow-auto h-100">
                         <table className="table">
@@ -38,6 +45,7 @@ export function Gastos () {
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col">Valor deuda</th>
+                                    <th scope="col">Fecha</th>
                                     <th scope="col">Descripcion</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
@@ -54,10 +62,15 @@ export function Gastos () {
                                         </td>
                                         <td>{producto.tipo}</td>
                                         <td>
-                                            <p className={`m-0 ${producto.estado === 'Pagado' ? "text-success" : "text-danger"}`}>{producto.estado}</p>
+                                            <div className={`m-0 p-1 rounded w-75 text-center ${producto.estado === 'Pagado' ? "bg-success" : "bg-danger"}`}>
+                                                <p className='m-0'>{producto.estado}</p>
+                                            </div>
                                         </td>
-                                        <td className={`m-0 ${producto.estado === 'Pagado' ? "text-success" : "text-danger"}`}>{producto.deuda.toString()
+                                        <td>{producto.deuda.toString()
                                                 .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
+                                        <td>
+                                            {producto.fecha}
+                                        </td>
                                         <td>{producto.descripcion}</td>
                                         <td>
                                             <button

@@ -1,20 +1,7 @@
+import {useEffect, useState} from 'react'
 import { Navigation } from '../../components/Navigation'
+import {TrashIcon, PencilIcon} from "@primer/octicons-react"
 import './users.css'
-
-const productos = [
-    {
-        id: 1,
-        nombre: "Jesus Gonzalez",
-        user: 'jesusgonzales1102@gmail.com',
-        rol: 'usuario'
-    },
-    {
-        id: 2,
-        nombre: "Valery Maurys",
-        user: 'vale1102@gmail.com',
-        rol: 'admin'
-    },
-];
 
 const ventas = [
     {
@@ -32,10 +19,32 @@ const ventas = [
 ];
 
 export function Users() {
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        async function getUsers() {
+            try {
+                const get_all_users = await fetch('http://127.0.0.1:5000//index/API/v1/users', {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json"}
+                })
+                const res = await get_all_users.json()
+    
+                if(!res.error) {
+                    setUsers(res.info)
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        getUsers()
+    }, [])
+
     return (
         <Navigation>
             <div>
-                <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo usuario</button>
+                <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo usuario</button>
             </div>
             <div className='h-90 d-flex gap-3'>
                 <div className="shadow-sm p-3 rounded overflow-auto w-60 h-100">
@@ -51,24 +60,17 @@ export function Users() {
                             </tr>
                         </thead>
                         <tbody>
-                            {productos.map((producto, index) => (
-                                <tr key={producto.id}>
+                            {users.map((user, index) => (
+                                <tr key={user._id}>
                                     <td>{index + 1}</td>
-                                    <td>{producto.nombre}</td>
-                                    <td>{producto.user}</td>
-                                    <td>{producto.rol}</td>
+                                    <td>{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.rol}</td>
                                     <td>
-                                        <button
-                                            className="btn btn-primary"
-                                            type="button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editProduct"
-                                        >
-                                            Editar
-                                        </button>
-                                        <button className='btn btn-danger mx-2'>
-                                            Eliminar
-                                        </button>
+                                        <div className='d-flex align-items-center gap-3'>
+                                            <PencilIcon data-bs-toggle="modal" data-bs-target="#editProduct" size={16}></PencilIcon>
+                                            <TrashIcon size={16}></TrashIcon>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

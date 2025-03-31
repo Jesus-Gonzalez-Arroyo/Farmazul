@@ -10,10 +10,13 @@ def register_product(data):
     try:
         return jsonify(ResponseModel(ProductsServices.register_product(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('cant_actual'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('fecha'))))
     except Exception as e:
-        return jsonify(ResponseModel(str(e), True, 401)),
+        return jsonify(ResponseModel(str(e), True, 401))
 
 def delete_product(data):
-    return jsonify(ResponseModel(ProductsServices.delete_product(data.get('id'))))
+    try:
+        return jsonify(ResponseModel({'product': ProductsServices.delete_product(data.get('id')), 'message': 'Eliminado con exito'}))
+    except Exception as e:
+        return jsonify(ResponseModel(str(e), True, 401)),
 
 def search_product(data):
     response = ProductsServices.search_products(data.get('name'))
@@ -24,7 +27,6 @@ def search_product(data):
     return jsonify(ResponseModel(response))
 
 def update_products(data):
-    print('data', data)
     try:
         result_update = ProductsServices.update_products(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('cant_actual'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('id'), data.get('fecha'))
 

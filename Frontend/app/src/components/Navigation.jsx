@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from "react-router";
+import {PersonIcon, SignOutIcon} from '@primer/octicons-react'
 
 export function Navigation(props) {
   const [UserInfo, setUserInfo] = useState({})
@@ -43,8 +44,13 @@ export function Navigation(props) {
           <p className="m-0 white">Farmazul</p>
         </div>
         <div className="d-flex gap-4 px-4">
-          <p className="m-0">Hola, {UserInfo.name}</p>
-          <p onClick={handleLoguot} className="m-0">Cerrar sesion</p>
+          <div className='d-flex align-items-center gap-2'>
+            <div>
+              <PersonIcon size={24}/>
+            </div>
+            <p className="m-0">Hola, {UserInfo.name}</p>
+          </div>
+          <p onClick={handleLoguot} className="m-0"><SignOutIcon size={24}/></p>
         </div>
       </div>
       <div className="d-block">

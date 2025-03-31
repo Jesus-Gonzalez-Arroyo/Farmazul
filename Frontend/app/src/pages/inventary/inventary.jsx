@@ -1,138 +1,47 @@
+import { useEffect } from 'react'
+import {TrashIcon, PencilIcon} from "@primer/octicons-react"
 import { Navigation } from '../../components/Navigation'
-import { useState, useEffect } from 'react'
+import {consumServices} from '../../utils/index'
+import {useInventary} from '../../hooks/index'
 import './inventary.css'
 
 export function Inventary() {
-    const [products, setProducts] = useState([])
-    const [allProducts, setAllProducts] = useState([])
-    const [formData, setFormData] = useState({
-        name: "",
-        price: "",
-        priceventa: "",
-        cant: "",
-        cant_actual: "",
-        estancia: "",
-        ganancia: "",
-        prov: "",
-        fecha: ""
-    });
-    const [infoUpdateProduct, setInfoUpdateProduct] = useState({
-        name: "",
-        price: "",
-        priceventa: "",
-        cant: "",
-        cant_actual: "",
-        estancia: "",
-        ganancia: "",
-        prov: "",
-        id: "",
-        cant_copy:"",
-        fecha: ""
-    })
 
-    const newProduct = async (e) => {
-        e.preventDefault()
-
-        try {
-            formData.ganancia = String(Number(formData.priceventa) - Number(formData.price))
-            formData.cant_actual = formData.cant
-            const register_product = await fetch('http://127.0.0.1:5000//index/API/v1/register_product', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            })
-            const response_register = await register_product.json()
-            setProducts((prev) => [...prev, response_register.info[0]])
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const updateProductService = async (e) => {
-        e.preventDefault()
-
-        try {
-            infoUpdateProduct.ganancia = String(Number(infoUpdateProduct.priceventa) - Number(infoUpdateProduct.price))
-            infoUpdateProduct.cant_actual = String(Number(infoUpdateProduct.cant_actual) + Number(infoUpdateProduct.cant === "" ? 0 : infoUpdateProduct.cant))
-            infoUpdateProduct.cant = infoUpdateProduct.cant === "" ? infoUpdateProduct.cant_copy : infoUpdateProduct.cant
-            const update_product = await fetch('http://127.0.0.1:5000//index/API/v1/update_product', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(infoUpdateProduct)
-            })
-            const response_update = await update_product.json()
-            if(!response_update.error) {
-                setProducts((prev) =>
-                    prev.map((producto) =>
-                      producto._id === infoUpdateProduct.id ? response_update.info[0] : producto
-                    )
-                );
-            }
-            console.log(response_update)
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleChangeUpdate = (e) => {
-        const { name, value } = e.target;
-        setInfoUpdateProduct((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const updateProduct = (product) => {
-        setInfoUpdateProduct({
-            name: product.name,
-            price: product.price,
-            priceventa: product.price_venta,
-            cant: "",
-            cant_copy: product.cantidad,
-            cant_actual: String(product.cantidad_actual),
-            estancia: product.estancia,
-            ganancia: product.ganancia,
-            prov: product.proveedor,
-            id: product._id,
-            fecha: product.fecha
-        })
-    }
-
-    const handleSearchProduct = (e) => {
-        const search = [...products].filter((product) => product.name.toLowerCase().includes(e.target.value.toLowerCase()))
-
-        if (e.target.value === "") {
-            setProducts(allProducts)
-            return;
-        }
-
-        setProducts(search)
-    }
+    const {
+        setProducts, 
+        setAllProducts, 
+        products, 
+        handleSearchProduct, 
+        updateProduct, 
+        handleIdProductDelete, 
+        newProduct, 
+        handleChange, 
+        handleChangeUpdate, 
+        infoUpdateProduct, 
+        updateProductService, 
+        deleteProduct
+    } = useInventary()
 
     useEffect(() => {
         const productsGet = async () => {
-            const products = await fetch('http://127.0.0.1:5000//index/API/v1/get_products_all', {
-                method: 'GET',
-                headers: { "Content-Type": "application/json" }
-            })
-            const responseProducts = await products.json()
+            const responseProducts = await consumServices('', 'http://127.0.0.1:5000//index/API/v1/get_products_all', 'GET')
             if (responseProducts.error) return console.error(responseProducts.info);
-            console.table(responseProducts.info)
             setProducts(responseProducts.info)
             setAllProducts(responseProducts.info)
         }
 
         productsGet()
-    }, [])
+    }, [setProducts, setAllProducts])
 
     return (
         <div>
             <Navigation>
                 <div className='d-flex justify-content-between align-items-center'>
                     <div>
-                        <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar nuevo producto</button>
+                        <p className='m-0 h5'>Inventario de productos</p>
+                    </div>
+                    <div>
+                        <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#addProduct">Agregar producto</button>
                     </div>
                 </div>
                 <div className='h-90'>
@@ -176,18 +85,20 @@ export function Inventary() {
                                         <td>{producto.proveedor}</td>
                                         <td>{producto.estancia}</td>
                                         <td>
-                                            <button
-                                                className="btn btn-primary"
-                                                type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editProduct"
-                                                onClick={() => updateProduct(producto)}
-                                            >
-                                                Editar
-                                            </button>
-                                            <button className='btn btn-danger mx-2'>
-                                                Eliminar
-                                            </button>
+                                            <div className='d-flex align-items-center gap-3'>
+                                                <PencilIcon
+                                                    size={16}
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editProduct"
+                                                    onClick={() => updateProduct(producto)}
+                                                />
+                                                <TrashIcon 
+                                                    size={16}
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteProduct"
+                                                    onClick={() => handleIdProductDelete(producto)}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -196,7 +107,9 @@ export function Inventary() {
                     </div>
                 </div>
 
-                <div class="modal fade modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {/* Agregar producto */}
+
+                <div class="modal fade modal-lg" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -234,7 +147,7 @@ export function Inventary() {
                     </div>
                 </div>
 
-                {/* Actualizar product */}
+                {/* Actualizar producto */}
 
                 <div class="modal fade modal-lg" id="editProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -252,7 +165,7 @@ export function Inventary() {
                                         <input name='price' type="text" value={infoUpdateProduct.price} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                         <label className='h6 required'>Precio de venta</label>
                                         <input name='priceventa' value={infoUpdateProduct.priceventa} type="text" className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
-                                        <label className='h6'>Cantidad</label>
+                                        <label className='h6'>Nueva cantidad comprada</label>
                                         <input name='cant' type="text" className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                     </div>
                                     <div>
@@ -269,6 +182,26 @@ export function Inventary() {
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Eliminar producto */}
+
+                <div class="modal" id="deleteProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Eliminar producto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Estas seguro de eliminar este producto?</p>
+                                <div className='d-flex gap-2'>
+                                    <button type="button" onClick={deleteProduct} class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

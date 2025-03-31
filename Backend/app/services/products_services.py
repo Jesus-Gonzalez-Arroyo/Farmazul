@@ -39,10 +39,9 @@ class ProductsServices:
     
     @staticmethod
     def delete_product(id):
-        result = collection_products.delete_one({'_id': ObjectId(id)})
-        if result.deleted_count == 1:
-            return 'Eliminado con exito'
-        return 'Ocurrio un error'
+        result = collection_products.find_one_and_delete({'_id': ObjectId(id)})
+        result['_id'] = str(result['_id'])
+        return result
 
     @staticmethod    
     def update_products(name, price, priceventa, cant, cant_actual, estancia, ganancia, prov, id, fecha):
