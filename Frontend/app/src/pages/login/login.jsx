@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import "./login.css";
+import { consumServices, keys } from "../../utils";
 
 export function Login() {
   const navigate = useNavigate();
@@ -23,42 +24,16 @@ export function Login() {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      if (formData.email === "" || formData.password === "") {
-        setAlert({
-          text: "Hacen falta campos por llenar",
-          block: true,
-        });
-        return;
-      }
+    e.preventDefault()
 
-      const response = await fetch("http://127.0.0.1:5000/index/API/v1/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
+    if (formData.email === "" || formData.password === "") return setAlert({text: "Hacen falta campos por llenar", block: true})
 
-      if (data.error === true) {
-        setAlert({
-          text: data.info,
-          block: true,
-        });
-        return;
-      }
+    const data = await consumServices(keys.loginUser, 'POST', '', formData)
 
-      localStorage.setItem("TOKEN", data.info.access_token);
+    if (data.error) return setAlert({text: data.info, block: true})
 
-      if (data.info.rol_user === "admin") {
-        setTimeout(() => {
-          navigate("/home");
-        }, 5000);
-        navigate("/loader");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    localStorage.setItem("TOKEN", data.info.access_token)
+    navigate("/home")
   };
 
   return (

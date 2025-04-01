@@ -1,26 +1,20 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from "react-router";
-import {PersonIcon, SignOutIcon} from '@primer/octicons-react'
+import {PersonIcon, SignOutIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon} from '@primer/octicons-react'
+import {consumServices, keys} from '../utils/index'
 
 export function Navigation(props) {
-  const [UserInfo, setUserInfo] = useState({})
+  const [UserInfo, setUserInfo] = useState('')
   const navigate = useNavigate()
 
   useEffect(()=>{
     const user = localStorage.getItem('infoUser')
 
-    if(user) {
-      return setUserInfo(JSON.parse(user))
-    }
-
+    if(user) return setUserInfo(JSON.parse(user))
+  
     const InfoUserGet = async () => {
       const token = localStorage.getItem('TOKEN')
-      const userResponse = await fetch("http://127.0.0.1:5000/index/API/v1/getInfoUser", {
-        method: "GET",
-        headers: { "Authorization": `Bearer ${token}`},
-      });
-  
-      const userData = await userResponse.json();
+      const userData = await consumServices(keys.get_info_user, 'GET', {"Authorization": `Bearer ${token}`})
       if (userData.error) return console.error(userData.info);
       setUserInfo(userData.info)
       localStorage.setItem('infoUser', JSON.stringify(userData.info))
@@ -58,33 +52,39 @@ export function Navigation(props) {
           <div style={{ width: "15%", height: "calc(100vh - 70px)", background: "#B5CFD8" }}>
             <ul style={{ listStyleType: "none" }} className="p-0 pt-5 text-decoration-none">
               <a href="/home" className='text-decoration-none text-dark'>
-                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center">
                   <p className="mx-5 m-0 h6">Inicio</p>
-                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Un resumen de tus secciones</p>
+                  <HomeIcon size={16}></HomeIcon>
                 </li>
               </a>
               <a href="/ventas" className='text-decoration-none text-dark'>
-                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
                   <p className="mx-5 m-0 h6">Ventas</p>
-                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Realiza y registra tus ventas</p>
+                  <CreditCardIcon size={16}></CreditCardIcon>
                 </li>
               </a>
               <a href="/inventario" className='text-decoration-none text-dark'>
-                <li className="py-3" /* style={{background: '#E4E0E1'}} */ /* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
+                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */ /* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
                   <p className="mx-5 m-0 h6">Inventario</p>
-                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Lleva un control de tus productos</p>
+                  <PackageIcon size={16}></PackageIcon>
                 </li>
               </a>
               <a href="/gastos" className='text-decoration-none text-dark'>
-                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
                   <p className="mx-5 m-0 h6">Gastos</p>
-                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Obten un registro de tus gastos</p>
+                  <GraphIcon size={16}></GraphIcon>
                 </li>
               </a>
               <a href="/users" className='text-decoration-none text-dark'>
-                <li className="py-3" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
                   <p className="mx-5 m-0 h6">Usuarios</p>
-                  <p style={{fontSize: '13px'}} className='m-0 mx-5 fw-light'>Registra y vizualiza los usuarios</p>
+                  <PeopleIcon size={16}></PeopleIcon>
+                </li>
+              </a>
+              <a href="/ventas" className='text-decoration-none text-dark'>
+                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
+                  <p className="mx-5 m-0 h6">Ventas</p>
+                  <ChecklistIcon size={16}></ChecklistIcon>
                 </li>
               </a>
             </ul>

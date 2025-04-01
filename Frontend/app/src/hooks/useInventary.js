@@ -9,10 +9,11 @@ export const useInventary = () => {
     const [allProducts, setAllProducts] = useState([])
     const [formData, setFormData] = useState(new ProductInfo());
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
+    const [loader, setLoader] = useState(true)
 
     const deleteProduct = async () => {
         
-        const res = await consumServices(productID, keys.deleteProduct, 'DELETE')
+        const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
 
         if(res.error) return console.error(res)
             
@@ -25,7 +26,7 @@ export const useInventary = () => {
         formData.ganancia = String(Number(formData.priceventa) - Number(formData.price))
         formData.cant_actual = formData.cant
 
-        const res = await consumServices(formData, keys.registerProduct, 'POST')
+        const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
         if(res.error) return console.error(res)
 
@@ -39,7 +40,7 @@ export const useInventary = () => {
         infoUpdateProduct.cant_actual = String(Number(infoUpdateProduct.cant_actual) + Number(infoUpdateProduct.cant === "" ? 0 : infoUpdateProduct.cant))
         infoUpdateProduct.cant = infoUpdateProduct.cant === "" ? infoUpdateProduct.cant_copy : infoUpdateProduct.cant
         
-        const res = await consumServices(infoUpdateProduct, keys.updateProduct, 'POST')
+        const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
         if(res.error) return console.error(res)
 
@@ -96,6 +97,8 @@ export const useInventary = () => {
         handleSearchProduct,
         handleChange,
         setProducts, 
-        setAllProducts
+        setAllProducts,
+        setLoader,
+        loader
     }
 }

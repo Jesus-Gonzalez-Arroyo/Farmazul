@@ -1,8 +1,8 @@
-export async function consumServices(body, endpoint, method) {
+export async function consumServices(endpoint, method, headers='', body='') {
     try {
         const consum = await fetch(endpoint, {
             method: method,
-            headers: { "Content-Type": "application/json" },
+            ...(headers === '' ? {headers: { "Content-Type": "application/json" }} : {headers}),
             ...(method !== "GET" ? { body: JSON.stringify(body) } : {})
         })
         const res = await consum.json()

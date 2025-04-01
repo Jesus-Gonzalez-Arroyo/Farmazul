@@ -1,7 +1,5 @@
 from database import Connect
 from bson.objectid import ObjectId
-from models import User_models
-from pymongo import ReturnDocument
 
 connect = Connect()
 collection_products = connect['Products']

@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import { Navigation } from '../../components/Navigation'
 import {TrashIcon, PencilIcon} from "@primer/octicons-react"
 
@@ -25,6 +26,15 @@ const productos = [
 ];
 
 export function Gastos () {
+    const [rol, setRol] = useState("")
+    const [open, setOpen] = useState(false)
+    const types = ["Pago", "Compra"]
+
+    const handleSelect = (value) => {
+        setRol(value)
+        setOpen(false)
+    };
+
     return (
         <Navigation>
             <div className='d-flex justify-content-between align-items-center'>
@@ -109,7 +119,30 @@ export function Gastos () {
                                         <label className='h6 required'>Precio</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <label className='h6 required'>Tipo</label>
-                                        <input type="text" className="form-control mb-3 mt-1" />
+                                        <div className="position-relative w-100 mb-3">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control w-100"
+                                                        value={rol}
+                                                        readOnly
+                                                        placeholder="Seleccionar rol..."
+                                                        onClick={() => setOpen(!open)}
+                                                    />
+                                                    {open && (
+                                                        <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                            {types.map((item) => (
+                                                                <li
+                                                                    key={item}
+                                                                    className="list-group-item list-group-item-action"
+                                                                    onClick={() => handleSelect(item)}
+                                                                    style={{ cursor: "pointer" }}
+                                                                >
+                                                                    {item}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
                                         <label className='h6 required'>Estado</label>
                                         <input type="text" className="form-control mb-3 mt-1" />
                                         <div className={`${"d-block"}`}>

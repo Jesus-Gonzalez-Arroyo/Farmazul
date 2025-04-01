@@ -1,3 +1,3 @@
-from routes.index import users_bp
+from routes.index import api_bp
 
-blueprints_user = users_bp
+blueprints_user = api_bp

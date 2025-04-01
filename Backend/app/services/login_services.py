@@ -1,6 +1,5 @@
 from database import Connect
 from bson.objectid import ObjectId
-from models import User_models
 
 connect = Connect()
 collection_users = connect['Users']
