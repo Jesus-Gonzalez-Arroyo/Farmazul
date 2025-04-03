@@ -14,6 +14,10 @@
     overflow: auto;
 }
 
+.h-30 {
+    height: 50%;
+}
+
 /* .custom-scroll::-webkit-scrollbar {
     display: none;
 } */

@@ -44,7 +44,7 @@ export function Navigation(props) {
             </div>
             <p className="m-0">Hola, {UserInfo.name}</p>
           </div>
-          <p onClick={handleLoguot} className="m-0"><SignOutIcon size={24}/></p>
+          <p onClick={handleLoguot} style={{ cursor: "pointer" }} className="m-0"><SignOutIcon size={24}/></p>
         </div>
       </div>
       <div className="d-block">
@@ -58,31 +58,31 @@ export function Navigation(props) {
                 </li>
               </a>
               <a href="/ventas" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center">
                   <p className="mx-5 m-0 h6">Ventas</p>
                   <CreditCardIcon size={16}></CreditCardIcon>
                 </li>
               </a>
               <a href="/inventario" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */ /* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
+                <li className="py-3 d-flex align-items-center"/* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
                   <p className="mx-5 m-0 h6">Inventario</p>
                   <PackageIcon size={16}></PackageIcon>
                 </li>
               </a>
               <a href="/gastos" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center">
                   <p className="mx-5 m-0 h6">Gastos</p>
                   <GraphIcon size={16}></GraphIcon>
                 </li>
               </a>
               <a href="/users" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center">
                   <p className="mx-5 m-0 h6">Usuarios</p>
                   <PeopleIcon size={16}></PeopleIcon>
                 </li>
               </a>
               <a href="/ventas-realizadas" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
+                <li className="py-3 d-flex align-items-center">
                   <p className="mx-5 m-0 h6">Ventas realizadas</p>
                   <ChecklistIcon size={16}></ChecklistIcon>
                 </li>
