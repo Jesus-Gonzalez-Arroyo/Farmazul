@@ -81,9 +81,9 @@ export function Navigation(props) {
                   <PeopleIcon size={16}></PeopleIcon>
                 </li>
               </a>
-              <a href="/ventas" className='text-decoration-none text-dark'>
+              <a href="/ventas-realizadas" className='text-decoration-none text-dark'>
                 <li className="py-3 d-flex align-items-center" /* style={{background: '#E4E0E1'}} */>
-                  <p className="mx-5 m-0 h6">Ventas</p>
+                  <p className="mx-5 m-0 h6">Ventas realizadas</p>
                   <ChecklistIcon size={16}></ChecklistIcon>
                 </li>
               </a>
