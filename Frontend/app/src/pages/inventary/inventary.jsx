@@ -21,7 +21,7 @@ export function Inventary() {
         updateProductService,
         deleteProduct,
         setLoader,
-        loader,
+        loader
     } = useInventary();
 
     useEffect(() => {

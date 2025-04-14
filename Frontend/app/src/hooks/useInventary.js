@@ -3,6 +3,7 @@ import {ProductInfo, ProductInfoUpdate} from '../models/index'
 import {consumServices, keys} from '../utils/index'
 
 
+
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
     const [products, setProducts] = useState([])
@@ -28,7 +29,10 @@ export const useInventary = () => {
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
-        if(res.error) return console.error(res)
+        if(res.error) {
+            return console.error(res)
+        }
+            
 
         setProducts((prev) => [...prev, res.info[0]])
     }
@@ -42,7 +46,9 @@ export const useInventary = () => {
         
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
-        if(res.error) return console.error(res)
+        if(res.error) {
+            return console.error(res)
+        }
 
         setProducts((prev) =>
             prev.map((producto) =>
