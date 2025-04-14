@@ -6,5 +6,6 @@ export const keys = {
     'get_info_user': 'http://127.0.0.1:5000/index/API/v1/getInfoUser',
     'loginUser': 'http://127.0.0.1:5000/index/API/v1/login',
     'getUsers': 'http://127.0.0.1:5000//index/API/v1/users',
-    'getVentas': 'http://127.0.0.1:5000//index/API/v1/get_ventas'
+    'getVentas': 'http://127.0.0.1:5000//index/API/v1/get_ventas',
+    'registerVenta': 'http://127.0.0.1:5000//index/API/v1/register_venta'
 }

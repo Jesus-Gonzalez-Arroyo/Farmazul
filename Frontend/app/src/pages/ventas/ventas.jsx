@@ -22,7 +22,9 @@ export function Ventas() {
         setCarProducts,
         handleAddProductCar,
         handleMoreCant,
-        handleDeleteProduct
+        handleDeleteProduct,
+        handleChange,
+        handleRegisterVenta
     } = useVentas()
 
     useEffect(() => {
@@ -138,7 +140,7 @@ export function Ventas() {
                                             </div>
                                         </div>
                                         <div className="end-0">
-                                            <button className="btn btn-success d-block mb-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Comprar</button>
+                                            <button className="btn btn-success d-block mb-3" type="button" data-bs-toggle="modal" disabled={carProducts.length === 0} data-bs-target="#exampleModal">Comprar</button>
                                             <button onClick={() => setCarProducts([])} className="btn btn-danger">Cancelar</button>
                                         </div>
                                     </div>
@@ -157,33 +159,37 @@ export function Ventas() {
                                         <div className='d-flex w-100 gap-5'>
                                             <div className='w-50'>
                                                 <p className='fw-bold'>Resumen de compra</p>
-                                                <table className="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Nombre</th>
-                                                            <th scope="col">Precio</th>
-                                                            <th scope="col">Cantidad</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {carProducts.map((producto, index) => (
-                                                            <tr key={producto.id}>
-                                                                <td>{producto.name}</td>
-                                                                <td>$
-                                                                    {producto.price
-                                                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                                </td>
-                                                                <td>{producto.cantidad}</td>
+                                                <div className='overflow-auto h-350'>
+                                                    <table className="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Nombre</th>
+                                                                <th scope="col">Precio</th>
+                                                                <th scope="col">Cantidad</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                                <p className='m-0 fw-bold'>Total de la compra</p>
-                                                <p>${String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                                                        </thead>
+                                                        <tbody>
+                                                            {carProducts.map((producto) => (
+                                                                <tr key={producto.id}>
+                                                                    <td>{producto.name}</td>
+                                                                    <td>$
+                                                                        {producto.price
+                                                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                                    </td>
+                                                                    <td>{producto.cantidad}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div className='mt-4'>
+                                                    <p className='m-0 fw-bold'>Total de la compra</p>
+                                                    <p>${String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                                                </div>
                                             </div>
                                             <div className='w-50'>
-                                                <form action="">
-                                                    <p className='fw-bold'>Metodo de pago</p>
+                                                <p className='fw-bold'>Metodo de pago</p>
+                                                <form action=''>
                                                     <div className="position-relative w-100 mb-3">
                                                         <input
                                                             type="text"
@@ -210,17 +216,19 @@ export function Ventas() {
                                                     </div>
                                                     <div style={{display: methodPay === 'Efectivo' ? 'block':'none'}}>
                                                         <p className='fw-bold'>Recibido</p>
-                                                        <input type="text" className="form-control mb-3" />
+                                                        <input type="text" name='recibido' onChange={handleChange} className="form-control mb-3"/>
                                                     </div>
-                                                    <p className='fw-bold'>Descuento</p>
-                                                    <input type="text" className="form-control" />
+                                                    <div>    
+                                                        <p className='fw-bold'>Descuento</p>
+                                                        <input type="text" name='descuent' onChange={handleChange} className="form-control"/>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Finalizar</button>
+                                        <button type="button" onClick={handleRegisterVenta} class="btn btn-success" data-bs-dismiss="modal">Finalizar</button>
                                     </div>
                                 </div>
                             </div>

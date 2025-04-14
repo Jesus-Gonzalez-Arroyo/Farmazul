@@ -14,8 +14,9 @@
     overflow: auto;
 }
 
-.h-30 {
-    height: 50%;
+.h-350 {
+    height: 300px;
+    max-height: 250px;
 }
 
 /* .custom-scroll::-webkit-scrollbar {

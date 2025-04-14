@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { consumServices, keys } from '../utils'
+import { VentaInfo } from '../models'
 
 export const useVentas = () => {
     const [products, setProducts] = useState([])
@@ -6,6 +8,7 @@ export const useVentas = () => {
     const [loader, setLoader] = useState(true)
     const [methodPay, setMethodPay] = useState("")
     const [open, setOpen] = useState(false)
+    const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
 
     const handleSelectMethodPay = (value) => {
@@ -40,6 +43,38 @@ export const useVentas = () => {
         setCarProducts(carProducts.filter((item) => item.id !== product.id))
     }
 
+    function getDate() {
+        const fecha = new Date();
+        const yyyy = fecha.getFullYear();
+        const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+        const dd = String(fecha.getDate()).padStart(2, '0');
+
+        return `${yyyy}/${mm}/${dd}`
+    }
+
+    async function handleRegisterVenta() {
+        const infoUser = JSON.parse(localStorage.getItem('infoUser'))
+        const valorCompra = String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0))
+        
+        infoVenta.fecha = getDate()
+        infoVenta.products = carProducts
+        infoVenta.valor = valorCompra
+        infoVenta.name = infoUser.name
+        infoVenta.method = methodPay
+        infoVenta.recibido = methodPay === methodsPay[0] ? infoVenta.recibido : valorCompra
+
+        const response = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
+
+        if(response.error) return console.error(response)
+
+        console.log(response)
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setInfoVenta((prev) => ({ ...prev, [name]: value }));
+    };
+
     return {
         products,
         carProducts,
@@ -48,12 +83,15 @@ export const useVentas = () => {
         methodsPay,
         open,
         setOpen,
+        setInfoVenta,
         handleSelectMethodPay,
         setProducts,
         setLoader,
         setCarProducts,
         handleAddProductCar,
         handleMoreCant,
-        handleDeleteProduct
+        handleDeleteProduct,
+        handleRegisterVenta,
+        handleChange
     }
 }

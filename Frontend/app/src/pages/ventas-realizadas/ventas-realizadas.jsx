@@ -112,6 +112,9 @@ export function VentasRealizadas() {
                                                 <th scope="col">Vendedor</th>
                                                 <th scope="col">Fecha</th>
                                                 <th scope="col">Valor</th>
+                                                <th scope="col">Recibido</th>
+                                                <th scope="col">Descuento</th>
+                                                <th scope="col">Metodo de pago</th>
                                                 <th scope="col">Productos vendidos</th>
                                             </tr>
                                         </thead>
@@ -124,6 +127,15 @@ export function VentasRealizadas() {
                                                     <td>$
                                                         {producto.valor
                                                             .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                    </td>
+                                                    <td>
+                                                        ${producto.recibido.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                    </td>
+                                                    <td>
+                                                        ${producto.descuent.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                    </td>
+                                                    <td>
+                                                        {producto.method}
                                                     </td>
                                                     <td>
                                                         {producto.products.map((item, index) => (

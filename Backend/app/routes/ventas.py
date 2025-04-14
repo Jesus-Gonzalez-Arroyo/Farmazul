@@ -9,3 +9,10 @@ def get_all_ventas():
     except Exception as e:
         return jsonify(ResponseModel(e, True, 401))
     
+def register_venta(data):
+    try:
+        register = VentasServices.register_ventas(data.get('name'), data.get('fecha'), data.get('valor'), data.get('products'), data.get('descuent'), data.get('recibido'), data.get('method'))
+        return jsonify(ResponseModel(register))
+    except Exception as e:
+        return jsonify(ResponseModel(e, True, 401))
+    

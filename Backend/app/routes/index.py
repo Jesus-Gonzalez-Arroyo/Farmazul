@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
 from routes.users import get_users, user_register
 from routes.products import get_products_all, register_product, delete_product, search_product, update_products
-from routes.ventas import get_all_ventas
+from routes.ventas import get_all_ventas, register_venta
 from flask_cors import cross_origin
 from flask import request, jsonify
 
@@ -76,3 +76,10 @@ def products_udpdate():
 def get_ventas():
     if(request.method == 'GET'):
         return get_all_ventas()
+
+@api_bp.route('/register_venta', methods=['POST', 'OPTIONS'])
+def ventas_register():
+    if(request.method == 'POST'):
+        return register_venta(request.json)
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
