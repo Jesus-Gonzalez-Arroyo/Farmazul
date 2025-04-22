@@ -31,8 +31,7 @@ export const useInventary = () => {
 
         if(res.error) {
             return console.error(res)
-        }
-            
+        }     
 
         setProducts((prev) => [...prev, res.info[0]])
     }

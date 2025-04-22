@@ -8,13 +8,13 @@ def get_all_gastos():
 
 def register_gasto(data):
     try:
-        return jsonify(ResponseModel(GastosServices.register_gasto(data.get('name'), data.get('price'), data.get('type'), data.get('state'), data.get('valordeuda'), data.get('fecha'), data.get('descript'))))
+        return jsonify(ResponseModel(GastosServices.register_gasto(data.get('name'), data.get('price'), data.get('type'), data.get('estado'), data.get('valordeuda'), data.get('fecha'), data.get('descripcion'))))
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401))
     
 def update_gasto(data):
     try:
-        return jsonify(ResponseModel(GastosServices.update_gasto(data.get('name'), data.get('price'), data.get('type'), data.get('state'), data.get('valordeuda'), data.get('fecha'), data.get('descript'))))
+        return jsonify(ResponseModel(GastosServices.update_gasto(data.get('name'), data.get('price'), data.get('type'), data.get('estado'), data.get('valordeuda'), data.get('fecha'), data.get('descripcion'), data.get('id'))))
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401))
 
