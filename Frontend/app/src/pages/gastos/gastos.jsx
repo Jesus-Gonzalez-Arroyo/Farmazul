@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Navigation } from '../../components/Navigation'
+import { Navigation } from '../../layouts/Navigation'
 import { TrashIcon, PencilIcon } from "@primer/octicons-react"
-import { consumServices, keys } from '../../utils';
+import { keys } from '../../utils';
+import {consumServices} from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { GastosInfoModel } from '../../models/gastosInfo.model';
 import { GastosInfoUpdateModel } from '../../models';

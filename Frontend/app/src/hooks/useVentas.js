@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { consumServices, keys } from '../utils'
+import { keys } from '../utils'
+import {consumServices} from '../contexts/execute'
 import { VentaInfo } from '../models'
 
 export const useVentas = () => {

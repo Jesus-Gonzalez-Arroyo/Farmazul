@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from "react-router";
 import {PersonIcon, SignOutIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon} from '@primer/octicons-react'
-import {consumServices, keys} from '../utils/index'
+import {keys} from '../utils/index'
+import {consumServices} from '../contexts/execute'
 
 export function Navigation(props) {
   const [UserInfo, setUserInfo] = useState('')

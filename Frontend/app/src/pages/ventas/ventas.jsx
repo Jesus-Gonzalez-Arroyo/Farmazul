@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { PlusCircleIcon, XCircleIcon } from '@primer/octicons-react'
-import { Navigation } from "../../components/Navigation";
-import { consumServices, keys } from '../../utils/index'
+import { Navigation } from "../../layouts/Navigation";
+import { keys } from '../../utils/index'
+import {consumServices} from '../../contexts/execute'
 import "./ventas.css";
 import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';

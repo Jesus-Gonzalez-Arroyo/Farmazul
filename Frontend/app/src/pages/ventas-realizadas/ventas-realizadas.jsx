@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Navigation } from "../../components/Navigation";
-import { consumServices, keys } from '../../utils/index'
+import { Navigation } from "../../layouts/Navigation";
+import { keys } from '../../utils/index'
+import {consumServices} from '../../contexts/execute'
 import "./ventas-realizadas.css";
 import { Loader } from '../../components/Loader';
 

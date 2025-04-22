@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigation } from "../../components/Navigation";
+import { Navigation } from "../../layouts/Navigation";
 import { CardsDates } from "../../components/Cards/CardsDates/card-dates-dashboard";
 import "./home.css";
 

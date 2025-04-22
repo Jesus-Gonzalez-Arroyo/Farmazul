@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { TrashIcon, PencilIcon } from "@primer/octicons-react";
-import { Navigation } from "../../components/Navigation";
+import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
-import { consumServices, keys } from "../../utils/index";
+import { keys } from "../../utils/index";
+import {consumServices} from '../../contexts/execute'
 import { useInventary } from "../../hooks/index";
 import "./inventary.css";
 
