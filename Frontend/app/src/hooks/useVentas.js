@@ -12,7 +12,7 @@ export const useVentas = () => {
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
 
-    const handleSelectMethodPay = (value) => {
+    function handleSelectMethodPay(value) {
         setMethodPay(value)
         setOpen(false)
     };
@@ -71,7 +71,7 @@ export const useVentas = () => {
         console.log(response)
     }
 
-    const handleChange = (e) => {
+    function handleChange (e) {
         const { name, value } = e.target;
         setInfoVenta((prev) => ({ ...prev, [name]: value }));
     };

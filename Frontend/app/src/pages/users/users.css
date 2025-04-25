@@ -5,3 +5,10 @@
 .w-60 {
     width: 60%;
 }
+
+.pass::after {
+    margin-left: 5px;
+    font-size: 12px;
+    content: 'Dejar vacio si la contraseña no sera actualizada';
+    color: red;
+}

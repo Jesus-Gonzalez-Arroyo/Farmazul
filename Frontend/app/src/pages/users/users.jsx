@@ -5,27 +5,16 @@ import './users.css'
 import { keys } from '../../utils';
 import {consumServices} from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
-
-const ventas = [
-    {
-        id: 1,
-        nombre: "Jesus Gonzalez",
-        valor: 3200,
-        fecha: '03/18/2025'
-    },
-    {
-        id: 2,
-        nombre: "Valery Maurys",
-        valor: 31750,
-        fecha: '01/10/2025'
-    },
-];
+import { NewUser, NewUserUpdate } from '../../models';
 
 export function Users() {
     const [users, setUsers] = useState([])
+    const [resumeVentas, setResumenVentas] = useState([])
     const [loader, setLoader] = useState(true)
     const [rol, setRol] = useState("")
     const [open, setOpen] = useState(false)
+    const [dataNewUser, setDataNewUser] = useState(new NewUser())
+    const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
     const roles = ["Admin", "Usuario"]
 
     const handleSelect = (value) => {
@@ -33,13 +22,40 @@ export function Users() {
         setOpen(false)
     };
 
+    const handleChangeNewUser = (e) => {
+        const { name, value } = e.target;
+        setDataNewUser((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleChangeUpdateUser = (e) => {
+        const { name, value } = e.target;
+        setDataUpdateUser((prev) => ({ ...prev, [name]: value }));
+    };
+
+    function getInfoUserUpdate(info) {
+        setDataUpdateUser(new NewUserUpdate(info))
+        setRol(info.rol)
+    }
+
+    async function registerUser () {
+        dataNewUser.rol = rol
+
+        const registerUser = await consumServices(keys.register_user, 'POST', '', dataNewUser)
+
+        if(registerUser.error) return console.error(registerUser)
+
+        setUsers((prev) => [...prev, registerUser.info[0]])
+    }
+
     useEffect(() => {
         async function getUsers() {
             const res = await consumServices(keys.getUsers, 'GET')
+            const resVentas = await consumServices(keys.getVentas, 'GET')
 
-            if (res.error) return console.error(res)
+            if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
 
             setUsers(res.info)
+            setResumenVentas(resVentas.info)
             setTimeout(() => {
                 setLoader(false)
             }, 500);
@@ -85,7 +101,7 @@ export function Users() {
                                                 <td>{user.rol}</td>
                                                 <td>
                                                     <div className='d-flex align-items-center gap-3'>
-                                                        <PencilIcon data-bs-toggle="modal" data-bs-target="#editProduct" size={16}></PencilIcon>
+                                                        <PencilIcon data-bs-toggle="modal" data-bs-target="#editProduct" size={16} onClick={() => getInfoUserUpdate(user)} />
                                                         <TrashIcon size={16}></TrashIcon>
                                                     </div>
                                                 </td>
@@ -106,13 +122,13 @@ export function Users() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {ventas.map((producto, index) => (
-                                            <tr key={producto.id}>
+                                        {resumeVentas.map((venta, index) => (
+                                            <tr key={venta.id}>
                                                 <td>{index + 1}</td>
-                                                <td>{producto.nombre}</td>
-                                                <td>{producto.valor.toString()
+                                                <td>{venta.usuario}</td>
+                                                <td>{venta.valor.toString()
                                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
-                                                <td>{producto.fecha}</td>
+                                                <td>{venta.fecha}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -131,9 +147,11 @@ export function Users() {
                                         <form action="">
                                             <div className='mb-3'>
                                                 <label className='h6 required'>Nombre</label>
-                                                <input type="text" className="form-control mb-3 mt-1" />
+                                                <input name='name' type="text" className="form-control mb-3 mt-1" onChange={handleChangeNewUser} />
                                                 <label className='h6 required'>Usuario</label>
-                                                <input type="text" className="form-control mb-3 mt-1" />
+                                                <input name='user' type="text" className="form-control mb-3 mt-1" onChange={handleChangeNewUser} />
+                                                <label className='h6 required'>Contraseña</label>
+                                                <input name='password' type="password" className="form-control mb-3 mt-1" onChange={handleChangeNewUser} />
                                                 <label className='h6 required'>Rol</label>
                                                 <div className="position-relative w-100">
                                                     <input
@@ -163,7 +181,7 @@ export function Users() {
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onClick={registerUser}>Guardar</button>
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                     </div>
                                 </div>
@@ -181,11 +199,37 @@ export function Users() {
                                         <form action="">
                                             <div className='mb-3'>
                                                 <label className='h6 required'>Nombre</label>
-                                                <input type="text" value='Acetaminofen' className="form-control mb-3 mt-1" />
+                                                <input type="text" name='name' value={dataUpdateUser.name} className="form-control mb-3 mt-1" onChange={handleChangeUpdateUser} />
                                                 <label className='h6 required'>Usuario</label>
-                                                <input type="text" className="form-control mb-3 mt-1" />
+                                                <input type="text" name='user' value={dataUpdateUser.user} className="form-control mb-3 mt-1" onChange={handleChangeUpdateUser} />
+                                                <label className='h6 required'>Contraseña</label>
+                                                <label className='pass'></label>
+                                                <input type="text" name='password' className="form-control mb-3 mt-1 pass" onChange={handleChangeUpdateUser} />
                                                 <label className='h6 required'>Rol</label>
-                                                <input type="text" className="form-control mb-3 mt-1" />
+                                                <div className="position-relative w-100">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control w-100"
+                                                        value={rol}
+                                                        readOnly
+                                                        placeholder="Seleccionar rol"
+                                                        onClick={() => setOpen(!open)}
+                                                    />
+                                                    {open && (
+                                                        <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                            {roles.map((item) => (
+                                                                <li
+                                                                    key={item}
+                                                                    className="list-group-item list-group-item-action"
+                                                                    onClick={() => handleSelect(item)}
+                                                                    style={{ cursor: "pointer" }}
+                                                                >
+                                                                    {item}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
                                             </div>
                                         </form>
                                     </div>

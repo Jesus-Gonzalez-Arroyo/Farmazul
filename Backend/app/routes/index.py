@@ -19,7 +19,10 @@ def users():
 
 @api_bp.route('/register', methods=['POST'])
 def register():
-    return user_register()
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    if request.method == 'POST':
+        return user_register(request.json)
 
 
 """ ----Login routes---- """

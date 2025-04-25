@@ -3,8 +3,6 @@ import {ProductInfo, ProductInfoUpdate} from '../models/index'
 import { keys } from '../utils/index'
 import {consumServices} from '../contexts/execute'
 
-
-
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
     const [products, setProducts] = useState([])
