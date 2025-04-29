@@ -18,7 +18,7 @@ def login_user(data):
         return jsonify(ResponseModel({'access_token': access_token, 'rol_user': user_find['rol']}))
 
     except Exception as e:
-        return jsonify(ResponseModel(str(e), True, 401)),
+        return jsonify(ResponseModel(e, True, 401))
 
 def protected_user():
     try:

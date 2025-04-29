@@ -80,7 +80,7 @@ export function Users() {
                             </div>
                         </div>
                         <div className='h-90 d-flex gap-3'>
-                            <div className="shadow-sm p-3 rounded overflow-auto w-60 h-100">
+                            <div className="shadow p-3 rounded overflow-auto w-60 h-100">
                                 <p className='h6'>Usuarios activos</p>
                                 <table className="table">
                                     <thead>
@@ -110,7 +110,7 @@ export function Users() {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className='shadow-sm p-3 rounded overflow-auto w-40 h-100'>
+                            <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
                                 <p className='h6'>Ventas realizadas</p>
                                 <table className="table">
                                     <thead>

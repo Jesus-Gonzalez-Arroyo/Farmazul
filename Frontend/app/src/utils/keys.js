@@ -1,4 +1,5 @@
 export const keys = {
+    'get_info': 'http://127.0.0.1:5000//index/API/v1/init',
     'getProducts': 'http://127.0.0.1:5000//index/API/v1/get_products_all',
     'deleteProduct': 'http://127.0.0.1:5000//index/API/v1/delete_product',
     'registerProduct': 'http://127.0.0.1:5000//index/API/v1/register_product',

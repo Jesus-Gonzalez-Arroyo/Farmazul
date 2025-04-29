@@ -62,7 +62,7 @@ export function Inventary() {
                             </div>
                         </div>
                         <div className="h-90">
-                            <div className="shadow-sm p-3 rounded overflow-auto h-100">
+                            <div className="shadow p-3 rounded overflow-auto h-100">
                                 <div class="input-group mb-4 w-50">
                                     <input
                                         type="text"

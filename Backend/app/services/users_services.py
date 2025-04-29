@@ -1,5 +1,6 @@
 from database import Connect
 from models import User_models
+from bson.objectid import ObjectId
 
 collection_users = Connect()['Users']
 
@@ -26,3 +27,28 @@ class UserService:
         user = collection_users.find_one({'_id': user_id})
         user['_id'] = str(user['_id'])
         return User_models(user), 201
+
+    @staticmethod
+    def updateUser(name, user, password, rol, id):
+        result = collection_users.find_one_and_update(
+            {'_id': ObjectId(id)},
+            {"$set": {
+                'name': name, 
+                'email': user, 
+                'password': password, 
+                'rol': rol
+            }},
+            return_document=True
+        )
+
+        if result:
+            result['_id'] = str(result['_id'])             
+            return result, 201
+        else:
+            return None
+    
+    @staticmethod
+    def deleteUser(id):
+        result = collection_users.find_one_and_delete({'_id': ObjectId(id)})
+        result['_id'] = str(result['_id'])
+        return result

@@ -48,7 +48,7 @@ export function VentasRealizadas() {
                         <div className="d-flex w-100 h-15 gap-4">
                             <div className="w-100">
                                 <p className="m-0 my-3 h5">Ventas realizadas</p>
-                                <div className="shadow-sm p-3 rounded overflow-auto h-100">
+                                <div className="shadow p-3 rounded overflow-auto h-100">
                                     <div className='d-flex align-items-center gap-3 mb-4'>
                                         <div class="input-group w-25">
                                             <input type="text" className="form-control w-25 p-2" placeholder="Buscar venta" />

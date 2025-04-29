@@ -6,6 +6,8 @@ load_dotenv()
 
 def Connect():
     url_database = os.getenv('MONGO_URI')
-    client = MongoClient(url_database)
+    client = MongoClient(
+        url_database
+    )
     db = client[os.getenv('DB_NAME')]
     return db

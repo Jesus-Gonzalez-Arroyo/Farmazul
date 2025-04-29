@@ -5,10 +5,16 @@ from routes.users import get_users, user_register
 from routes.products import get_products_all, register_product, delete_product, search_product, update_products
 from routes.ventas import get_all_ventas, register_venta
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
+from routes.init import init
 from flask_cors import cross_origin
 from flask import request, jsonify
 
 api_bp = Blueprint('index', __name__, url_prefix="/index/API/v1")
+
+@api_bp.route('/init', methods=['GET'])
+def initDate():
+    if request.method == 'GET':
+        return init()
 
 """ ----User routes---- """
 

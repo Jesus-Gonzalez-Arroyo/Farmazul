@@ -51,7 +51,7 @@ export function Ventas() {
                         <div className="d-flex w-100 h-15 gap-4">
                             <div className="w-75">
                                 <p className="m-0 my-3 h5">Tus productos disponibles</p>
-                                <div className="shadow-sm p-3 rounded overflow-auto h-100">
+                                <div className="shadow p-3 rounded overflow-auto h-100">
                                     <div class="input-group mb-4 w-50">
                                         <input type="text" className="form-control w-75" placeholder="Nombre del producto" aria-label="Nombre del producto" aria-describedby="button-addon2" />
                                     </div>
@@ -88,7 +88,7 @@ export function Ventas() {
                             </div>
                             <div className="w-25">
                                 <p className="h5 m-0 my-3">Carrito de compras</p>
-                                <div className="p-3 shadow-sm rounded h-100">
+                                <div className="p-3 shadow rounded h-100">
                                     <p className="h6 mb-3">Productos agregados</p>
                                     <div className="h-85 position-relative custom-scroll">
                                         {
