@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { TrashIcon, PencilIcon } from "@primer/octicons-react";
+import { TableComponent } from "../../components/Tables";
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
-import { keys } from "../../utils/index";
-import {consumServices} from '../../contexts/execute'
+import { keys, modifyMoney } from "../../utils/index";
+import { consumServices } from '../../contexts/execute'
 import { useInventary } from "../../hooks/index";
 import "./inventary.css";
 
@@ -73,70 +73,22 @@ export function Inventary() {
                                         onChange={handleSearchProduct}
                                     />
                                 </div>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Precio compra</th>
-                                            <th scope="col">Precio venta</th>
-                                            <th scope="col">Cantidad comprada</th>
-                                            <th scope="col">Fecha ultima compra</th>
-                                            <th scope="col">Cantidad Actual</th>
-                                            <th scope="col">Ganancia x unidad</th>
-                                            <th scope="col">Proveedor</th>
-                                            <th scope="col">Estancia</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {products.map((producto, index) => (
-                                            <tr key={producto._id}>
-                                                <td>{index + 1}</td>
-                                                <td>{producto.name}</td>
-                                                <td>
-                                                    $
-                                                    {producto.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                </td>
-                                                <td>
-                                                    $
-                                                    {producto.price_venta.replace(
-                                                        /\B(?=(\d{3})+(?!\d))/g,
-                                                        "."
-                                                    )}
-                                                </td>
-                                                <td>{producto.cantidad}</td>
-                                                <td>{producto.fecha}</td>
-                                                <td>{producto.cantidad_actual}</td>
-                                                <td>
-                                                    $
-                                                    {String(
-                                                        Number(producto.price_venta) -
-                                                        Number(producto.price)
-                                                    ).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                </td>
-                                                <td>{producto.proveedor}</td>
-                                                <td>{producto.estancia}</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center gap-3">
-                                                        <PencilIcon
-                                                            size={16}
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProduct"
-                                                            onClick={() => updateProduct(producto)}
-                                                        />
-                                                        <TrashIcon
-                                                            size={16}
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#deleteProduct"
-                                                            onClick={() => handleIdProductDelete(producto)}
-                                                        />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <TableComponent
+                                    heads={[
+                                        { label: "Nombre", key: "name" },
+                                        { label: "Precio compra", key: "price", render: (val) => `$${modifyMoney(val)}` },
+                                        { label: "Precio venta", key: "price_venta", render: (val) => `$${modifyMoney(val)}` },
+                                        { label: "Cantidad comprada", key: "cantidad" },
+                                        { label: "Fecha ultima compra", key: "fecha" },
+                                        { label: "Cantidad Actual", key: "cantidad_actual" },
+                                        { label: "Ganancia x unidad", key: "ganancia", render: (val) => `$${modifyMoney(val)}`},
+                                        { label: "Proveedor", key: "proveedor" },
+                                        { label: "Estancia", key: "estancia" }
+                                    ]}
+                                    items={products}
+                                    onEdit={(item) => updateProduct(item)}
+                                    onDelete={(item) => handleIdProductDelete(item)} 
+                                />
                             </div>
                         </div>
 

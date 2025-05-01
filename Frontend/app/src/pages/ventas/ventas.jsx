@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { PlusCircleIcon, XCircleIcon } from '@primer/octicons-react'
 import { Navigation } from "../../layouts/Navigation";
 import { keys } from '../../utils/index'
-import {consumServices} from '../../contexts/execute'
-import "./ventas.css";
+import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
 import { useVentas } from '../../hooks/index'
+import "./ventas.css";
+
 
 export function Ventas() {
     const {
@@ -113,12 +114,12 @@ export function Ventas() {
                                                                 <div>
                                                                     <p className="mb-6 h6 fw-bold">Cantidad</p>
                                                                     <div>
-                                                                        <input 
-                                                                            value={product.cantidad} 
-                                                                            className='form-control d-block text-center m-auto' 
-                                                                            style={{width: '50px'}} 
-                                                                            type="text" 
-                                                                            onChange={(e) => handleMoreCant(product, e.target.value)} 
+                                                                        <input
+                                                                            value={product.cantidad}
+                                                                            className='form-control d-block text-center m-auto'
+                                                                            style={{ width: '50px' }}
+                                                                            type="text"
+                                                                            onChange={(e) => handleMoreCant(product, e.target.value)}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -215,13 +216,13 @@ export function Ventas() {
                                                             </ul>
                                                         )}
                                                     </div>
-                                                    <div style={{display: methodPay === 'Efectivo' ? 'block':'none'}}>
+                                                    <div style={{ display: methodPay === 'Efectivo' ? 'block' : 'none' }}>
                                                         <p className='fw-bold'>Recibido</p>
-                                                        <input type="text" name='recibido' onChange={handleChange} className="form-control mb-3"/>
+                                                        <input type="text" name='recibido' onChange={handleChange} className="form-control mb-3" />
                                                     </div>
-                                                    <div>    
+                                                    <div>
                                                         <p className='fw-bold'>Descuento</p>
-                                                        <input type="text" name='descuent' onChange={handleChange} className="form-control"/>
+                                                        <input type="text" name='descuent' onChange={handleChange} className="form-control" />
                                                     </div>
                                                 </form>
                                             </div>

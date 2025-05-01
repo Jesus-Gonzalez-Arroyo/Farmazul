@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Navigation } from '../../layouts/Navigation'
-import { TrashIcon, PencilIcon } from "@primer/octicons-react"
-import './users.css'
-import { keys } from '../../utils';
-import {consumServices} from '../../contexts/execute'
+import { keys, modifyMoney } from '../../utils';
+import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { NewUser, NewUserUpdate } from '../../models';
+import { TableComponent } from '../../components/Tables';
+import './users.css'
 
 export function Users() {
     const [users, setUsers] = useState([])
@@ -37,12 +37,12 @@ export function Users() {
         setRol(info.rol)
     }
 
-    async function registerUser () {
+    async function registerUser() {
         dataNewUser.rol = rol
 
         const registerUser = await consumServices(keys.register_user, 'POST', '', dataNewUser)
 
-        if(registerUser.error) return console.error(registerUser)
+        if (registerUser.error) return console.error(registerUser)
 
         setUsers((prev) => [...prev, registerUser.info[0]])
     }
@@ -53,7 +53,7 @@ export function Users() {
             const resVentas = await consumServices(keys.getVentas, 'GET')
 
             if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
-
+                
             setUsers(res.info)
             setResumenVentas(resVentas.info)
             setTimeout(() => {
@@ -82,57 +82,28 @@ export function Users() {
                         <div className='h-90 d-flex gap-3'>
                             <div className="shadow p-3 rounded overflow-auto w-60 h-100">
                                 <p className='h6'>Usuarios activos</p>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Usuario</th>
-                                            <th scope="col">Rol</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {users.map((user, index) => (
-                                            <tr key={user._id}>
-                                                <td>{index + 1}</td>
-                                                <td>{user.name}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.rol}</td>
-                                                <td>
-                                                    <div className='d-flex align-items-center gap-3'>
-                                                        <PencilIcon data-bs-toggle="modal" data-bs-target="#editProduct" size={16} onClick={() => getInfoUserUpdate(user)} />
-                                                        <TrashIcon size={16}></TrashIcon>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <TableComponent
+                                    heads={[
+                                        { label: "Nombre", key: "name" },
+                                        { label: "Usuario", key: "email",},
+                                        { label: "Rol", key: "rol" }
+                                    ]}
+                                    items={users}
+                                    onEdit={(item) => getInfoUserUpdate(item)}
+                                    /* onDelete={(item) => setProductoAEliminar(item)} */
+                                />
                             </div>
                             <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
                                 <p className='h6'>Ventas realizadas</p>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Valor venta</th>
-                                            <th scope="col">Fecha</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {resumeVentas.map((venta, index) => (
-                                            <tr key={venta.id}>
-                                                <td>{index + 1}</td>
-                                                <td>{venta.usuario}</td>
-                                                <td>{venta.valor.toString()
-                                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
-                                                <td>{venta.fecha}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <TableComponent
+                                    heads={[
+                                        { label: "Nombre", key: "usuario" },
+                                        { label: "Valor venta", key: "valor", render: (val) => `$${modifyMoney(val)}` },
+                                        { label: "Fecha", key: "fecha" }
+                                    ]}
+                                    items={resumeVentas}
+                                    actions={false}
+                                />
                             </div>
                         </div>
 

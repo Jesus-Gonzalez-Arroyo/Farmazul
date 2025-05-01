@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Navigation } from "../../layouts/Navigation";
-import { keys } from '../../utils/index'
-import {consumServices} from '../../contexts/execute'
-import "./ventas-realizadas.css";
+import { keys, modifyMoney } from '../../utils/index'
+import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
+import { TableComponent } from '../../components/Tables';
+import "./ventas-realizadas.css";
 
 export function VentasRealizadas() {
     const [products, setProducts] = useState([])
@@ -54,101 +55,77 @@ export function VentasRealizadas() {
                                             <input type="text" className="form-control w-25 p-2" placeholder="Buscar venta" />
                                         </div>
                                         <div>
-                                        <div className="position-relative w-100">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control w-100 p-2"
-                                                        value={filterPrice}
-                                                        readOnly
-                                                        placeholder="Filtrar de"
-                                                        onClick={() => setOpenFilterPrice(!open)}
-                                                    />
-                                                    {openFilterPrice && (
-                                                        <ul className="list-group position-absolute w-100 mt-1 shadow">
-                                                            {filters.map((item) => (
-                                                                <li
-                                                                    key={item}
-                                                                    className="list-group-item list-group-item-action"
-                                                                    onClick={() => handleSelectFilter(item)}
-                                                                    style={{ cursor: "pointer" }}
-                                                                >
-                                                                    {item}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    )}
+                                            <div className="position-relative w-100">
+                                                <input
+                                                    type="text"
+                                                    className="form-control w-100 p-2"
+                                                    value={filterPrice}
+                                                    readOnly
+                                                    placeholder="Filtrar de"
+                                                    onClick={() => setOpenFilterPrice(!open)}
+                                                />
+                                                {openFilterPrice && (
+                                                    <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                        {filters.map((item) => (
+                                                            <li
+                                                                key={item}
+                                                                className="list-group-item list-group-item-action"
+                                                                onClick={() => handleSelectFilter(item)}
+                                                                style={{ cursor: "pointer" }}
+                                                            >
+                                                                {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
                                             </div>
                                         </div>
                                         <div>
                                             <div className="position-relative w-100">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control w-100 p-2"
-                                                        value={user}
-                                                        readOnly
-                                                        placeholder="Filtrar por usuario"
-                                                        onClick={() => setOpen(!open)}
-                                                    />
-                                                    {open && (
-                                                        <ul className="list-group position-absolute w-100 mt-1 shadow">
-                                                            {userActives.map((item) => (
-                                                                <li
-                                                                    key={item}
-                                                                    className="list-group-item list-group-item-action"
-                                                                    onClick={() => handleSelect(item)}
-                                                                    style={{ cursor: "pointer" }}
-                                                                >
-                                                                    {item}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    )}
+                                                <input
+                                                    type="text"
+                                                    className="form-control w-100 p-2"
+                                                    value={user}
+                                                    readOnly
+                                                    placeholder="Filtrar por usuario"
+                                                    onClick={() => setOpen(!open)}
+                                                />
+                                                {open && (
+                                                    <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                        {userActives.map((item) => (
+                                                            <li
+                                                                key={item}
+                                                                className="list-group-item list-group-item-action"
+                                                                onClick={() => handleSelect(item)}
+                                                                style={{ cursor: "pointer" }}
+                                                            >
+                                                                {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Vendedor</th>
-                                                <th scope="col">Fecha</th>
-                                                <th scope="col">Valor</th>
-                                                <th scope="col">Recibido</th>
-                                                <th scope="col">Descuento</th>
-                                                <th scope="col">Metodo de pago</th>
-                                                <th scope="col">Productos vendidos</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {products.map((producto, index) => (
-                                                <tr key={producto._id}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{producto.usuario}</td>
-                                                    <td>{producto.fecha}</td>
-                                                    <td>$
-                                                        {producto.valor
-                                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                    </td>
-                                                    <td>
-                                                        ${producto.recibido.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                    </td>
-                                                    <td>
-                                                        ${producto.descuent.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                    </td>
-                                                    <td>
-                                                        {producto.method}
-                                                    </td>
-                                                    <td>
-                                                        {producto.products.map((item, index) => (
-                                                            <div key={index}>
-                                                                <strong>{item.name}</strong> - ${item.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - {item.cantidad} unidades
-                                                            </div>
-                                                        ))}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                    <TableComponent
+                                        heads={[
+                                            { label: "Vendedor", key: "usuario" },
+                                            { label: "Fecha", key: "fecha" },
+                                            { label: "Valor", key: "valor", render: (val) => `$${modifyMoney(val)}` },
+                                            { label: "Recibido", key: "recibido" },
+                                            { label: "Descuento", key: "descuent" },
+                                            { label: "Metodo de pago", key: "method" },
+                                            {
+                                                label: "Productos vendidos", key: "products", render: (producto) => producto.map((item, index) => (
+                                                    <div key={index}>
+                                                        <strong>{item.name}</strong> - ${item.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - {item.cantidad} unidades
+                                                    </div>
+                                                ))
+                                            },
+                                        ]}
+                                        items={products}
+                                        actions={false}
+                                    />
                                 </div>
                             </div>
                         </div>
