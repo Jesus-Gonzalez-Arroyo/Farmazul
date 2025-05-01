@@ -15,7 +15,7 @@ export function Navigation(props) {
   
     const InfoUserGet = async () => {
       const token = localStorage.getItem('TOKEN')
-      const userData = await consumServices(keys.get_info_user, 'GET', {"Authorization": `Bearer ${token}`})
+      const userData = await consumServices(keys.getInfoUser, 'GET', {"Authorization": `Bearer ${token}`})
       if (userData.error) return console.error(userData.info);
       setUserInfo(userData.info)
       localStorage.setItem('infoUser', JSON.stringify(userData.info))

@@ -112,7 +112,7 @@ export function VentasRealizadas() {
                                             { label: "Vendedor", key: "usuario" },
                                             { label: "Fecha", key: "fecha" },
                                             { label: "Valor", key: "valor", render: (val) => `$${modifyMoney(val)}` },
-                                            { label: "Recibido", key: "recibido" },
+                                            { label: "Recibido", key: "recibido", render: (val) => `$${modifyMoney(val)}` },
                                             { label: "Descuento", key: "descuent" },
                                             { label: "Metodo de pago", key: "method" },
                                             {

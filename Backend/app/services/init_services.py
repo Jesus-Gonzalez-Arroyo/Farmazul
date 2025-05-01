@@ -32,8 +32,8 @@ class InitService:
             {**venta, '_id': str(venta['_id'])}
             for venta in collection_ventas.find({
                 "fecha": {
-                    "$gte": primer_dia_mes.strftime("%Y/%m/%d"),
-                    "$lt": primer_dia_proximo_mes.strftime("%Y/%m/%d")
+                    "$gte": primer_dia_mes.strftime("%d/%m/%Y"),
+                    "$lt": primer_dia_proximo_mes.strftime("%d/%m/%Y")
                 }
             },
             {"fecha": 0, "usuario": 0, "descuent": 0, "recibido": 0, "method": 0})

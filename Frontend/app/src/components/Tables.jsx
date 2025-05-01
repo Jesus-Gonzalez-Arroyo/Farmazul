@@ -32,13 +32,13 @@ export function TableComponent({ heads, items, onEdit, onDelete, actions = true 
                                         <PencilIcon
                                             size={16}
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editProduct"
+                                            data-bs-target="#edit"
                                             onClick={() => onEdit(item)}
                                         />
                                         <TrashIcon
                                             size={16}
                                             data-bs-toggle="modal"
-                                            data-bs-target="#deleteProduct"
+                                            data-bs-target="#delete"
                                             onClick={() => onDelete(item)}
                                         />
                                     </div>

@@ -15,7 +15,7 @@ def user_register(data):
 
 def userUpdate(data):
     try:
-        return jsonify(ResponseModel(UserService.updateUser(data.get('name'), data.get('user'), data.get('pass'), data.get('rol'), data.get('id'))))
+        return jsonify(ResponseModel(UserService.updateUser(data.get('name'), data.get('user'), data.get('password'), data.get('rol'), data.get('id'))))
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401))
 

@@ -15,6 +15,7 @@ export function Users() {
     const [open, setOpen] = useState(false)
     const [dataNewUser, setDataNewUser] = useState(new NewUser())
     const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
+    const [productID, setProductID] = useState({})
     const roles = ["Admin", "Usuario"]
 
     const handleSelect = (value) => {
@@ -37,14 +38,45 @@ export function Users() {
         setRol(info.rol)
     }
 
+    const getIdUser = (user) => {
+        setProductID({
+            id: user._id
+        })
+    }
+
     async function registerUser() {
         dataNewUser.rol = rol
 
-        const registerUser = await consumServices(keys.register_user, 'POST', '', dataNewUser)
+        const registerUser = await consumServices(keys.registerUser, 'POST', '', dataNewUser)
 
         if (registerUser.error) return console.error(registerUser)
 
         setUsers((prev) => [...prev, registerUser.info[0]])
+    }
+
+    async function updateInfoUser() {
+        dataUpdateUser.rol = rol
+
+        const resUpdate = await consumServices(keys.updateUser, 'POST', '', dataUpdateUser)
+
+        if (resUpdate.error) return console.error(resUpdate)
+
+        setUsers((prev) =>
+            prev.map((user) =>
+                user._id === dataUpdateUser.id ? resUpdate.info[0] : user
+            )
+        );
+    }
+
+    const deleteUser = async () => {
+        
+        const res = await consumServices(keys.deleteUser, 'DELETE', '', productID)
+
+        if(res.error) return console.error(res)
+
+        console.log(res)
+            
+        setUsers((prev) => prev.filter((user) => user._id !== res.info._id))
     }
 
     useEffect(() => {
@@ -90,7 +122,7 @@ export function Users() {
                                     ]}
                                     items={users}
                                     onEdit={(item) => getInfoUserUpdate(item)}
-                                    /* onDelete={(item) => setProductoAEliminar(item)} */
+                                    onDelete={(item) => getIdUser(item)}
                                 />
                             </div>
                             <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
@@ -159,7 +191,7 @@ export function Users() {
                             </div>
                         </div>
 
-                        <div class="modal fade modal-lg" id="editProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade modal-lg" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -205,8 +237,26 @@ export function Users() {
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Actualizar</button>
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onClick={updateInfoUser}>Actualizar</button>
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Eliminar usuario</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estas seguro de eliminar este usuario?</p>
+                                        <div className='d-flex gap-2'>
+                                            <button type="button" class="btn btn-danger" onClick={deleteUser} data-bs-dismiss="modal">Eliminar</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

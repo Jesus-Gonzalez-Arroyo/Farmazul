@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { TrashIcon, PencilIcon } from "@primer/octicons-react"
-import { keys } from '../../utils';
-import {consumServices} from '../../contexts/execute'
+import { keys, modifyMoney } from '../../utils';
+import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { GastosInfoModel } from '../../models/gastosInfo.model';
 import { GastosInfoUpdateModel } from '../../models';
+import { TableComponent } from "../../components/Tables";
+import { render } from 'vue';
 
 export function Gastos() {
     const [loader, setLoader] = useState(true)
@@ -33,7 +35,7 @@ export function Gastos() {
 
         const res = await consumServices(keys.registerGastos, 'POST', '', dataRegister)
 
-        if(res.error) {
+        if (res.error) {
             return console.error(res)
         }
 
@@ -44,23 +46,23 @@ export function Gastos() {
         const res = await consumServices(keys.updateGasto, 'POST', '', dataRegisterUpdate)
 
 
-        if(res.error) {
+        if (res.error) {
             return console.error(res)
         }
 
         setGastos((prev) =>
             prev.map((gasto) =>
-              gasto._id === dataRegisterUpdate.id ? res.info[0] : gasto
+                gasto._id === dataRegisterUpdate.id ? res.info[0] : gasto
             )
         );
     }
 
     const deleteGasto = async () => {
-        
+
         const res = await consumServices(keys.deleteGasto, 'DELETE', '', productId)
 
-        if(res.error) return console.error(res)
-            
+        if (res.error) return console.error(res)
+
         setGastos((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
     }
 
@@ -80,7 +82,7 @@ export function Gastos() {
 
     useEffect(() => {
         const gastosGet = async () => {
-            const response = await consumServices(keys.get_all_gastos, "GET");
+            const response = await consumServices(keys.getGastos, "GET");
             if (response.error) return console.error(response.info);
             setGastos(response.info);
             setTimeout(() => {
@@ -104,70 +106,37 @@ export function Gastos() {
                                     <p className='m-0 h5'>Gestor de gastos</p>
                                 </div>
                                 <div>
-                                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo gasto</button>
+                                    <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#register">Nuevo gasto</button>
                                 </div>
                             </div>
                             <div className='h-90'>
                                 <div className="shadow p-3 rounded overflow-auto h-100">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Nombre</th>
-                                                <th scope="col">Precio</th>
-                                                <th scope="col">Tipo</th>
-                                                <th scope="col">Estado</th>
-                                                <th scope="col">Valor deuda</th>
-                                                <th scope="col">Fecha</th>
-                                                <th scope="col">Descripcion</th>
-                                                <th scope="col">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {gastos.map((gasto, index) => (
-                                                <tr key={gasto.id}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{gasto.name}</td>
-                                                    <td>$
-                                                        {gasto.price
-                                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                                    </td>
-                                                    <td>{gasto.type}</td>
-                                                    <td>
-                                                        <div className={`m-0 p-1 rounded w-75 text-center ${gasto.estado === 'Pagado' ? "bg-success" : "bg-danger"}`}>
-                                                            <p className='m-0'>{gasto.estado}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>{gasto.valordeuda
-                                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</td>
-                                                    <td>
-                                                        {gasto.fecha}
-                                                    </td>
-                                                    <td>{gasto.descripcion}</td>
-                                                    <td>
-                                                        <div className='d-flex align-items-center gap-3'>
-                                                            <PencilIcon
-                                                                size={16}
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#editProduct"
-                                                                onClick={() => updateGasto(gasto)}  
-                                                            />
-                                                            <TrashIcon
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#deleteProduct"
-                                                                size={16}
-                                                                onClick={() => handleIdGastoDelete(gasto)}  
-                                                            />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                    <TableComponent
+                                        heads={[
+                                            { label: "Nombre", key: "name" },
+                                            { label: "Precio", key: "price", render: (val) => `$${modifyMoney(val)}` },
+                                            { label: "Tipo", key: "type" },
+                                            {
+                                                label: "Estado", key: "estado", render: (estado) => (
+                                                    <div className={`m-0 p-1 rounded w-75 text-center ${estado === 'Pagado' ? "bg-success" : "bg-danger"}`}>
+                                                        <p className='m-0'>{estado}</p>
+                                                    </div>
+                                                )
+                                            },
+                                            { label: "Valor deuda", key: "valordeuda", render: (val) => `$${modifyMoney(val)}` },
+                                            { label: "Fecha", key: "fecha" },
+                                            { label: "Descripcion", key: "descripcion" }
+                                        ]}
+                                        items={gastos}
+                                        onEdit={(item) => updateGasto(item)}
+                                        onDelete={(item) => handleIdGastoDelete(item)}
+                                    />
                                 </div>
                             </div>
 
-                            <div class="modal fade modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            {/* MODAL PARA REGISTRAR */}
+
+                            <div class="modal fade modal-lg" id="register" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -199,7 +168,7 @@ export function Gastos() {
                                                                     <li
                                                                         key={item}
                                                                         className="list-group-item list-group-item-action"
-                                                                        
+
                                                                         onClick={() => handleSelect(item)}
                                                                         style={{ cursor: "pointer" }}
                                                                     >
@@ -228,7 +197,9 @@ export function Gastos() {
                                 </div>
                             </div>
 
-                            <div class="modal fade modal-lg" id="editProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            {/* MODAL PARA ACTUALIZAR ITEMS */}
+
+                            <div class="modal fade modal-lg" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -265,23 +236,25 @@ export function Gastos() {
                                 </div>
                             </div>
 
-                            <div class="modal fade" id="deleteProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Eliminar gasto</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>¿Estas seguro de eliminar este gasto?</p>
-                                        <div className='d-flex gap-2'>
-                                            <button type="button" onClick={deleteGasto} class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            {/* MODAL PARA ELIMINAR ITEMS */}
+
+                            <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Eliminar gasto</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Estas seguro de eliminar este gasto?</p>
+                                            <div className='d-flex gap-2'>
+                                                <button type="button" onClick={deleteGasto} class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     )
                 }

@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
-from routes.users import get_users, user_register
+from routes.users import get_users, user_register, userUpdate, userDelete
 from routes.products import get_products_all, register_product, delete_product, search_product, update_products
 from routes.ventas import get_all_ventas, register_venta
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
@@ -23,13 +23,25 @@ def users():
     if request.method == 'GET':
         return get_users()
 
-@api_bp.route('/register', methods=['POST'])
+@api_bp.route('/users/register', methods=['POST'])
 def register():
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
     if request.method == 'POST':
         return user_register(request.json)
 
+@cross_origin(origins='*')
+@api_bp.route('/users/update', methods=['POST'])
+def updateInfoUser():
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    if request.method == 'POST':
+        return userUpdate(request.json)
+
+@api_bp.route('/users/delete', methods=['DELETE'])
+def userInfoDelete():
+    if request.method == 'DELETE':
+        return userDelete(request.json)
 
 """ ----Login routes---- """
 
@@ -52,29 +64,24 @@ def protect():
     
 """ ----Products routes---- """
 
-@api_bp.route('/get_products_all', methods=['GET'])
+@api_bp.route('/products', methods=['GET'])
 def get_products():
     if request.method == 'GET':
         return get_products_all()
 
-@api_bp.route('/register_product', methods=['OPTIONS', 'POST']) 
+@api_bp.route('/products/register', methods=['OPTIONS', 'POST']) 
 def register_product_inv():
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
     if request.method == 'POST':
         return register_product(request.json)
 
-@api_bp.route('/delete_product', methods=['DELETE'])
+@api_bp.route('/products/delete', methods=['DELETE'])
 def product_delete():
     if request.method == 'DELETE':
         return delete_product(request.json)
-
-@api_bp.route('/search_product', methods=['POST'])
-def product_search():
-    if request.method == 'POST':
-        return search_product(request.json)
     
-@api_bp.route('/update_product', methods=['POST', 'OPTIONS']) 
+@api_bp.route('products/update', methods=['POST', 'OPTIONS']) 
 def products_udpdate():
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
@@ -82,12 +89,12 @@ def products_udpdate():
         return update_products(request.json)
     
 """ --------- Ventas routes ----------- """
-@api_bp.route('/get_ventas', methods=['GET'])
+@api_bp.route('/ventas', methods=['GET'])
 def get_ventas():
     if(request.method == 'GET'):
         return get_all_ventas()
 
-@api_bp.route('/register_venta', methods=['POST', 'OPTIONS'])
+@api_bp.route('ventas/register', methods=['POST', 'OPTIONS'])
 def ventas_register():
     if(request.method == 'POST'):
         return register_venta(request.json)
@@ -96,26 +103,26 @@ def ventas_register():
     
 """  ---------- Gastos routes ---------- """
 
-@api_bp.route('/get-all-gastos', methods=['GET'])
+@api_bp.route('/gastos', methods=['GET'])
 def get_gastos():
     if(request.method == 'GET'):
         return get_all_gastos()
 
-@api_bp.route('/add_gasto', methods=['POST', 'OPTIONS']) 
+@api_bp.route('/gastos/register', methods=['POST', 'OPTIONS']) 
 def addNewGasto():
     if(request.method == 'POST'):
         return register_gasto(request.json)
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
 
-@api_bp.route('/update_gasto', methods=['POST', 'OPTIONS']) 
+@api_bp.route('/gastos/update', methods=['POST', 'OPTIONS']) 
 def updateInfoGasto():
     if(request.method == 'POST'):
         return update_gasto(request.json)
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
     
-@api_bp.route('/delete_gasto', methods=['DELETE'])
+@api_bp.route('/gastos/delete', methods=['DELETE'])
 def gasto_delete():
     if request.method == 'DELETE':
         return delete_gasto(request.json)
