@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Navigation } from '../../layouts/Navigation'
-import { TrashIcon, PencilIcon } from "@primer/octicons-react"
 import { keys, modifyMoney } from '../../utils';
 import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { GastosInfoModel } from '../../models/gastosInfo.model';
 import { GastosInfoUpdateModel } from '../../models';
 import { TableComponent } from "../../components/Tables";
-import { render } from 'vue';
 
 export function Gastos() {
     const [loader, setLoader] = useState(true)

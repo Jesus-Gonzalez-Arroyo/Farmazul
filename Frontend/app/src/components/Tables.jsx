@@ -22,7 +22,7 @@ export function TableComponent({ heads, items, onEdit, onDelete, actions = true 
                                     {
                                         typeof head.render === 'function'
                                             ? head.render(item[head.key], item)
-                                            : item[head.key]
+                                            : item[head.key].toUpperCase()
                                     }
                                 </td>
                             ))}

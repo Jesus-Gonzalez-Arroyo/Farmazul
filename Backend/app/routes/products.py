@@ -8,7 +8,7 @@ def get_products_all():
 
 def register_product(data):
     try:
-        return jsonify(ResponseModel(ProductsServices.register_product(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('cant_actual'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('fecha'))))
+        return jsonify(ResponseModel(ProductsServices.register_product(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('idProduct'))))
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401))
 

@@ -75,12 +75,11 @@ export function Inventary() {
                                 </div>
                                 <TableComponent
                                     heads={[
+                                        /* { label: "Id", key: "idProduct" }, */
                                         { label: "Nombre", key: "name" },
                                         { label: "Precio compra", key: "price", render: (val) => `$${modifyMoney(val)}` },
                                         { label: "Precio venta", key: "price_venta", render: (val) => `$${modifyMoney(val)}` },
-                                        { label: "Cantidad comprada", key: "cantidad" },
-                                        { label: "Fecha ultima compra", key: "fecha" },
-                                        { label: "Cantidad Actual", key: "cantidad_actual" },
+                                        { label: "Cantidad", key: "cantidad" },
                                         { label: "Ganancia x unidad", key: "ganancia", render: (val) => `$${modifyMoney(val)}`},
                                         { label: "Proveedor", key: "proveedor" },
                                         { label: "Estancia", key: "estancia" }
@@ -104,6 +103,8 @@ export function Inventary() {
                                     <form action="" onSubmit={newProduct}>
                                         <div class="modal-body">
                                             <div className='mb-3'>
+                                                <label className='h6 required'>Id producto</label>
+                                                <input name='idProduct' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                                 <label className='h6 required'>Nombre</label>
                                                 <input name='name' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                                 <label className='h6 required'>Precio de compra</label>
@@ -114,8 +115,6 @@ export function Inventary() {
                                                 <input name='cant' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                             </div>
                                             <div>
-                                                <label className='h6 required'>Fecha</label>
-                                                <input name='fecha' type="date" className="form-control mb-3 mt-1" onChange={handleChange} />
                                                 <label className='h6'>Proveedor</label>
                                                 <input name='prov' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                                 <label className='h6'>Lugar de estancia</label>
@@ -150,12 +149,10 @@ export function Inventary() {
                                                 <input name='price' type="text" value={infoUpdateProduct.price} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                                 <label className='h6 required'>Precio de venta</label>
                                                 <input name='priceventa' value={infoUpdateProduct.priceventa} type="text" className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
-                                                <label className='h6'>Nueva cantidad comprada</label>
-                                                <input name='cant' type="text" className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
+                                                <label className='h6'>Cantidad</label>
+                                                <input name='cant' value={infoUpdateProduct.cant} type="text" className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                             </div>
                                             <div>
-                                                <label className='h6 required'>Fecha</label>
-                                                <input name='fecha' type="date" value={infoUpdateProduct.fecha} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                                 <label className='h6'>Proveedor</label>
                                                 <input name='prov' type="text" value={infoUpdateProduct.prov} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                                 <label className='h6'>Lugar de estancia</label>

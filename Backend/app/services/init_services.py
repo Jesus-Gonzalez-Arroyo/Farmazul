@@ -13,31 +13,33 @@ class InitService:
         primer_dia_mes = datetime(now.year, now.month, 1)
         primer_dia_proximo_mes = datetime(now.year, now.month + 1, 1) if now.month < 12 else datetime(now.year + 1, 1, 1)
 
-        # Usuarios (puedes pedir solo los campos necesarios si quieres aún más rápido)
         users = [
             {**user, '_id': str(user['_id'])}
-            for user in collection_users.find({}, {"password": 0})  # ejemplo: no traemos contraseñas
+            for user in collection_users.find({}, {"password": 0})
         ]
 
         products_low_stock = [
             {**product, '_id': str(product['_id'])}
-            for product in collection_products.find({
-                "$expr": { "$lt": [ { "$toInt": "$cantidad_actual" }, 10 ] }
-            })
-        ]
-
-
-        # Ventas del mes actual (directamente en MongoDB)
-        ventas_mes = [
-            {**venta, '_id': str(venta['_id'])}
-            for venta in collection_ventas.find({
-                "fecha": {
-                    "$gte": primer_dia_mes.strftime("%d/%m/%Y"),
-                    "$lt": primer_dia_proximo_mes.strftime("%d/%m/%Y")
+            for product in collection_products.find(
+                {
+                    "$expr": { "$lt": [ { "$toInt": "$cantidad" }, 10 ] }
+                },
+                {
+                    "estancia": 0, "fecha": 0, "ganancia": 0, "price": 0, "price_venta": 0, "proveedor": 0
                 }
-            },
-            {"fecha": 0, "usuario": 0, "descuent": 0, "recibido": 0, "method": 0})
+            )
         ]
+
+        ventas_mes = []
+        for venta in collection_ventas.find({}, {"usuario": 0, "descuent": 0, "recibido": 0, "method": 0}):
+            try:
+                fecha_venta = datetime.strptime(venta["fecha"], "%d/%m/%Y")
+                if primer_dia_mes <= fecha_venta < primer_dia_proximo_mes:
+                    venta['_id'] = str(venta['_id'])
+                    ventas_mes.append(venta)
+            except (KeyError, ValueError):
+                print(KeyError)
+                continue
 
         return {
             'resumVentas': ventas_mes,

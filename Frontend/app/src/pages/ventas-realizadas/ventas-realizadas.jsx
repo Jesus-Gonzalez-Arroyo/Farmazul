@@ -118,7 +118,7 @@ export function VentasRealizadas() {
                                             {
                                                 label: "Productos vendidos", key: "products", render: (producto) => producto.map((item, index) => (
                                                     <div key={index}>
-                                                        <strong>{item.name}</strong> - ${item.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - {item.cantidad} unidades
+                                                        <strong>{String(item.name).toUpperCase()}</strong> - ${item.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - <strong>{String(item.cantidad).toUpperCase()}</strong> UNIDADES
                                                     </div>
                                                 ))
                                             },

@@ -1,100 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
-import { keys, modifyMoney } from '../../utils';
-import { consumServices } from '../../contexts/execute'
+import { modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
-import { NewUser, NewUserUpdate } from '../../models';
 import { TableComponent } from '../../components/Tables';
 import './users.css'
+import { UseUsers } from '../../hooks/useUsers';
 
 export function Users() {
-    const [users, setUsers] = useState([])
-    const [resumeVentas, setResumenVentas] = useState([])
-    const [loader, setLoader] = useState(true)
-    const [rol, setRol] = useState("")
-    const [open, setOpen] = useState(false)
-    const [dataNewUser, setDataNewUser] = useState(new NewUser())
-    const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
-    const [productID, setProductID] = useState({})
-    const roles = ["Admin", "Usuario"]
 
-    const handleSelect = (value) => {
-        setRol(value)
-        setOpen(false)
-    };
-
-    const handleChangeNewUser = (e) => {
-        const { name, value } = e.target;
-        setDataNewUser((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleChangeUpdateUser = (e) => {
-        const { name, value } = e.target;
-        setDataUpdateUser((prev) => ({ ...prev, [name]: value }));
-    };
-
-    function getInfoUserUpdate(info) {
-        setDataUpdateUser(new NewUserUpdate(info))
-        setRol(info.rol)
-    }
-
-    const getIdUser = (user) => {
-        setProductID({
-            id: user._id
-        })
-    }
-
-    async function registerUser() {
-        dataNewUser.rol = rol
-
-        const registerUser = await consumServices(keys.registerUser, 'POST', '', dataNewUser)
-
-        if (registerUser.error) return console.error(registerUser)
-
-        setUsers((prev) => [...prev, registerUser.info[0]])
-    }
-
-    async function updateInfoUser() {
-        dataUpdateUser.rol = rol
-
-        const resUpdate = await consumServices(keys.updateUser, 'POST', '', dataUpdateUser)
-
-        if (resUpdate.error) return console.error(resUpdate)
-
-        setUsers((prev) =>
-            prev.map((user) =>
-                user._id === dataUpdateUser.id ? resUpdate.info[0] : user
-            )
-        );
-    }
-
-    const deleteUser = async () => {
-        
-        const res = await consumServices(keys.deleteUser, 'DELETE', '', productID)
-
-        if(res.error) return console.error(res)
-
-        console.log(res)
-            
-        setUsers((prev) => prev.filter((user) => user._id !== res.info._id))
-    }
+    const {
+        users,
+        resumeVentas,
+        loader,
+        open,
+        roles,
+        rol,
+        dataUpdateUser,
+        handleSelect,
+        handleChangeNewUser,
+        handleChangeUpdateUser,
+        updateInfoUser,
+        deleteUser,
+        registerUser,
+        getIdUser,
+        getInfoUserUpdate,
+        getUsers,
+        setOpen
+    } = UseUsers()
 
     useEffect(() => {
-        async function getUsers() {
-            const res = await consumServices(keys.getUsers, 'GET')
-            const resVentas = await consumServices(keys.getVentas, 'GET')
-
-            if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
-                
-            setUsers(res.info)
-            setResumenVentas(resVentas.info)
-            setTimeout(() => {
-                setLoader(false)
-            }, 500);
-        }
-
         getUsers()
-    }, [])
+    }, [getUsers])
 
     return (
         <Navigation>
@@ -117,7 +53,7 @@ export function Users() {
                                 <TableComponent
                                     heads={[
                                         { label: "Nombre", key: "name" },
-                                        { label: "Usuario", key: "email",},
+                                        { label: "Usuario", key: "email", },
                                         { label: "Rol", key: "rol" }
                                     ]}
                                     items={users}

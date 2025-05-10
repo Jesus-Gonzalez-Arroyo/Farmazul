@@ -91,7 +91,7 @@ export function Navigation(props) {
             </ul>
           </div>
           <div
-            className="px-4 py-2"
+            className="px-4 py-2 overflow-auto"
             style={{ width: "calc(100% - 15%)", height: "calc(100vh - 70px)" }}
           >
             {props.children}

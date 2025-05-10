@@ -18,6 +18,7 @@ export const useVentas = () => {
     };
 
     function handleAddProductCar(product) {
+        console.log(product)
         const productExist = carProducts.find((item) => item.id === product.id)
 
         if (productExist) {

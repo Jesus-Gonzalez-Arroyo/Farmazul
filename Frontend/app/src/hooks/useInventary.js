@@ -24,7 +24,6 @@ export const useInventary = () => {
         e.preventDefault()
 
         formData.ganancia = String(Number(formData.priceventa) - Number(formData.price))
-        formData.cant_actual = formData.cant
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
@@ -39,8 +38,6 @@ export const useInventary = () => {
         e.preventDefault()
 
         infoUpdateProduct.ganancia = String(Number(infoUpdateProduct.priceventa) - Number(infoUpdateProduct.price))
-        infoUpdateProduct.cant_actual = String(Number(infoUpdateProduct.cant_actual) + Number(infoUpdateProduct.cant === "" ? 0 : infoUpdateProduct.cant))
-        infoUpdateProduct.cant = infoUpdateProduct.cant === "" ? infoUpdateProduct.cant_copy : infoUpdateProduct.cant
         
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
@@ -72,6 +69,7 @@ export const useInventary = () => {
     };
 
     const updateProduct = (product) => {
+        console.log(product)
         setInfoUpdateProduct(new ProductInfoUpdate(product))
     }
 
