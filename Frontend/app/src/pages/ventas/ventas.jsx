@@ -59,7 +59,7 @@ export function Ventas() {
                                     <table className="table">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
+                                                <th scope="col">Id</th>
                                                 <th scope="col">Nombre</th>
                                                 <th scope="col">Precio</th>
                                                 <th scope="col">Cantidad</th>
@@ -68,16 +68,16 @@ export function Ventas() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {products.map((producto, index) => (
+                                            {products.map((producto) => (
                                                 <tr key={producto._id}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{producto.name}</td>
+                                                    <td>{producto.idProduct}</td>
+                                                    <td>{producto.name.toUpperCase()}</td>
                                                     <td>$
                                                         {producto.price_venta
                                                             .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                                                     </td>
                                                     <td>{producto.cantidad}</td>
-                                                    <td>{producto.estancia}</td>
+                                                    <td>{producto.estancia.toUpperCase()}</td>
                                                     <td>
                                                         <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />
                                                     </td>

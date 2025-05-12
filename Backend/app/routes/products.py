@@ -28,7 +28,7 @@ def search_product(data):
 
 def update_products(data):
     try:
-        result_update = ProductsServices.update_products(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('cant_actual'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('id'), data.get('fecha'))
+        result_update = ProductsServices.update_products(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('id'), data.get('idProduct'))
 
         if result_update is None:
             return jsonify(ResponseModel('Ha ocurrido un error', True, 404))

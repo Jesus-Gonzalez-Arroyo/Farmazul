@@ -42,19 +42,18 @@ class ProductsServices:
         return result
 
     @staticmethod    
-    def update_products(name, price, priceventa, cant, cant_actual, estancia, ganancia, prov, id, fecha):
+    def update_products(name, price, priceventa, cant, estancia, ganancia, prov, id, idProduct):
         result = collection_products.find_one_and_update(
             {'_id': ObjectId(id)},
             {"$set": {
                 'name': name, 
                 'price': price, 
                 'price_venta': priceventa, 
-                'cantidad': cant, 
-                'cantidad_actual': cant_actual, 
+                'cantidad': cant,
                 'estancia': estancia,
                 'ganancia': ganancia, 
                 'proveedor': prov,
-                'fecha': fecha
+                'idProduct': idProduct
             }},
             return_document=True
         )

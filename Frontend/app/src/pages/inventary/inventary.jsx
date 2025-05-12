@@ -75,7 +75,7 @@ export function Inventary() {
                                 </div>
                                 <TableComponent
                                     heads={[
-                                        /* { label: "Id", key: "idProduct" }, */
+                                        { label: "Id", key: "idProduct" },
                                         { label: "Nombre", key: "name" },
                                         { label: "Precio compra", key: "price", render: (val) => `$${modifyMoney(val)}` },
                                         { label: "Precio venta", key: "price_venta", render: (val) => `$${modifyMoney(val)}` },
@@ -86,7 +86,8 @@ export function Inventary() {
                                     ]}
                                     items={products}
                                     onEdit={(item) => updateProduct(item)}
-                                    onDelete={(item) => handleIdProductDelete(item)} 
+                                    onDelete={(item) => handleIdProductDelete(item)}
+                                    IdView={true} 
                                 />
                             </div>
                         </div>
@@ -143,6 +144,8 @@ export function Inventary() {
                                     <form onSubmit={updateProductService}>
                                         <div class="modal-body">
                                             <div className='mb-3'>
+                                                <label className='h6 required'>Id producto</label>
+                                                <input name='idProduct' type="text" value={infoUpdateProduct.idProduct} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                                 <label className='h6 required'>Nombre</label>
                                                 <input name='name' type="text" value={infoUpdateProduct.name} className="form-control mb-3 mt-1" onChange={handleChangeUpdate} />
                                                 <label className='h6 required'>Precio de compra</label>

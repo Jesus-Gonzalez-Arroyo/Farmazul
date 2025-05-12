@@ -1,12 +1,12 @@
 import { TrashIcon, PencilIcon } from "@primer/octicons-react";
 
-export function TableComponent({ heads, items, onEdit, onDelete, actions = true }) {
+export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false }) {
     return (
         <div>
             <table className="table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        {!IdView && <th>#</th>}
                         {heads.map((head, idx) => (
                             <th key={idx}>{head.label}</th>
                         ))}
@@ -16,7 +16,7 @@ export function TableComponent({ heads, items, onEdit, onDelete, actions = true 
                 <tbody>
                     {items.map((item, index) => (
                         <tr key={item._id}>
-                            <td>{index + 1}</td>
+                            {!IdView && <td>{index + 1}</td>}
                             {heads.map((head, idx) => (
                                 <td key={idx}>
                                     {

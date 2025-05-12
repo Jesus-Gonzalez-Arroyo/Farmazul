@@ -13,7 +13,7 @@ export function VentasRealizadas() {
     const [open, setOpen] = useState(false)
     const [openFilterPrice, setOpenFilterPrice] = useState(false)
     const [filterPrice, setFilterPrice] = useState("")
-    const userActives = ["Jesus", "Valery", "Yoniris"]
+    const [userActives, setUserActives] = useState([])
     const filters = ["Mayor a Menor", "Menor a Mayor"]
 
     const handleSelect = (value) => {
@@ -29,8 +29,10 @@ export function VentasRealizadas() {
     useEffect(() => {
         const productsGet = async () => {
             const resVentas = await consumServices(keys.getVentas, 'GET')
-            if (resVentas.error) return console.error(resVentas.info);
+            const resUser = await consumServices(keys.getUsers, 'GET')
+            if (resVentas.error || resUser.error) return console.error(resUser.error ? resUser.info : resVentas.info);
             setProducts(resVentas.info)
+            setUserActives(resUser.info)
             setTimeout(() => {
                 setLoader(false)
             }, 500);
@@ -85,7 +87,7 @@ export function VentasRealizadas() {
                                                 <input
                                                     type="text"
                                                     className="form-control w-100 p-2"
-                                                    value={user}
+                                                    value={user.name}
                                                     readOnly
                                                     placeholder="Filtrar por usuario"
                                                     onClick={() => setOpen(!open)}
@@ -99,7 +101,7 @@ export function VentasRealizadas() {
                                                                 onClick={() => handleSelect(item)}
                                                                 style={{ cursor: "pointer" }}
                                                             >
-                                                                {item}
+                                                                {item.name}
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -113,8 +115,14 @@ export function VentasRealizadas() {
                                             { label: "Fecha", key: "fecha" },
                                             { label: "Valor", key: "valor", render: (val) => `$${modifyMoney(val)}` },
                                             { label: "Recibido", key: "recibido", render: (val) => `$${modifyMoney(val)}` },
-                                            { label: "Descuento", key: "descuent" },
-                                            { label: "Metodo de pago", key: "method" },
+                                            { label: "Descuento", key: "descuent", render: (val) => `$${modifyMoney(val)}` },
+                                            { label: "Metodo de pago", key: "method", render: (val) => (
+                                                <td>
+                                                    <div className={`p-2 rounded text-white ${val === 'Efectivo' ? 'bg-success' : 'bg-primary'}`}>
+                                                        {val}
+                                                    </div>
+                                                </td>
+                                            )},
                                             {
                                                 label: "Productos vendidos", key: "products", render: (producto) => producto.map((item, index) => (
                                                     <div key={index}>
