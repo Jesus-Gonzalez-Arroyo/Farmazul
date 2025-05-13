@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { consumServices } from "../contexts/execute"
 import { NewUser, NewUserUpdate } from "../models"
 import { keys } from "../utils"
@@ -13,6 +13,7 @@ export const UseUsers = () => {
     const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
     const [productID, setProductID] = useState({})
     const roles = ["Admin", "Usuario"]
+    const form = useRef()
 
     const handleSelect = (value) => {
         setRol(value)
@@ -48,6 +49,7 @@ export const UseUsers = () => {
         if (registerUser.error) return console.error(registerUser)
 
         setUsers((prev) => [...prev, registerUser.info[0]])
+        form.current.reset()
     }
 
     async function updateInfoUser() {
@@ -96,6 +98,7 @@ export const UseUsers = () => {
         roles,
         rol,
         dataUpdateUser,
+        form,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,

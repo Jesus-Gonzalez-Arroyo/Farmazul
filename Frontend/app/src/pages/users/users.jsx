@@ -16,6 +16,7 @@ export function Users() {
         roles,
         rol,
         dataUpdateUser,
+        form,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,
@@ -83,7 +84,7 @@ export function Users() {
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="">
+                                        <form ref={form} action="">
                                             <div className='mb-3'>
                                                 <label className='h6 required'>Nombre</label>
                                                 <input name='name' type="text" className="form-control mb-3 mt-1" onChange={handleChangeNewUser} />

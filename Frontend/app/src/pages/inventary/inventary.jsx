@@ -22,7 +22,8 @@ export function Inventary() {
         updateProductService,
         deleteProduct,
         setLoader,
-        loader
+        loader,
+        form
     } = useInventary();
 
     useEffect(() => {
@@ -101,7 +102,7 @@ export function Inventary() {
                                         <h5 class="modal-title" id="exampleModalLabel">Registrar producto</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <form action="" onSubmit={newProduct}>
+                                    <form ref={form} onSubmit={newProduct}>
                                         <div class="modal-body">
                                             <div className='mb-3'>
                                                 <label className='h6 required'>Id producto</label>
