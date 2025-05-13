@@ -36,3 +36,9 @@ def update_products(data):
         return jsonify(ResponseModel(result_update))
     except Exception as e:
         return jsonify(ResponseModel(str(e), True, 401))
+
+def descuentUnitsProducts(data):
+    try:
+        return jsonify(ResponseModel(ProductsServices.descuentUnits(data)))
+    except Exception as e:
+        return jsonify(ResponseModel(e, True, 401))

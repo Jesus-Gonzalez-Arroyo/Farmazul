@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { getDate, keys } from '../utils'
-import {consumServices} from '../contexts/execute'
+import { consumServices } from '../contexts/execute'
 import { VentaInfo } from '../models'
 
 export const useVentas = () => {
@@ -11,6 +11,7 @@ export const useVentas = () => {
     const [open, setOpen] = useState(false)
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
+    const form = useRef()
 
     function handleSelectMethodPay(value) {
         setMethodPay(value)
@@ -18,7 +19,6 @@ export const useVentas = () => {
     };
 
     function handleAddProductCar(product) {
-        console.log(product)
         const productExist = carProducts.find((item) => item.id === product.id)
 
         if (productExist) {
@@ -48,8 +48,8 @@ export const useVentas = () => {
     async function handleRegisterVenta() {
         const infoUser = JSON.parse(localStorage.getItem('infoUser'))
         const valorCompra = String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0))
-        const validateDescuent = infoVenta.descuent !== ''|| infoVenta.descuent !== '0'
-        
+        const validateDescuent = infoVenta.descuent !== '' || infoVenta.descuent !== '0'
+
         infoVenta.fecha = getDate()
         infoVenta.products = carProducts
         infoVenta.valor = validateDescuent ? String(valorCompra - Number(infoVenta.descuent)) : valorCompra
@@ -59,12 +59,26 @@ export const useVentas = () => {
 
         const response = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
 
-        if(response.error) return console.error(response)
+        if (response.error) return console.error(response)
+
+        const descuentUnitsProducts = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
+
+        if (descuentUnitsProducts.error) return console.error(descuentUnitsProducts)
+
+        setProducts((prevProducts) =>
+            prevProducts.map((product) => {
+                const updated = descuentUnitsProducts.info.find(
+                    (p) => p._id === product._id
+                );
+                return updated ? updated : product;
+            })
+        );
 
         setCarProducts([])
+        form.current.reset()
     }
 
-    function handleChange (e) {
+    function handleChange(e) {
         const { name, value } = e.target;
         setInfoVenta((prev) => ({ ...prev, [name]: value }));
     };
@@ -76,6 +90,7 @@ export const useVentas = () => {
         methodPay,
         methodsPay,
         open,
+        form,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,

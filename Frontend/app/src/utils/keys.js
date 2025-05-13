@@ -4,6 +4,7 @@ export const keys = {
     'deleteProduct': 'http://127.0.0.1:5000//index/API/v1/products/delete',
     'registerProduct': 'http://127.0.0.1:5000//index/API/v1/products/register',
     'updateProduct': 'http://127.0.0.1:5000//index/API/v1/products/update',
+    'descuentUnits': 'http://127.0.0.1:5000//index/API/v1/products/descuentUnits',
     'getInfoUser': 'http://127.0.0.1:5000/index/API/v1/getInfoUser',
     'loginUser': 'http://127.0.0.1:5000/index/API/v1/login',
     'getUsers': 'http://127.0.0.1:5000//index/API/v1/users',
