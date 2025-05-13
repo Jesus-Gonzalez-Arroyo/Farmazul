@@ -1,5 +1,5 @@
 from utils.responseModel.responsemodel import ResponseModel
-from flask import jsonify
+from flask import jsonify, request
 from services.ventas_services import VentasServices
 
 def get_all_ventas():
@@ -15,4 +15,3 @@ def register_venta(data):
         return jsonify(ResponseModel('Exito.'))
     except Exception as e:
         return jsonify(ResponseModel(e, True, 401))
-    

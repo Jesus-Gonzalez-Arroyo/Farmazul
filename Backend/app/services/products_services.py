@@ -63,4 +63,27 @@ class ProductsServices:
             return result, 201
         else:
             return None
+    
+    @staticmethod
+    def descuentUnits(products):
+        updated_products = []
+
+        for product in products:
+            product_id = ObjectId(product['id'])
+            cantSold = int(product['cantidad'])
+
+            product_found = collection_products.find_one({'_id': product_id})
+            new_cant = int(product_found['cantidad']) - cantSold
+
+            updated = collection_products.find_one_and_update(
+                {'_id': product_id},
+                {'$set': {'cantidad': str(new_cant)}},
+                return_document=True
+            )
+
+            if updated:
+                updated['_id'] = str(updated['_id'])
+                updated_products.append(updated)
+
+        return updated_products
 

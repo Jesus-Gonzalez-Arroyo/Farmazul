@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
 from routes.users import get_users, user_register, userUpdate, userDelete
-from routes.products import get_products_all, register_product, delete_product, search_product, update_products
+from routes.products import get_products_all, register_product, delete_product, update_products, descuentUnitsProducts
 from routes.ventas import get_all_ventas, register_venta
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
 from routes.init import init
@@ -87,6 +87,13 @@ def products_udpdate():
         return jsonify({'message': 'Metodo no permitido'}), 200
     if request.method == 'POST':
         return update_products(request.json)
+
+@api_bp.route('products/descuentUnits', methods=['POST', 'OPTIONS'])
+def productUnitDescuent():
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    if request.method == 'POST':
+        return descuentUnitsProducts(request.json)
     
 """ --------- Ventas routes ----------- """
 @api_bp.route('/ventas', methods=['GET'])
