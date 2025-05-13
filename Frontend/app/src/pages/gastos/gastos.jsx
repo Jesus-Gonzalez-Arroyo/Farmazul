@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { keys, modifyMoney } from '../../utils';
 import { consumServices } from '../../contexts/execute'
@@ -16,6 +16,7 @@ export function Gastos() {
     const types = ["Pago", "Compra"]
     const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
     const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
+    const form = useRef()
 
     const handleSelect = (value) => {
         setRol(value)
@@ -142,7 +143,7 @@ export function Gastos() {
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="">
+                                            <form ref={form} action="">
                                                 <div className='mb-3'>
                                                     <label className='h6 required'>Fecha</label>
                                                     <input name='fecha' type="date" className="form-control mb-3 mt-1" onChange={handleChange} />

@@ -17,6 +17,7 @@ export function Ventas() {
         methodPay,
         methodsPay,
         open,
+        form,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -191,7 +192,7 @@ export function Ventas() {
                                             </div>
                                             <div className='w-50'>
                                                 <p className='fw-bold'>Metodo de pago</p>
-                                                <form action=''>
+                                                <form ref={form} action=''>
                                                     <div className="position-relative w-100 mb-3">
                                                         <input
                                                             type="text"

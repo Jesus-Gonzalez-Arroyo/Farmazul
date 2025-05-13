@@ -1,7 +1,8 @@
-import {useState} from 'react'
+import {useState, useRef} from 'react'
 import {ProductInfo, ProductInfoUpdate} from '../models/index'
 import { keys } from '../utils/index'
 import {consumServices} from '../contexts/execute'
+
 
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
@@ -10,7 +11,8 @@ export const useInventary = () => {
     const [formData, setFormData] = useState(new ProductInfo());
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
     const [loader, setLoader] = useState(true)
-
+    const form = useRef()
+    
     const deleteProduct = async () => {
         
         const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
@@ -32,6 +34,7 @@ export const useInventary = () => {
         }     
 
         setProducts((prev) => [...prev, res.info[0]])
+        form.current.reset()
     }
 
     const updateProductService = async (e) => {
@@ -69,7 +72,6 @@ export const useInventary = () => {
     };
 
     const updateProduct = (product) => {
-        console.log(product)
         setInfoUpdateProduct(new ProductInfoUpdate(product))
     }
 
@@ -90,6 +92,8 @@ export const useInventary = () => {
         allProducts,
         formData,
         infoUpdateProduct,
+        loader,
+        form,
         deleteProduct,
         newProduct,
         updateProductService,
@@ -100,7 +104,6 @@ export const useInventary = () => {
         handleChange,
         setProducts, 
         setAllProducts,
-        setLoader,
-        loader
+        setLoader
     }
 }
