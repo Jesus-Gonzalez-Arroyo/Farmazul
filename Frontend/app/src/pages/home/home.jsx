@@ -15,6 +15,7 @@ export function Home() {
     productMasVendidos,
     mes,
     loader,
+    infoDay,
     getInfoSystem,
   } = UseHome();
 
@@ -36,16 +37,28 @@ export function Home() {
               />
               <CardsDates title="Productos vendidos" date={cantProduct} />
               <CardsDates
-                title="Total ingresos"
+                title="Ingresos"
                 date={totalIngresos}
                 changeStyle={true}
               />
             </div>
             <div className="d-flex justify-content-around my-4">
               <CardsDates
-                title="Total ganancias"
+                title="Ganancias"
                 date={totalGanancias}
                 changeStyle={true}
+              />
+              <CardsDates
+                title="Ganancias"
+                date={infoDay.gananciaDay}
+                changeStyle={true}
+                isDay={true}
+              />
+              <CardsDates
+                title="Ventas"
+                date={infoDay.productDay}
+                changeStyle={true}
+                isDay={true}
               />
             </div>
             <div
