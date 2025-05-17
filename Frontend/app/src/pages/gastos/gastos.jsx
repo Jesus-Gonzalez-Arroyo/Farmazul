@@ -11,16 +11,24 @@ export function Gastos() {
     const [loader, setLoader] = useState(true)
     const [productId, setProductId] = useState({})
     const [gastos, setGastos] = useState([])
-    const [rol, setRol] = useState("")
+    const [type, setType] = useState("")
+    const [state, setState] = useState("")
     const [open, setOpen] = useState(false)
+    const [openState, setOpenState] = useState(false)
     const types = ["Pago", "Compra"]
+    const typeState = ["Pagado", "En deuda"]
     const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
     const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
     const form = useRef()
 
     const handleSelect = (value) => {
-        setRol(value)
+        setType(value)
         setOpen(false)
+    };
+
+    const handleSelectState = (value) => {
+        setState(value)
+        setOpenState(false)
     };
 
     const handleIdGastoDelete = (product) => {
@@ -30,7 +38,9 @@ export function Gastos() {
     }
 
     const registerGasto = async () => {
-        dataRegister.type = rol
+        dataRegister.type = type
+        dataRegister.estado = state
+        dataRegister.valordeuda = dataRegister.valordeuda === '' ? '0' : dataRegister.valordeuda
 
         const res = await consumServices(keys.registerGastos, 'POST', '', dataRegister)
 
@@ -39,9 +49,14 @@ export function Gastos() {
         }
 
         setGastos((prev) => [...prev, res.info[0]])
+        form.current.reset()
     }
 
     const updateGastoService = async () => {
+        dataRegisterUpdate.type = type
+        dataRegisterUpdate.estado = state
+        dataRegisterUpdate.valordeuda = state === typeState[0] ? '0' :  dataRegisterUpdate.valordeuda
+
         const res = await consumServices(keys.updateGasto, 'POST', '', dataRegisterUpdate)
 
 
@@ -66,6 +81,8 @@ export function Gastos() {
     }
 
     const updateGasto = (info) => {
+        setState(info.estado)
+        setType(info.type)
         setDataRegisterUpdate(new GastosInfoUpdateModel(info))
     }
 
@@ -156,13 +173,13 @@ export function Gastos() {
                                                         <input
                                                             type="text"
                                                             className="form-control w-100"
-                                                            value={rol}
+                                                            value={type}
                                                             readOnly
-                                                            placeholder="Seleccionar rol..."
+                                                            placeholder="Seleccionar tipo..."
                                                             onClick={() => setOpen(!open)}
                                                         />
                                                         {open && (
-                                                            <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                            <ul className="list-group position-absolute w-100 mt-1 shadow z-100">
                                                                 {types.map((item) => (
                                                                     <li
                                                                         key={item}
@@ -178,8 +195,32 @@ export function Gastos() {
                                                         )}
                                                     </div>
                                                     <label className='h6 required'>Estado</label>
-                                                    <input name='estado' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
-                                                    <div className={`${"d-block"}`}>
+                                                    <div className="w-100 mb-3">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control w-100"
+                                                            value={state}
+                                                            readOnly
+                                                            placeholder="Seleccionar estado..."
+                                                            onClick={() => setOpenState(!openState)}
+                                                        />
+                                                        {openState && (
+                                                            <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                                {typeState.map((item) => (
+                                                                    <li
+                                                                        key={item}
+                                                                        className="list-group-item list-group-item-action"
+
+                                                                        onClick={() => handleSelectState(item)}
+                                                                        style={{ cursor: "pointer" }}
+                                                                    >
+                                                                        {item}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </div>
+                                                    <div className={`${state === typeState[1] ? "d-block" : "d-none"}`}>
                                                         <label className='h6 required'>Valor deuda</label>
                                                         <input name='valordeuda' type="text" className="form-control mb-3 mt-1" onChange={handleChange} />
                                                     </div>
@@ -215,10 +256,56 @@ export function Gastos() {
                                                     <label className='h6 required'>Precio</label>
                                                     <input value={dataRegisterUpdate.price} onChange={handleChangeUpdate} name='price' type="text" className="form-control mb-3 mt-1" />
                                                     <label className='h6 required'>Tipo</label>
-                                                    <input value={dataRegisterUpdate.type} onChange={handleChangeUpdate} name='type' type="text" className="form-control mb-3 mt-1" />
+                                                    <div className="position-relative w-100 mb-3">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control w-100"
+                                                            value={type}
+                                                            readOnly
+                                                            onClick={() => setOpen(!open)}
+                                                        />
+                                                        {open && (
+                                                            <ul className="list-group position-absolute w-100 mt-1 shadow z-100">
+                                                                {types.map((item) => (
+                                                                    <li
+                                                                        key={item}
+                                                                        className="list-group-item list-group-item-action"
+
+                                                                        onClick={() => handleSelect(item)}
+                                                                        style={{ cursor: "pointer" }}
+                                                                    >
+                                                                        {item}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </div>
                                                     <label className='h6 required'>Estado</label>
-                                                    <input value={dataRegisterUpdate.estado} onChange={handleChangeUpdate} name='estado' type="text" className="form-control mb-3 mt-1" />
-                                                    <div className={`${"d-block"}`}>
+                                                    <div className="w-100 mb-3">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control w-100"
+                                                            value={state}
+                                                            readOnly
+                                                            onClick={() => setOpenState(!openState)}
+                                                        />
+                                                        {openState && (
+                                                            <ul className="list-group position-absolute w-100 mt-1 shadow">
+                                                                {typeState.map((item) => (
+                                                                    <li
+                                                                        key={item}
+                                                                        className="list-group-item list-group-item-action"
+
+                                                                        onClick={() => handleSelectState(item)}
+                                                                        style={{ cursor: "pointer" }}
+                                                                    >
+                                                                        {item}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </div>
+                                                    <div className={`${state === typeState[1] ? "d-block" : "d-none"}`}>
                                                         <label className='h6 required'>Valor deuda</label>
                                                         <input value={dataRegisterUpdate.valordeuda} onChange={handleChangeUpdate} name='valordeuda' type="text" className="form-control mb-3 mt-1" />
                                                     </div>
