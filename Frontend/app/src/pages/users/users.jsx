@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
-import { TableComponent } from '../../components/Tables';
+import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
 

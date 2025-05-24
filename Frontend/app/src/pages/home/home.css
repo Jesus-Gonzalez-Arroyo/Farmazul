@@ -1,0 +1,23 @@
+.table-responsive{
+  width: 30%; 
+  height: 550px;
+  max-height: 550px;
+}
+
+.table-responsive-1 {
+  width: 40%; 
+}
+
+@media screen and (max-width: 768px) {
+  .resum {
+    gap: 30px
+  }
+
+  .table-responsive {
+    width: 100%;
+  }
+
+    .table-responsive-1 {
+        width: 100%;
+    }
+}

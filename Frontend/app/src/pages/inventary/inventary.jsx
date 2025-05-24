@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { TableComponent } from "../../components/Tables";
+import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
 import { keys, modifyMoney } from "../../utils/index";

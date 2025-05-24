@@ -3,7 +3,7 @@ import { Navigation } from "../../layouts/Navigation";
 import { keys, modifyMoney } from '../../utils/index'
 import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
-import { TableComponent } from '../../components/Tables';
+import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import "./ventas-realizadas.css";
 
 export function VentasRealizadas() {

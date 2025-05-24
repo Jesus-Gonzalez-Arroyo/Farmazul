@@ -1,9 +1,10 @@
 import { TrashIcon, PencilIcon } from "@primer/octicons-react";
+import '../tableComponent/Table.css';
 
 export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false }) {
     return (
         <div>
-            <table className="table">
+            <table className="table table-responsive">
                 <thead>
                     <tr>
                         {!IdView && <th>#</th>}

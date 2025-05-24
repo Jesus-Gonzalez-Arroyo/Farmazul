@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Navigation } from "../../layouts/Navigation";
 import { CardsDates } from "../../components/Cards/CardsDates/card-dates-dashboard";
-import { TableComponent } from "../../components/Tables";
+import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { Loader } from "../../components/Loader";
 import "./home.css";
 import { UseHome } from "../../hooks/useHome";
@@ -30,7 +30,7 @@ export function Home() {
           <Loader />
         ) : (
           <div>
-            <div className="d-flex justify-content-around my-4">
+            <div className="d-flex flex-wrap justify-content-around my-4 resum">
               <CardsDates
                 title="Ventas realizadas"
                 date={info.resumVentas.length}
@@ -41,8 +41,6 @@ export function Home() {
                 date={totalIngresos}
                 changeStyle={true}
               />
-            </div>
-            <div className="d-flex justify-content-around my-4">
               <CardsDates
                 title="Ganancias"
                 date={totalGanancias}
@@ -62,12 +60,11 @@ export function Home() {
               />
             </div>
             <div
-              className="d-flex justify-content-around my-5 gap-5 mx-4"
+              className="d-flex flex-wrap justify-content-around my-5 gap-5 mx-4"
               style={{ height: "550px" }}
             >
               <div
-                className="shadow p-3 rounded overflow-auto"
-                style={{ width: "30%", height: "550px", maxHeight: "550px" }}
+                className="shadow p-3 rounded overflow-auto table-responsive"
               >
                 <p className="h6 mb-4">Productos mas vendidos ({mes})</p>
                 <TableComponent
@@ -77,8 +74,7 @@ export function Home() {
                 />
               </div>
               <div
-                className="shadow p-3 rounded overflow-auto"
-                style={{ width: "30%", height: "550px", maxHeight: "550px" }}
+                className="shadow p-3 rounded overflow-auto table-responsive"
               >
                 <p className="h6 mb-4">Productos en agotamiento</p>
                 <TableComponent
@@ -91,8 +87,7 @@ export function Home() {
                 />
               </div>
               <div
-                className="shadow p-3 rounded overflow-auto"
-                style={{ width: "40%" }}
+                className="shadow p-3 rounded overflow-auto table-responsive-1"
               >
                 <p className="h6 mb-4">Usuarios activos</p>
                 <TableComponent
