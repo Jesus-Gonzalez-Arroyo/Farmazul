@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getDate, getMounth, keys } from "../utils";
+import { getDate, getMounth, keys, modifyMoney } from "../utils";
 import { consumServices } from "../contexts/execute";
 
 export const UseHome = () => {
@@ -28,18 +28,16 @@ export const UseHome = () => {
 
             const totalGanancias = resInfo.info.resumVentas.map(venta =>
                 venta.products.reduce((total, product) =>
-                    total + parseInt(product.ganancia, 10), 0)
+                    total + parseInt(product.ganancia * product.cantidad, 10), 0)
             ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
-
-            const totalGananciasMes = totalValor + totalGanancias
 
             getInfoVentasInDay(resInfo.info)
             getProductVendidos(resInfo.info)
             getProductsTop(resInfo.info)
 
             setMes(getMounth());
-            setTotalGanancias(`$${totalGanancias.toLocaleString()}`)
-            setTotalIngresos(`$${totalGananciasMes.toLocaleString()}`);
+            setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
+            setTotalIngresos(`$${modifyMoney(totalValor)}`);
         } catch (error) {
             console.error(error);
         } finally {
@@ -59,10 +57,10 @@ export const UseHome = () => {
 
         const totalGananciasForDay = ventasForDay.map(venta =>
             venta.products.reduce((total, product) =>
-                total + parseInt(product.ganancia, 10), 0)
+                total + parseInt(product.ganancia * product.cantidad, 10), 0)
         ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
 
-        setInfoDay({ gananciaDay: `$${totalGananciasForDay.toLocaleString()}`, productDay: ventasForDay.length })
+        setInfoDay({ gananciaDay: `$${ventasForDay.length === 0 ? '0' : modifyMoney(totalGananciasForDay)}`, productDay: ventasForDay.length })
     }
 
     function getProductVendidos(info) {
