@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from "react-router";
-import {PersonIcon, SignOutIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon} from '@primer/octicons-react'
+import {PersonIcon, SignOutIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon, ChevronRightIcon} from '@primer/octicons-react'
 import {keys} from '../utils/index'
 import {consumServices} from '../contexts/execute'
 
@@ -51,41 +51,48 @@ export function Navigation(props) {
       <div className="d-block">
         <div className="d-flex">
           <div style={{ width: "15%", height: "calc(100vh - 70px)", background: "#B5CFD8" }}>
-            <ul style={{ listStyleType: "none" }} className="p-0 pt-5 text-decoration-none">
+            <ul style={{ listStyleType: "none" }} className="p-3 pt-5 text-decoration-none d-flex flex-column gap-2">
               <a href="/home" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center">
-                  <p className="mx-5 m-0 h6">Inicio</p>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
                   <HomeIcon size={16}></HomeIcon>
+                  <p className="m-0 h6 w-50">Inicio</p>
+                  <ChevronRightIcon size={16} />
                 </li>
               </a>
               <a href="/ventas" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center">
-                  <p className="mx-5 m-0 h6">Ventas</p>
-                  <CreditCardIcon size={16}></CreditCardIcon>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
+                  <CreditCardIcon size={16} />
+                  <p className="m-0 h6 w-50">Ventas</p>
+                  <ChevronRightIcon size={16} />
                 </li>
               </a>
               <a href="/inventario" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center"/* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
-                  <p className="mx-5 m-0 h6">Inventario</p>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around"/* style={{display: UserInfo.rol === 'admin' ? 'none': 'block'}} */>
                   <PackageIcon size={16}></PackageIcon>
+                  <p className="m-0 h6 w-50">Inventario</p>
+                  <ChevronRightIcon size={16} />
+
                 </li>
               </a>
               <a href="/gastos" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center">
-                  <p className="mx-5 m-0 h6">Gastos</p>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
                   <GraphIcon size={16}></GraphIcon>
+                  <p className="m-0 h6 w-50">Gastos</p>
+                  <ChevronRightIcon size={16} />
                 </li>
               </a>
               <a href="/users" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center">
-                  <p className="mx-5 m-0 h6">Usuarios</p>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
                   <PeopleIcon size={16}></PeopleIcon>
+                  <p className="m-0 h6 w-50">Usuarios</p>
+                  <ChevronRightIcon size={16} />
                 </li>
               </a>
               <a href="/ventas-realizadas" className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center">
-                  <p className="mx-5 m-0 h6">Ventas realizadas</p>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
                   <ChecklistIcon size={16}></ChecklistIcon>
+                  <p className="m-0 h6 w-50">Ventas realizadas</p>
+                  <ChevronRightIcon size={16} />
                 </li>
               </a>
             </ul>

@@ -5,7 +5,7 @@ import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { GastosInfoModel } from '../../models/gastosInfo.model';
 import { GastosInfoUpdateModel } from '../../models';
-import { TableComponent } from "../../components/Tables";
+import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 
 export function Gastos() {
     const [loader, setLoader] = useState(true)
