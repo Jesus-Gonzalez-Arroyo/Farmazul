@@ -26,7 +26,7 @@ class UserService:
 
         user = collection_users.find_one({'_id': user_id})
         user['_id'] = str(user['_id'])
-        return User_models(user), 201
+        return user, 201
 
     @staticmethod
     def updateUser(name, user, password, rol, id):

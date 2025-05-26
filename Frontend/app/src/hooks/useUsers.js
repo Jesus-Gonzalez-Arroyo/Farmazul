@@ -12,6 +12,11 @@ export const UseUsers = () => {
     const [dataNewUser, setDataNewUser] = useState(new NewUser())
     const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
     const [productID, setProductID] = useState({})
+    const [infoAlert, setInfoAlert] = useState({
+        show: false,
+        message: '',
+        type: 'success',
+    });
     const roles = ["Admin", "Usuario"]
     const form = useRef()
 
@@ -45,10 +50,10 @@ export const UseUsers = () => {
         dataNewUser.rol = rol
 
         const registerUser = await consumServices(keys.registerUser, 'POST', '', dataNewUser)
-
-        if (registerUser.error) return console.error(registerUser)
+        if (registerUser.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
 
         setUsers((prev) => [...prev, registerUser.info[0]])
+        updateInfoAlert('Se ha agregado un nuevo usuario con exito')
         form.current.reset()
     }
 
@@ -56,25 +61,23 @@ export const UseUsers = () => {
         dataUpdateUser.rol = rol
 
         const resUpdate = await consumServices(keys.updateUser, 'POST', '', dataUpdateUser)
-
-        if (resUpdate.error) return console.error(resUpdate)
+        if (resUpdate.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
 
         setUsers((prev) =>
             prev.map((user) =>
                 user._id === dataUpdateUser.id ? resUpdate.info[0] : user
             )
         );
+        updateInfoAlert('Se ha actualizado un usuario con exito')
+
     }
 
     const deleteUser = async () => {
-
         const res = await consumServices(keys.deleteUser, 'DELETE', '', productID)
-
-        if (res.error) return console.error(res)
-
-        console.log(res)
+        if (res.error) updateInfoAlert('Ha ocurrido un error', 'danger')
 
         setUsers((prev) => prev.filter((user) => user._id !== res.info._id))
+        updateInfoAlert('Se ha eliminado un usuario con exito', 'danger')
     }
 
     async function getUsers() {
@@ -90,6 +93,13 @@ export const UseUsers = () => {
         }, 500);
     }
 
+    const updateInfoAlert = (message, type='success') => {
+        setInfoAlert({show: true, message, type})
+         setTimeout(() => {
+            setInfoAlert({...infoAlert, show: false})
+        }, 5000);
+    }
+
     return {
         users,
         resumeVentas,
@@ -99,6 +109,7 @@ export const UseUsers = () => {
         rol,
         dataUpdateUser,
         form,
+        infoAlert,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,

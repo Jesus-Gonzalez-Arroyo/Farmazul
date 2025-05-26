@@ -12,14 +12,20 @@ export const useInventary = () => {
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
     const [loader, setLoader] = useState(true)
     const form = useRef()
+    const [infoAlert, setInfoAlert] = useState({
+        show: false,
+        message: '',
+        type: 'success',
+    });
     
     const deleteProduct = async () => {
         
         const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
 
-        if(res.error) return console.error(res)
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
             
         setProducts((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
+        updateInfoAlert('Se ha eliminado un producto con exito', 'danger')
     }
 
     const newProduct = async (e) => {
@@ -29,11 +35,10 @@ export const useInventary = () => {
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
-        if(res.error) {
-            return console.error(res)
-        }     
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')   
 
         setProducts((prev) => [...prev, res.info[0]])
+        updateInfoAlert('Nuevo producto agregado con exito.')
         form.current.reset()
     }
 
@@ -44,15 +49,15 @@ export const useInventary = () => {
         
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
-        if(res.error) {
-            return console.error(res)
-        }
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
 
         setProducts((prev) =>
             prev.map((producto) =>
               producto._id === infoUpdateProduct.id ? res.info[0] : producto
             )
         );
+
+        updateInfoAlert('Producto actualizado con exito.')
     }
 
     const handleIdProductDelete = (product) => {
@@ -86,6 +91,13 @@ export const useInventary = () => {
         setProducts(search)
     }
 
+    const updateInfoAlert = (message, type='success') => {
+        setInfoAlert({show: true, message, type})
+         setTimeout(() => {
+            setInfoAlert({...infoAlert, show: false})
+        }, 5000);
+    }
+
     return {
         productID,
         products,
@@ -94,6 +106,7 @@ export const useInventary = () => {
         infoUpdateProduct,
         loader,
         form,
+        infoAlert,
         deleteProduct,
         newProduct,
         updateProductService,
@@ -104,6 +117,6 @@ export const useInventary = () => {
         handleChange,
         setProducts, 
         setAllProducts,
-        setLoader
+        setLoader,
     }
 }

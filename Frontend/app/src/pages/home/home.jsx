@@ -30,7 +30,7 @@ export function Home() {
           <Loader />
         ) : (
           <div>
-            <div className="d-flex flex-wrap justify-content-around my-4 resum">
+            <div className="d-flex flex-wrap justify-content-around my-4 resum gap-4">
               <CardsDates
                 title="Ventas realizadas"
                 date={info.resumVentas.length}

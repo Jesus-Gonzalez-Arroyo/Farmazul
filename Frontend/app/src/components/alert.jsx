@@ -1,26 +1,11 @@
-import {CheckCircleIcon} from '@primer/octicons-react'
-import { useEffect, useState } from 'react';
+const AlertComponent = ({ show, message, type = 'success' }) => {
+  if (!show) return null
 
-export function Alert(props) {
-    const [show, setShow] = useState(false)
-
-    useEffect(()=>{
-        if(props.show) {
-            setShow(true)
-            setTimeout(() => {
-                setShow(false)
-            }, 3000);
-        }
-    }, [props])
-
-    return (
-        <div className={`position-absolute m-2 w-25 top-0 end-0 d-${show ? 'block' : 'none'}`}>
-            <div className={`alert alert-${props.type} d-flex align-items-center gap-3`} role="alert">
-                <div>
-                    <CheckCircleIcon size={24}/>  
-                </div>
-                <div>{props.text}</div>
-            </div>
-        </div>
-    );
+  return (
+    <div className={`alert alert-${type} alert-dismissible fade show mt-2 me-2 position-absolute top-0 end-0 w-25 shadow`} role="alert">
+      {message}
+    </div>
+  )
 }
+
+export default AlertComponent

@@ -7,6 +7,7 @@ import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
 import { useVentas } from '../../hooks/index'
 import "./ventas.css";
+import AlertComponent from '../../components/alert';
 
 
 export function Ventas() {
@@ -18,6 +19,7 @@ export function Ventas() {
         methodsPay,
         open,
         form,
+        infoAlert,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -236,6 +238,12 @@ export function Ventas() {
                                 </div>
                             </div>
                         </div>
+
+                        <AlertComponent
+                            show={infoAlert.show}
+                            message={infoAlert.message}
+                            type={infoAlert.type}
+                        />
                     </div>
                 )
             }
