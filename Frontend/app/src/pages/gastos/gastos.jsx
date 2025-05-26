@@ -4,7 +4,7 @@ import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { useGastos } from '../../hooks/useGastos.js';
-import AlertComponent from '../../components/alert.jsx';
+import { AlertComponent } from '../../components/alert.jsx';
 import { consumServices } from '../../contexts/execute.js';
 
 export function Gastos() {

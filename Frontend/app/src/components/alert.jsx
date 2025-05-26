@@ -1,4 +1,4 @@
-const AlertComponent = ({ show, message, type = 'success' }) => {
+export const AlertComponent = ({ show, message, type = 'success' }) => {
   if (!show) return null
 
   return (
@@ -7,5 +7,3 @@ const AlertComponent = ({ show, message, type = 'success' }) => {
     </div>
   )
 }
-
-export default AlertComponent

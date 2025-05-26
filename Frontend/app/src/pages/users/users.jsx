@@ -5,7 +5,7 @@ import { Loader } from '../../components/Loader';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
-import AlertComponent from '../../components/alert.jsx';
+import { AlertComponent } from '../../components/alert.jsx';
 
 export function Users() {
 

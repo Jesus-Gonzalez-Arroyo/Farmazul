@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
-import Alert from "../../components/alert.jsx"
+import { AlertComponent } from "../../components/alert.jsx"
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
 import { keys, modifyMoney } from "../../utils/index";
@@ -194,7 +194,7 @@ export function Inventary() {
                             </div>
                         </div>
 
-                        <Alert
+                        <AlertComponent
                             show={infoAlert.show}
                             message={infoAlert.message}
                             type={infoAlert.type}
