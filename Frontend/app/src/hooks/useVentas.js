@@ -11,6 +11,11 @@ export const useVentas = () => {
     const [open, setOpen] = useState(false)
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
+    const [infoAlert, setInfoAlert] = useState({
+        show: false,
+        message: '',
+        type: 'success',
+    });
     const form = useRef()
 
     function handleSelectMethodPay(value) {
@@ -59,11 +64,11 @@ export const useVentas = () => {
 
         const response = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
 
-        if (response.error) return console.error(response)
+        if (response.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
 
         const descuentUnitsProducts = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
 
-        if (descuentUnitsProducts.error) return console.error(descuentUnitsProducts)
+        if (descuentUnitsProducts.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
 
         setProducts((prevProducts) =>
             prevProducts.map((product) => {
@@ -75,6 +80,7 @@ export const useVentas = () => {
         );
 
         setCarProducts([])
+        updateInfoAlert('Compra registrada con exito')
         form.current.reset()
     }
 
@@ -82,6 +88,14 @@ export const useVentas = () => {
         const { name, value } = e.target;
         setInfoVenta((prev) => ({ ...prev, [name]: value }));
     };
+
+    
+    const updateInfoAlert = (message, type='success') => {
+        setInfoAlert({show: true, message, type})
+         setTimeout(() => {
+            setInfoAlert({...infoAlert, show: false})
+        }, 5000);
+    }
 
     return {
         products,
@@ -91,6 +105,7 @@ export const useVentas = () => {
         methodsPay,
         open,
         form,
+        infoAlert,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,

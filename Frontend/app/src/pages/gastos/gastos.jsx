@@ -1,100 +1,40 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { keys, modifyMoney } from '../../utils';
-import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
-import { GastosInfoModel } from '../../models/gastosInfo.model';
-import { GastosInfoUpdateModel } from '../../models';
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
+import { useGastos } from '../../hooks/useGastos.js';
+import AlertComponent from '../../components/alert.jsx';
+import { consumServices } from '../../contexts/execute.js';
 
 export function Gastos() {
-    const [loader, setLoader] = useState(true)
-    const [productId, setProductId] = useState({})
-    const [gastos, setGastos] = useState([])
-    const [type, setType] = useState("")
-    const [state, setState] = useState("")
-    const [open, setOpen] = useState(false)
-    const [openState, setOpenState] = useState(false)
-    const types = ["Pago", "Compra"]
-    const typeState = ["Pagado", "En deuda"]
-    const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
-    const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
-    const form = useRef()
 
-    const handleSelect = (value) => {
-        setType(value)
-        setOpen(false)
-    };
-
-    const handleSelectState = (value) => {
-        setState(value)
-        setOpenState(false)
-    };
-
-    const handleIdGastoDelete = (product) => {
-        setProductId({
-            id: product._id
-        })
-    }
-
-    const registerGasto = async () => {
-        dataRegister.type = type
-        dataRegister.estado = state
-        dataRegister.valordeuda = dataRegister.valordeuda === '' ? '0' : dataRegister.valordeuda
-
-        const res = await consumServices(keys.registerGastos, 'POST', '', dataRegister)
-
-        if (res.error) {
-            return console.error(res)
-        }
-
-        setGastos((prev) => [...prev, res.info[0]])
-        form.current.reset()
-    }
-
-    const updateGastoService = async () => {
-        dataRegisterUpdate.type = type
-        dataRegisterUpdate.estado = state
-        dataRegisterUpdate.valordeuda = state === typeState[0] ? '0' :  dataRegisterUpdate.valordeuda
-
-        const res = await consumServices(keys.updateGasto, 'POST', '', dataRegisterUpdate)
-
-
-        if (res.error) {
-            return console.error(res)
-        }
-
-        setGastos((prev) =>
-            prev.map((gasto) =>
-                gasto._id === dataRegisterUpdate.id ? res.info[0] : gasto
-            )
-        );
-    }
-
-    const deleteGasto = async () => {
-
-        const res = await consumServices(keys.deleteGasto, 'DELETE', '', productId)
-
-        if (res.error) return console.error(res)
-
-        setGastos((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
-    }
-
-    const updateGasto = (info) => {
-        setState(info.estado)
-        setType(info.type)
-        setDataRegisterUpdate(new GastosInfoUpdateModel(info))
-    }
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setDataRegister((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleChangeUpdate = (e) => {
-        const { name, value } = e.target;
-        setDataRegisterUpdate((prev) => ({ ...prev, [name]: value }));
-    };
+    const {
+        loader,
+        gastos,
+        open,
+        openState,
+        types,
+        typeState,
+        form,
+        type,
+        state,
+        dataRegisterUpdate,
+        infoAlert,
+        handleSelect,
+        handleSelectState,
+        handleIdGastoDelete,
+        registerGasto,
+        updateGastoService,
+        deleteGasto,
+        updateGasto,
+        handleChange,
+        handleChangeUpdate,
+        setOpen,
+        setOpenState,
+        setGastos,
+        setLoader
+    } = useGastos()
 
     useEffect(() => {
         const gastosGet = async () => {
@@ -107,7 +47,7 @@ export function Gastos() {
         };
 
         gastosGet();
-    }, [])
+    }, [setGastos, setLoader])
 
     return (
         <div>
@@ -341,6 +281,12 @@ export function Gastos() {
                                     </div>
                                 </div>
                             </div>
+
+                            <AlertComponent
+                                show={infoAlert.show}
+                                message={infoAlert.message}
+                                type={infoAlert.type}
+                            />
                         </div>
                     )
                 }

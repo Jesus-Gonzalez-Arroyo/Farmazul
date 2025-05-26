@@ -4,7 +4,7 @@ import '../tableComponent/Table.css';
 export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false }) {
     return (
         <div>
-            <table className="table table-responsive">
+            <table className="table">
                 <thead>
                     <tr>
                         {!IdView && <th>#</th>}
