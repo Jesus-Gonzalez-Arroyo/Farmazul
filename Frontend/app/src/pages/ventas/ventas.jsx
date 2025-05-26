@@ -7,8 +7,7 @@ import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
 import { useVentas } from '../../hooks/index'
 import "./ventas.css";
-import AlertComponent from '../../components/alert';
-
+import { AlertComponent } from '../../components/alert';
 
 export function Ventas() {
     const {
