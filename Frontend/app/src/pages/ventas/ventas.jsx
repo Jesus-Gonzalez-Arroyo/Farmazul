@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { PlusCircleIcon, XCircleIcon } from '@primer/octicons-react'
 import { Navigation } from "../../layouts/Navigation";
-import { keys } from '../../utils/index'
+import { keys, modifyMoney } from '../../utils/index'
 import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
@@ -50,7 +50,7 @@ export function Ventas() {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div className='h-100'>
+                    <div className='h-100 position-relative'>
                         <div className="d-flex w-100 h-15 gap-4">
                             <div className="w-75">
                                 <p className="m-0 my-3 h5">Tus productos disponibles</p>
@@ -75,8 +75,7 @@ export function Ventas() {
                                                     <td>{producto.idProduct}</td>
                                                     <td>{producto.name.toUpperCase()}</td>
                                                     <td>$
-                                                        {producto.price_venta
-                                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                        {modifyMoney(producto.price_venta)}
                                                     </td>
                                                     <td>{producto.cantidad}</td>
                                                     <td>{producto.estancia.toUpperCase()}</td>
@@ -105,11 +104,11 @@ export function Ventas() {
                                                             <div className="w-75 border-end">
                                                                 <div className="mb-3">
                                                                     <p className="mb-6 h6 fw-bold">Nombre</p>
-                                                                    <p className="m-0 text-secondary">{product.name}</p>
+                                                                    <p className="m-0 text-secondary">{product.name.toUpperCase()}</p>
                                                                 </div>
                                                                 <div>
                                                                     <p className="mb-6 h6 fw-bold">Precio</p>
-                                                                    <p className="m-0 text-secondary">${product.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                                                                    <p className="m-0 text-secondary">${modifyMoney(product.price)}</p>
                                                                 </div>
                                                             </div>
                                                             <div className="w-25 d-flex align-items-center">
@@ -136,7 +135,7 @@ export function Ventas() {
                                         <div>
                                             <div className="mb-2">
                                                 <p className="mb-6 h6 fw-bold">Total</p>
-                                                <p className="m-0 text-secondary">${String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                                                <p className="m-0 text-secondary">${modifyMoney(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0))}</p>
                                             </div>
                                             <div>
                                                 <p className="mb-6 h6 fw-bold">Total productos</p>
@@ -242,6 +241,7 @@ export function Ventas() {
                             show={infoAlert.show}
                             message={infoAlert.message}
                             type={infoAlert.type}
+                            error={infoAlert.error}
                         />
                     </div>
                 )

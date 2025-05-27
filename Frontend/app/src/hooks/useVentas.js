@@ -15,6 +15,7 @@ export const useVentas = () => {
         show: false,
         message: '',
         type: 'success',
+        error: false
     });
     const form = useRef()
 
@@ -24,6 +25,9 @@ export const useVentas = () => {
     };
 
     function handleAddProductCar(product) {
+        if(product.cantidad === '0') {
+            return updateInfoAlert(`No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        }
         const productExist = carProducts.find((item) => item.id === product.id)
 
         if (productExist) {
@@ -64,11 +68,11 @@ export const useVentas = () => {
 
         const response = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
 
-        if (response.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
+        if (response.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
 
         const descuentUnitsProducts = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
 
-        if (descuentUnitsProducts.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
+        if (descuentUnitsProducts.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
 
         setProducts((prevProducts) =>
             prevProducts.map((product) => {
@@ -90,8 +94,8 @@ export const useVentas = () => {
     };
 
     
-    const updateInfoAlert = (message, type='success') => {
-        setInfoAlert({show: true, message, type})
+    const updateInfoAlert = (message, type='success', error = false) => {
+        setInfoAlert({show: true, message, type, error})
          setTimeout(() => {
             setInfoAlert({...infoAlert, show: false})
         }, 5000);
