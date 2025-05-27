@@ -3,7 +3,6 @@ import {ProductInfo, ProductInfoUpdate} from '../models/index'
 import { keys } from '../utils/index'
 import {consumServices} from '../contexts/execute'
 
-
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
     const [products, setProducts] = useState([])
@@ -16,13 +15,14 @@ export const useInventary = () => {
         show: false,
         message: '',
         type: 'success',
+        error: false
     });
     
     const deleteProduct = async () => {
         
         const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
             
         setProducts((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
         updateInfoAlert('Se ha eliminado un producto con exito', 'danger')
@@ -35,7 +35,7 @@ export const useInventary = () => {
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')   
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)   
 
         setProducts((prev) => [...prev, res.info[0]])
         updateInfoAlert('Nuevo producto agregado con exito.')
@@ -49,7 +49,7 @@ export const useInventary = () => {
         
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger')
+        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
 
         setProducts((prev) =>
             prev.map((producto) =>
@@ -91,8 +91,8 @@ export const useInventary = () => {
         setProducts(search)
     }
 
-    const updateInfoAlert = (message, type='success') => {
-        setInfoAlert({show: true, message, type})
+    const updateInfoAlert = (message, type='success', error=false) => {
+        setInfoAlert({show: true, message, type, error})
          setTimeout(() => {
             setInfoAlert({...infoAlert, show: false})
         }, 5000);

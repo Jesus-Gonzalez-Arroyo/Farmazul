@@ -4,5 +4,6 @@ export class ProductInfoCar {
         this.price = String(info.price_venta)
         this.name = info.name
         this.ganancia = info.ganancia
+        this.cantidad = info.cantidad
     }
 }

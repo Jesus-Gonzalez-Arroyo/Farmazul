@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
-import { modifyMoney } from '../../utils';
+import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
 import { AlertComponent } from '../../components/alert.jsx';
+import { consumServices } from '../../contexts/execute.js';
 
 export function Users() {
 
@@ -27,13 +28,28 @@ export function Users() {
         registerUser,
         getIdUser,
         getInfoUserUpdate,
-        getUsers,
-        setOpen
+        setOpen,
+        setUsers,
+        setResumenVentas,
+        setLoader
     } = UseUsers()
 
     useEffect(() => {
+        async function getUsers() {
+            const res = await consumServices(keys.getUsers, 'GET')
+            const resVentas = await consumServices(keys.getVentas, 'GET')
+
+            if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
+
+            setUsers(res.info)
+            setResumenVentas(resVentas.info)
+            setTimeout(() => {
+                setLoader(false)
+            }, 500);
+        }
+
         getUsers()
-    }, [getUsers])
+    }, [setLoader, setResumenVentas, setUsers])
 
     return (
         <Navigation>
@@ -41,7 +57,7 @@ export function Users() {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div className='h-100'>
+                    <div className='h-100 position-relative'>
                         <div className='d-flex justify-content-between align-items-center'>
                             <div>
                                 <p className='m-0 h5'>Gestor de usuarios</p>
@@ -66,15 +82,17 @@ export function Users() {
                             </div>
                             <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
                                 <p className='h6'>Ventas realizadas</p>
-                                <TableComponent
-                                    heads={[
-                                        { label: "Nombre", key: "usuario" },
-                                        { label: "Valor venta", key: "valor", render: (val) => `$${modifyMoney(val)}` },
-                                        { label: "Fecha", key: "fecha" }
-                                    ]}
-                                    items={resumeVentas}
-                                    actions={false}
-                                />
+                                <div>
+                                    <TableComponent
+                                        heads={[
+                                            { label: "Nombre", key: "usuario" },
+                                            { label: "Valor venta", key: "valor", render: (val) => `$${modifyMoney(val)}` },
+                                            { label: "Fecha", key: "fecha" }
+                                        ]}
+                                        items={resumeVentas}
+                                        actions={false}
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -205,6 +223,7 @@ export function Users() {
                             show={infoAlert.show}
                             message={infoAlert.message}
                             type={infoAlert.type}
+                            error={infoAlert.error}
                         />
                     </div>
                 )
