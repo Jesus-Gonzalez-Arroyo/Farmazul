@@ -1,13 +1,28 @@
-export async function consumServices(endpoint, method, headers='', body='') {
+import { Alerts } from '../utils/alerts'
+
+export async function consumServices(endpoint, method = 'GET', headers = '', body = '') {
     try {
-        const consum = await fetch(endpoint, {
-            method: method,
-            ...(headers === '' ? {headers: { "Content-Type": "application/json" }} : {headers}),
-            ...(method !== "GET" ? { body: JSON.stringify(body) } : {})
-        })
-        const res = await consum.json()
-        return res
+        const defaultHeaders = { "Content-Type": "application/json" };
+        const response = await fetch(endpoint, {
+            method,
+            headers: headers === '' ? defaultHeaders : headers,
+            ...(method !== "GET" && body ? { body: JSON.stringify(body) } : {})
+        });
+
+        const isJson = response.headers.get("content-type")?.includes("application/json");
+        const data = isJson ? await response.json() : {};
+
+        if (response.error) {
+            const message = data.message || '¡Algo salió mal!';
+            Alerts('Ups...', 'Ha ocurrido un error, vuelve a intentarlo', 'error');
+            return { error: true, info: message, code: response.code };
+        }
+
+        return data;
+
     } catch (error) {
-        return error
+        console.error("Error de red o inesperado:", error);
+        Alerts('Ups...', 'Ha ocurrido un error, vuelve a intentarlo', 'error');
+        return { error: true, info: 'Error de red', code: 500 };
     }
 }

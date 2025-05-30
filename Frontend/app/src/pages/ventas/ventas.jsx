@@ -7,7 +7,6 @@ import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
 import { useVentas } from '../../hooks/index'
 import "./ventas.css";
-import { AlertComponent } from '../../components/alert';
 
 export function Ventas() {
     const {
@@ -18,7 +17,6 @@ export function Ventas() {
         methodsPay,
         open,
         form,
-        infoAlert,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -176,8 +174,7 @@ export function Ventas() {
                                                                 <tr key={producto.id}>
                                                                     <td>{producto.name}</td>
                                                                     <td>$
-                                                                        {producto.price
-                                                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                                                        {modifyMoney(producto.price)}
                                                                     </td>
                                                                     <td>{producto.cantidad}</td>
                                                                 </tr>
@@ -217,7 +214,7 @@ export function Ventas() {
                                                             </ul>
                                                         )}
                                                     </div>
-                                                    <div style={{ display: methodPay === 'Efectivo' ? 'block' : 'none' }}>
+                                                    <div style={{ display: methodPay === methodsPay[0] ? 'block' : 'none' }}>
                                                         <p className='fw-bold'>Recibido</p>
                                                         <input type="text" name='recibido' onChange={handleChange} className="form-control mb-3" />
                                                     </div>
@@ -236,13 +233,6 @@ export function Ventas() {
                                 </div>
                             </div>
                         </div>
-
-                        <AlertComponent
-                            show={infoAlert.show}
-                            message={infoAlert.message}
-                            type={infoAlert.type}
-                            error={infoAlert.error}
-                        />
                     </div>
                 )
             }

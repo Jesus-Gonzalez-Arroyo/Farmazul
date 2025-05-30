@@ -5,7 +5,6 @@ import { Loader } from '../../components/Loader';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
-import { AlertComponent } from '../../components/alert.jsx';
 import { consumServices } from '../../contexts/execute.js';
 
 export function Users() {
@@ -19,7 +18,6 @@ export function Users() {
         rol,
         dataUpdateUser,
         form,
-        infoAlert,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,
@@ -218,13 +216,6 @@ export function Users() {
                                 </div>
                             </div>
                         </div>
-
-                        <AlertComponent
-                            show={infoAlert.show}
-                            message={infoAlert.message}
-                            type={infoAlert.type}
-                            error={infoAlert.error}
-                        />
                     </div>
                 )
             }

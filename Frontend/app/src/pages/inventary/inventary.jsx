@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
-import { AlertComponent } from "../../components/alert.jsx"
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
 import { keys, modifyMoney } from "../../utils/index";
@@ -21,11 +20,10 @@ export function Inventary() {
         handleChangeUpdate,
         infoUpdateProduct,
         updateProductService,
-        deleteProduct,
         setLoader,
         loader,
         form,
-        infoAlert
+        deleteProduct
     } = useInventary();
 
     useEffect(() => {
@@ -193,13 +191,6 @@ export function Inventary() {
                                 </div>
                             </div>
                         </div>
-
-                        <AlertComponent
-                            show={infoAlert.show}
-                            message={infoAlert.message}
-                            type={infoAlert.type}
-                            error={infoAlert.error}
-                        />
                     </div>
                 )}
             </Navigation>

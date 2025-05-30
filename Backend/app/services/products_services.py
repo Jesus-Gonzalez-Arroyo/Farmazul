@@ -37,6 +37,10 @@ class ProductsServices:
     
     @staticmethod
     def delete_product(id):
+
+        if(id is None):
+            return None
+
         result = collection_products.find_one_and_delete({'_id': ObjectId(id)})
         result['_id'] = str(result['_id'])
         return result

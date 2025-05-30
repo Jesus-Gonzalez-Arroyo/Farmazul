@@ -2,43 +2,65 @@ from flask import jsonify
 from services.products_services import ProductsServices
 from utils.responseModel.responsemodel import ResponseModel
 
+def safe_response(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return jsonify(ResponseModel(str(e), error=True, code=500))
+    return wrapper
+
+@safe_response
 def get_products_all():
     products = ProductsServices.get_products()
     return jsonify(ResponseModel(products))
 
+@safe_response
 def register_product(data):
-    try:
-        return jsonify(ResponseModel(ProductsServices.register_product(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('idProduct'))))
-    except Exception as e:
-        return jsonify(ResponseModel(str(e), True, 401))
+    product = ProductsServices.register_product(
+        data.get('name'),
+        data.get('price'),
+        data.get('priceventa'),
+        data.get('cant'),
+        data.get('estancia'),
+        data.get('ganancia'),
+        data.get('prov'),
+        data.get('idProduct')
+    )
+    return jsonify(ResponseModel(product))
 
+@safe_response
 def delete_product(data):
-    try:
-        return jsonify(ResponseModel({'product': ProductsServices.delete_product(data.get('id')), 'message': 'Eliminado con exito'}))
-    except Exception as e:
-        return jsonify(ResponseModel(str(e), True, 401)),
+    result = ProductsServices.delete_product(data.get('id'))
+    if result is None:
+        return jsonify(ResponseModel('Ha ocurrido un error al eliminar', True, 404))
+    return jsonify(ResponseModel({'product': result, 'message': 'Eliminado con éxito'}))
 
+@safe_response
 def search_product(data):
-    response = ProductsServices.search_products(data.get('name'))
+    result = ProductsServices.search_products(data.get('name'))
+    if not result:
+        return jsonify(ResponseModel({'message': 'No se encontraron productos', 'product': result}, True, 404))
+    return jsonify(ResponseModel(result))
 
-    if response is None:
-        return jsonify(ResponseModel({'response': 'No se encontraron datos', 'product': response}, True, 404))
-    
-    return jsonify(ResponseModel(response))
-
+@safe_response
 def update_products(data):
-    try:
-        result_update = ProductsServices.update_products(data.get('name'), data.get('price'), data.get('priceventa'), data.get('cant'), data.get('estancia'), data.get('ganancia'), data.get('prov'), data.get('id'), data.get('idProduct'))
+    result = ProductsServices.update_products(
+        data.get('name'),
+        data.get('price'),
+        data.get('priceventa'),
+        data.get('cant'),
+        data.get('estancia'),
+        data.get('ganancia'),
+        data.get('prov'),
+        data.get('id'),
+        data.get('idProduct')
+    )
+    if result is None:
+        return jsonify(ResponseModel('No se pudo actualizar el producto', True, 404))
+    return jsonify(ResponseModel(result))
 
-        if result_update is None:
-            return jsonify(ResponseModel('Ha ocurrido un error', True, 404))
-        
-        return jsonify(ResponseModel(result_update))
-    except Exception as e:
-        return jsonify(ResponseModel(str(e), True, 401))
-
+@safe_response
 def descuentUnitsProducts(data):
-    try:
-        return jsonify(ResponseModel(ProductsServices.descuentUnits(data)))
-    except Exception as e:
-        return jsonify(ResponseModel(e, True, 401))
+    result = ProductsServices.descuentUnits(data)
+    return jsonify(ResponseModel(result))

@@ -4,7 +4,6 @@ import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { useGastos } from '../../hooks/useGastos.js';
-import { AlertComponent } from '../../components/alert.jsx';
 import { consumServices } from '../../contexts/execute.js';
 
 export function Gastos() {
@@ -20,7 +19,6 @@ export function Gastos() {
         type,
         state,
         dataRegisterUpdate,
-        infoAlert,
         handleSelect,
         handleSelectState,
         handleIdGastoDelete,
@@ -281,13 +279,6 @@ export function Gastos() {
                                     </div>
                                 </div>
                             </div>
-
-                            <AlertComponent
-                                show={infoAlert.show}
-                                message={infoAlert.message}
-                                type={infoAlert.type}
-                                error={infoAlert.error}
-                            />
                         </div>
                     )
                 }
