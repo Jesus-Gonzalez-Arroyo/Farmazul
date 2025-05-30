@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import { getDate, keys } from '../utils'
 import { consumServices } from '../contexts/execute'
 import { VentaInfo } from '../models'
+import Swal from 'sweetalert2'
+import { Alerts } from '../utils/alerts'
 
 export const useVentas = () => {
     const [products, setProducts] = useState([])
@@ -11,12 +13,6 @@ export const useVentas = () => {
     const [open, setOpen] = useState(false)
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
-    const [infoAlert, setInfoAlert] = useState({
-        show: false,
-        message: '',
-        type: 'success',
-        error: false
-    });
     const form = useRef()
 
     function handleSelectMethodPay(value) {
@@ -26,7 +22,12 @@ export const useVentas = () => {
 
     function handleAddProductCar(product) {
         if(product.cantidad === '0') {
-            return updateInfoAlert(`No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+            return Swal.fire({
+                title: 'Accion no permitida',
+                text: `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`,
+                icon: 'warning',
+                timer: 5000
+            })
         }
         const productExist = carProducts.find((item) => item.id === product.id)
 
@@ -66,17 +67,14 @@ export const useVentas = () => {
         infoVenta.method = methodPay
         infoVenta.recibido = methodPay === methodsPay[0] ? infoVenta.recibido : valorCompra
 
-        const response = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
+        const responseRegisterVenta = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
+        const responseDescuentUnits = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
 
-        if (response.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
-
-        const descuentUnitsProducts = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
-
-        if (descuentUnitsProducts.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if (responseRegisterVenta.error || responseDescuentUnits.error) return console.error(responseRegisterVenta.error ? responseRegisterVenta : responseDescuentUnits)
 
         setProducts((prevProducts) =>
             prevProducts.map((product) => {
-                const updated = descuentUnitsProducts.info.find(
+                const updated = responseDescuentUnits.info.find(
                     (p) => p._id === product._id
                 );
                 return updated ? updated : product;
@@ -84,7 +82,8 @@ export const useVentas = () => {
         );
 
         setCarProducts([])
-        updateInfoAlert('Compra registrada con exito')
+
+        Alerts('Completado','Compra registrada con exito')
         form.current.reset()
     }
 
@@ -92,14 +91,6 @@ export const useVentas = () => {
         const { name, value } = e.target;
         setInfoVenta((prev) => ({ ...prev, [name]: value }));
     };
-
-    
-    const updateInfoAlert = (message, type='success', error = false) => {
-        setInfoAlert({show: true, message, type, error})
-         setTimeout(() => {
-            setInfoAlert({...infoAlert, show: false})
-        }, 5000);
-    }
 
     return {
         products,
@@ -109,7 +100,6 @@ export const useVentas = () => {
         methodsPay,
         open,
         form,
-        infoAlert,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,

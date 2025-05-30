@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import "./login.css";
 import { keys } from "../../utils";
 import {consumServices} from '../../contexts/execute'
+import { Alerts } from '../../utils/alerts'
+import "./login.css";
 
 export function Login() {
   const navigate = useNavigate();
@@ -10,28 +11,20 @@ export function Login() {
     email: "",
     password: "",
   });
-  const [alert, setAlert] = useState({
-    text: "",
-    block: false,
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setAlert({
-      text: "",
-      block: false,
-    });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    if (formData.email === "" || formData.password === "") return setAlert({text: "Hacen falta campos por llenar", block: true})
+    if (formData.email === "" || formData.password === "") return Alerts('Informacion incompleta', 'Faltan campos por llenar', 'warning')
 
     const data = await consumServices(keys.loginUser, 'POST', '', formData)
 
-    if (data.error) return setAlert({text: data.info, block: true})
+    if (data.error) return Alerts('Error', `${data.info}`, 'error')
 
     localStorage.setItem("TOKEN", data.info.access_token)
     navigate("/home")
@@ -57,10 +50,7 @@ export function Login() {
                 <input
                   value={formData.email}
                   name="email"
-                  className={`w-100 form-control ${alert.text === "Usuario incorrecto"
-                    ? "border border-danger"
-                    : ""
-                    }`}
+                  className="w-100 form-control"
                   placeholder="user@gmail.com"
                   type="text"
                   onChange={handleChange}
@@ -73,10 +63,7 @@ export function Login() {
                 <input
                   value={formData.password}
                   name="password"
-                  className={`w-100 form-control ${alert.text === "Contraseña incorrecta"
-                    ? "border border-danger"
-                    : ""
-                    }`}
+                  className="w-100 form-control"
                   type="password"
                   placeholder="Ingrese su contraseña"
                   onChange={handleChange}

@@ -2,6 +2,7 @@ import {useState, useRef} from 'react'
 import {ProductInfo, ProductInfoUpdate} from '../models/index'
 import { keys } from '../utils/index'
 import {consumServices} from '../contexts/execute'
+import { Alerts } from '../utils/alerts'
 
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
@@ -11,21 +12,15 @@ export const useInventary = () => {
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
     const [loader, setLoader] = useState(true)
     const form = useRef()
-    const [infoAlert, setInfoAlert] = useState({
-        show: false,
-        message: '',
-        type: 'success',
-        error: false
-    });
     
-    const deleteProduct = async () => {
-        
+    const deleteProduct = async () => {        
         const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if(res.error) return console.error(res)
             
         setProducts((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
-        updateInfoAlert('Se ha eliminado un producto con exito', 'danger')
+
+        Alerts('Completado', 'Producto eliminado con exito')
     }
 
     const newProduct = async (e) => {
@@ -35,10 +30,10 @@ export const useInventary = () => {
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)   
+        if(res.error) return console.error(res)   
 
         setProducts((prev) => [...prev, res.info[0]])
-        updateInfoAlert('Nuevo producto agregado con exito.')
+        Alerts('Completado', 'Producto agregado con exito')
         form.current.reset()
     }
 
@@ -49,7 +44,7 @@ export const useInventary = () => {
         
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
-        if(res.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if(res.error) return console.error(res)
 
         setProducts((prev) =>
             prev.map((producto) =>
@@ -57,7 +52,7 @@ export const useInventary = () => {
             )
         );
 
-        updateInfoAlert('Producto actualizado con exito.')
+        Alerts('Completado', 'Producto actualizado con exito')
     }
 
     const handleIdProductDelete = (product) => {
@@ -91,13 +86,6 @@ export const useInventary = () => {
         setProducts(search)
     }
 
-    const updateInfoAlert = (message, type='success', error=false) => {
-        setInfoAlert({show: true, message, type, error})
-         setTimeout(() => {
-            setInfoAlert({...infoAlert, show: false})
-        }, 5000);
-    }
-
     return {
         productID,
         products,
@@ -106,8 +94,6 @@ export const useInventary = () => {
         infoUpdateProduct,
         loader,
         form,
-        infoAlert,
-        deleteProduct,
         newProduct,
         updateProductService,
         handleIdProductDelete,
@@ -118,5 +104,6 @@ export const useInventary = () => {
         setProducts, 
         setAllProducts,
         setLoader,
+        deleteProduct
     }
 }

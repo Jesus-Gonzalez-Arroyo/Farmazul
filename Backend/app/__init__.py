@@ -5,7 +5,7 @@ from routes.__init__ import blueprints_user
 
 def create_api():
     app = Flask(__name__)
-    
+
     app.config.from_object(Config)
 
     JWTManager(app)
