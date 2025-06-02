@@ -1,10 +1,23 @@
 import { TrashIcon, PencilIcon } from "@primer/octicons-react";
 import '../tableComponent/Table.css';
+import { useEffect, useState } from "react";
 
-export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false }) {
+export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false, elementForPage, pageActual }) {
+    const [pageSlice, setPageSlice] = useState([])
+
+    useEffect(() => {
+        const elementosPorPagina = elementForPage;
+
+        const inicio = (pageActual - 1) * elementosPorPagina;
+        const datosPagina = items.slice(inicio, inicio + elementosPorPagina);
+
+        setPageSlice(datosPagina)
+    }, [pageActual, setPageSlice, items, elementForPage])
+
+
     return (
         <div>
-            <table className="table">
+            <table className="table table-striped position-relative">
                 <thead>
                     <tr>
                         {!IdView && <th>#</th>}
@@ -15,7 +28,7 @@ export function TableComponent({ heads, items, onEdit, onDelete, actions = true,
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map((item, index) => (
+                    {pageSlice.map((item, index) => (
                         <tr key={item._id}>
                             {!IdView && <td>{index + 1}</td>}
                             {heads.map((head, idx) => (

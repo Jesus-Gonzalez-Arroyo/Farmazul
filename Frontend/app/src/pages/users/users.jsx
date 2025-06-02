@@ -18,6 +18,12 @@ export function Users() {
         rol,
         dataUpdateUser,
         form,
+        paginaActual,
+        paginaActualUsers,
+        totalPages,
+        totalPagesUser,
+        setTotalPages,
+        setTotalPagesUser,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,
@@ -29,7 +35,11 @@ export function Users() {
         setOpen,
         setUsers,
         setResumenVentas,
-        setLoader
+        setLoader,
+        nextPage,
+        nextPageUser,
+        previuosPage,
+        previuosPageUser
     } = UseUsers()
 
     useEffect(() => {
@@ -39,15 +49,20 @@ export function Users() {
 
             if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
 
+            const totalPaginas = Math.ceil(resVentas.info.length / 14);
+            const totalPaginasUser = Math.ceil(res.info.length / 14);
+            setTotalPagesUser(totalPaginasUser)
+            setTotalPages(totalPaginas)
+
             setUsers(res.info)
-            setResumenVentas(resVentas.info)
+            setResumenVentas(resVentas.info.reverse())
             setTimeout(() => {
                 setLoader(false)
             }, 500);
         }
 
         getUsers()
-    }, [setLoader, setResumenVentas, setUsers])
+    }, [setLoader, setResumenVentas, setUsers, setTotalPages, setTotalPagesUser])
 
     return (
         <Navigation>
@@ -65,7 +80,7 @@ export function Users() {
                             </div>
                         </div>
                         <div className='h-90 d-flex gap-3'>
-                            <div className="shadow p-3 rounded overflow-auto w-60 h-100">
+                            <div className="shadow p-3 rounded overflow-auto w-60 h-100 position-relative">
                                 <p className='h6'>Usuarios activos</p>
                                 <TableComponent
                                     heads={[
@@ -76,9 +91,34 @@ export function Users() {
                                     items={users}
                                     onEdit={(item) => getInfoUserUpdate(item)}
                                     onDelete={(item) => getIdUser(item)}
+                                    pageActual={paginaActualUsers}
+                                    elementForPage={10}
                                 />
+                                <div className="position-absolute bottom-0 end-0 w-100 bg-white rounded">
+                                    <nav aria-label="Page navigation example" className='d-flex me-3 justify-content-end'>
+                                        <ul class="pagination">
+                                            <li class="page-item pe-auto" onClick={previuosPageUser}>
+                                                <div class="page-link" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only user-select-none">Previous</span>
+                                                </div>
+                                            </li>
+                                            {
+                                                Array.from({ length: totalPagesUser }, (_, i) => i + 1).map((page) => (
+                                                    <li className={`page-item`}><div class="page-link">{page}</div></li>
+                                                ))
+                                            }
+                                            <li class="page-item pe-auto" onClick={nextPageUser}>
+                                                <div class="page-link" aria-label="Next">
+                                                    <span class="sr-only user-select-none">Next</span>
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
-                            <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
+                            <div className='shadow p-3 rounded overflow-auto w-40 h-100 position-relative'>
                                 <p className='h6'>Ventas realizadas</p>
                                 <div>
                                     <TableComponent
@@ -89,7 +129,32 @@ export function Users() {
                                         ]}
                                         items={resumeVentas}
                                         actions={false}
+                                        pageActual={paginaActual}
+                                        elementForPage={14}
                                     />
+                                </div>
+                                <div className="position-absolute bottom-0 end-0 w-100 bg-white rounded">
+                                    <nav aria-label="Page navigation example" className='d-flex me-3 justify-content-end'>
+                                        <ul class="pagination">
+                                            <li class="page-item pe-auto" onClick={previuosPage}>
+                                                <div class="page-link" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only user-select-none">Previous</span>
+                                                </div>
+                                            </li>
+                                            {
+                                                Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                                    <li className={`page-item`}><div class="page-link">{page}</div></li>
+                                                ))
+                                            }
+                                            <li class="page-item pe-auto" onClick={nextPage}>
+                                                <div class="page-link" aria-label="Next">
+                                                    <span class="sr-only user-select-none">Next</span>
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>
