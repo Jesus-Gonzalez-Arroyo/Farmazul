@@ -88,7 +88,9 @@ export function Inventary() {
                                     items={products}
                                     onEdit={(item) => updateProduct(item)}
                                     onDelete={(item) => handleIdProductDelete(item)}
-                                    IdView={true} 
+                                    IdView={true}
+                                    elementForPage={10}
+                                    pageActual={1} 
                                 />
                             </div>
                         </div>

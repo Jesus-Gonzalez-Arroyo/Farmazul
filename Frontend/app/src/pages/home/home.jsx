@@ -71,6 +71,8 @@ export function Home() {
                   heads={[{ label: "Nombre", key: "name" }]}
                   actions={false}
                   items={productMasVendidos}
+                  pageActual={1}
+                  elementForPage={10}
                 />
               </div>
               <div
@@ -84,6 +86,8 @@ export function Home() {
                   ]}
                   actions={false}
                   items={info.resumLowUnits}
+                   pageActual={1}
+                  elementForPage={10}
                 />
               </div>
               <div
@@ -98,6 +102,8 @@ export function Home() {
                   ]}
                   actions={false}
                   items={info.users}
+                   pageActual={1}
+                  elementForPage={10}
                 />
               </div>
             </div>

@@ -84,6 +84,8 @@ export function Gastos() {
                                         items={gastos}
                                         onEdit={(item) => updateGasto(item)}
                                         onDelete={(item) => handleIdGastoDelete(item)}
+                                        pageActual={1}
+                                        elementForPage={10}
                                     />
                                 </div>
                             </div>
