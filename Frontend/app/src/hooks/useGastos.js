@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { GastosInfoModel, GastosInfoUpdateModel } from "../models";
 import { consumServices } from "../contexts/execute";
 import { keys } from "../utils";
-import { Alerts, Dialog } from "../utils/alerts";
+import { Alerts } from "../utils/alerts";
 
 export const useGastos = () => {
   const [loader, setLoader] = useState(true);
@@ -17,6 +17,18 @@ export const useGastos = () => {
   const typeState = ["Pagado", "En deuda"];
   const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
   const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalPages, setTotalPages] = useState([])
+
+  const nextPage = () => {
+    if (paginaActual === totalPages) return
+    setPaginaActual(paginaActual + 1)
+  }
+
+  const previuosPage = () => {
+    if (paginaActual === 1) return
+    setPaginaActual(paginaActual - 1)
+  }
 
   const handleSelect = (value) => {
     setType(value);
@@ -38,7 +50,7 @@ export const useGastos = () => {
 
     const res = await consumServices(keys.registerGastos, "POST", "", payload);
     if (res.error) return console.error(res)
-      
+
     Alerts('Completado', 'Nuevo gastos registrado con exito')
     setGastos((prev) => [...prev, res.info[0]]);
     form.current?.reset();
@@ -98,6 +110,9 @@ export const useGastos = () => {
     type,
     state,
     dataRegisterUpdate,
+    totalPages,
+    paginaActual,
+    setTotalPages,
     setLoader,
     setGastos,
     setOpen,
@@ -110,6 +125,8 @@ export const useGastos = () => {
     deleteGasto,
     updateGasto,
     handleChange,
-    handleChangeUpdate
+    handleChangeUpdate,
+    nextPage,
+    previuosPage
   };
 };

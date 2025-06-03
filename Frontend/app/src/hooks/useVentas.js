@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { getDate, keys } from '../utils'
 import { consumServices } from '../contexts/execute'
 import { VentaInfo } from '../models'
-import Swal from 'sweetalert2'
 import { Alerts } from '../utils/alerts'
 
 export const useVentas = () => {
@@ -13,6 +12,8 @@ export const useVentas = () => {
     const [open, setOpen] = useState(false)
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const methodsPay = ["Efectivo", "Transferencia"]
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [totalPages, setTotalPages] = useState([])
     const form = useRef()
 
     function handleSelectMethodPay(value) {
@@ -20,16 +21,25 @@ export const useVentas = () => {
         setOpen(false)
     };
 
+    const nextPage = () => {
+        if (paginaActual === totalPages) return
+        setPaginaActual(paginaActual + 1)
+    }
+
+    const previuosPage = () => {
+        if (paginaActual === 1) return
+        setPaginaActual(paginaActual - 1)
+    }
+
     function handleAddProductCar(product) {
-        if(product.cantidad === '0') {
-            return Swal.fire({
-                title: 'Accion no permitida',
-                text: `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`,
-                icon: 'warning',
-                timer: 5000
-            })
-        }
         const productExist = carProducts.find((item) => item.id === product.id)
+        if (product.cantidad === '0') {
+            return Alerts('Accion no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        }
+
+        if (productExist !== undefined && Number(productExist.cantidad + 1) > Number(product.cantidad)) {
+            return Alerts('Accion no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        }
 
         if (productExist) {
             setCarProducts(
@@ -43,9 +53,14 @@ export const useVentas = () => {
     }
 
     function handleMoreCant(product, valueInput) {
+        const productExist = products.find((item) => item._id === product.id)
+        if (Number(valueInput) > Number(productExist.cantidad)) {
+            return Alerts('Accion no permitida', `Solo existen ${productExist.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        }
+
         setCarProducts(
             carProducts.map((item) =>
-                item.id === product.id ? { ...product, cantidad: valueInput } : item
+                item.id === product.id ? { ...product, cantidad: Number(valueInput) } : item
             )
 
         )
@@ -83,7 +98,7 @@ export const useVentas = () => {
 
         setCarProducts([])
 
-        Alerts('Completado','Compra registrada con exito')
+        Alerts('Completado', 'Compra registrada con exito')
         form.current.reset()
     }
 
@@ -100,6 +115,9 @@ export const useVentas = () => {
         methodsPay,
         open,
         form,
+        totalPages,
+        paginaActual,
+        setTotalPages,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,
@@ -110,6 +128,8 @@ export const useVentas = () => {
         handleMoreCant,
         handleDeleteProduct,
         handleRegisterVenta,
-        handleChange
+        handleChange,
+        nextPage,
+        previuosPage
     }
 }

@@ -1,7 +1,7 @@
-import {useState, useRef} from 'react'
-import {ProductInfo, ProductInfoUpdate} from '../models/index'
+import { useState, useRef } from 'react'
+import { ProductInfo, ProductInfoUpdate } from '../models/index'
 import { keys } from '../utils/index'
-import {consumServices} from '../contexts/execute'
+import { consumServices } from '../contexts/execute'
 import { Alerts } from '../utils/alerts'
 
 export const useInventary = () => {
@@ -11,13 +11,15 @@ export const useInventary = () => {
     const [formData, setFormData] = useState(new ProductInfo());
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
     const [loader, setLoader] = useState(true)
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [totalPages, setTotalPages] = useState([])
     const form = useRef()
-    
-    const deleteProduct = async () => {        
+
+    const deleteProduct = async () => {
         const res = await consumServices(keys.deleteProduct, 'DELETE', '', productID)
 
-        if(res.error) return console.error(res)
-            
+        if (res.error) return console.error(res)
+
         setProducts((prev) => prev.filter((producto) => producto._id !== res.info.product._id))
 
         Alerts('Completado', 'Producto eliminado con exito')
@@ -30,7 +32,7 @@ export const useInventary = () => {
 
         const res = await consumServices(keys.registerProduct, 'POST', '', formData)
 
-        if(res.error) return console.error(res)   
+        if (res.error) return console.error(res)
 
         setProducts((prev) => [...prev, res.info[0]])
         Alerts('Completado', 'Producto agregado con exito')
@@ -41,14 +43,14 @@ export const useInventary = () => {
         e.preventDefault()
 
         infoUpdateProduct.ganancia = String(Number(infoUpdateProduct.priceventa) - Number(infoUpdateProduct.price))
-        
+
         const res = await consumServices(keys.updateProduct, 'POST', '', infoUpdateProduct)
 
-        if(res.error) return console.error(res)
+        if (res.error) return console.error(res)
 
         setProducts((prev) =>
             prev.map((producto) =>
-              producto._id === infoUpdateProduct.id ? res.info[0] : producto
+                producto._id === infoUpdateProduct.id ? res.info[0] : producto
             )
         );
 
@@ -86,6 +88,16 @@ export const useInventary = () => {
         setProducts(search)
     }
 
+    const nextPage = () => {
+        if (paginaActual === totalPages) return
+        setPaginaActual(paginaActual + 1)
+    }
+
+    const previuosPage = () => {
+        if (paginaActual === 1) return
+        setPaginaActual(paginaActual - 1)
+    }
+
     return {
         productID,
         products,
@@ -94,6 +106,8 @@ export const useInventary = () => {
         infoUpdateProduct,
         loader,
         form,
+        paginaActual,
+        totalPages,
         newProduct,
         updateProductService,
         handleIdProductDelete,
@@ -101,9 +115,12 @@ export const useInventary = () => {
         updateProduct,
         handleSearchProduct,
         handleChange,
-        setProducts, 
+        setProducts,
         setAllProducts,
         setLoader,
-        deleteProduct
+        deleteProduct,
+        nextPage,
+        previuosPage,
+        setTotalPages
     }
 }

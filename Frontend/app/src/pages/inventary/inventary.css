@@ -2,6 +2,10 @@
     height: 90%;
 }
 
+.h-98 {
+    height: 98%;
+}
+
 .required::after {
     margin: 0 2px;
     content: '*';
