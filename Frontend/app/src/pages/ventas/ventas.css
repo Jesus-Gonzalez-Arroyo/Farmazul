@@ -6,10 +6,6 @@
     height: calc();
 }
 
-.h-85 {
-    height: 80%;
-}
-
 .custom-scroll {
     overflow: auto;
 }
