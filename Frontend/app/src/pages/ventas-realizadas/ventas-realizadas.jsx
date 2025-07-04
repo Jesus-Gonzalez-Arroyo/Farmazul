@@ -12,8 +12,10 @@ import { ProductsVendidosModel } from '../../models/productsVendidosModel.js';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import "./ventas-realizadas.css";
+import { Calendar } from 'primereact/calendar';
 
 export function VentasRealizadas() {
+    const [date, setDate] = useState(null)
     const [products, setProducts] = useState([])
     const [methodsPay] = useState([
         'Efectivo',
@@ -23,7 +25,7 @@ export function VentasRealizadas() {
     const [loader, setLoader] = useState(true)
     const [filters] = useState({
         usuario: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        fecha: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        fecha: { value: null, matchMode: FilterMatchMode.BETWEEN },
         valor: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         recibido: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         method: { value: null, matchMode: FilterMatchMode.EQUALS }
@@ -34,6 +36,12 @@ export function VentasRealizadas() {
             {rowData.method}
         </div>
     )
+
+    const calendarFilterTemplate = () => {
+        return (
+            <Calendar value={date} onChange={(e) => setDate(e.value)} dateFormat='dd/mm/yy' />
+        )
+    }
 
     const statusRowFilterTemplate = (options) => {
         return (
@@ -99,6 +107,7 @@ export function VentasRealizadas() {
                                         <Column
                                             field="usuario"
                                             header="Vendedor"
+                                            filterField='usuario'
                                             filter
                                             filterPlaceholder="Search by name"
                                             style={{ minWidth: '12rem' }}
@@ -106,10 +115,11 @@ export function VentasRealizadas() {
                                         <Column
                                             field='fecha'
                                             header="Fecha"
+                                            filterField='fecha'
                                             filter
                                             sortable
-                                            filterMatchMode="date"
                                             filterPlaceholder="Search by date"
+                                            filterElement={calendarFilterTemplate}
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
