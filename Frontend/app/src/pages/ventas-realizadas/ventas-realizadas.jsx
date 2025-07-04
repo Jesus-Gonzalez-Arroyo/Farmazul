@@ -10,9 +10,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { FileIcon } from '@primer/octicons-react';
 import { ProductsVendidosModel } from '../../models/productsVendidosModel.js';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
+import { Calendar } from 'primereact/calendar';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import "./ventas-realizadas.css";
-import { Calendar } from 'primereact/calendar';
 
 export function VentasRealizadas() {
     const [date, setDate] = useState(null)
@@ -110,16 +110,16 @@ export function VentasRealizadas() {
                                             filterField='usuario'
                                             filter
                                             filterPlaceholder="Search by name"
+                                            showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
                                             field='fecha'
                                             header="Fecha"
-                                            filterField='fecha'
                                             filter
-                                            sortable
                                             filterPlaceholder="Search by date"
                                             filterElement={calendarFilterTemplate}
+                                            showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
@@ -129,6 +129,7 @@ export function VentasRealizadas() {
                                             sortable
                                             filter
                                             filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
@@ -138,6 +139,7 @@ export function VentasRealizadas() {
                                             sortable
                                             filter
                                             filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
@@ -147,6 +149,7 @@ export function VentasRealizadas() {
                                             filterElement={statusRowFilterTemplate}
                                             filter
                                             filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
                                             style={{ minWidth: '15rem' }}
                                         />
                                         <Column

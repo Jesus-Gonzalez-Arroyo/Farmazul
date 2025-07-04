@@ -3,16 +3,19 @@ import { ProductInfo, ProductInfoUpdate } from '../models/index'
 import { keys } from '../utils/index'
 import { consumServices } from '../contexts/execute'
 import { Alerts } from '../utils/alerts'
+import { FilterMatchMode } from 'primereact/api'
 
 export const useInventary = () => {
     const [productID, setProductID] = useState({})
     const [products, setProducts] = useState([])
-    const [allProducts, setAllProducts] = useState([])
     const [formData, setFormData] = useState(new ProductInfo());
     const [infoUpdateProduct, setInfoUpdateProduct] = useState(new ProductInfoUpdate({}))
     const [loader, setLoader] = useState(true)
-    const [paginaActual, setPaginaActual] = useState(1);
-    const [totalPages, setTotalPages] = useState([])
+    const [filters] = useState({
+        idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        estancia: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    });
     const form = useRef()
 
     const deleteProduct = async () => {
@@ -35,6 +38,7 @@ export const useInventary = () => {
         if (res.error) return console.error(res)
 
         setProducts((prev) => [...prev, res.info[0]])
+
         Alerts('Completado', 'Producto agregado con exito')
         form.current.reset()
     }
@@ -77,50 +81,37 @@ export const useInventary = () => {
         setInfoUpdateProduct(new ProductInfoUpdate(product))
     }
 
-    const handleSearchProduct = (e) => {
-        const search = [...products].filter((product) => product.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    const getUnitProducts = (units) => {
+        if(units <= 10) {
+            return 'danger'
+        } 
 
-        if (e.target.value === "") {
-            setProducts(allProducts)
-            return;
-        }
+        if(units <= 15) {
+            return 'info'
+        } 
 
-        setProducts(search)
-    }
-
-    const nextPage = () => {
-        if (paginaActual === totalPages) return
-        setPaginaActual(paginaActual + 1)
-    }
-
-    const previuosPage = () => {
-        if (paginaActual === 1) return
-        setPaginaActual(paginaActual - 1)
-    }
+        if(units >= 20) {
+            return 'success'
+        } 
+    };
 
     return {
         productID,
         products,
-        allProducts,
         formData,
         infoUpdateProduct,
         loader,
         form,
-        paginaActual,
-        totalPages,
+        filters,
         newProduct,
         updateProductService,
         handleIdProductDelete,
         handleChangeUpdate,
         updateProduct,
-        handleSearchProduct,
         handleChange,
         setProducts,
-        setAllProducts,
         setLoader,
         deleteProduct,
-        nextPage,
-        previuosPage,
-        setTotalPages
+        getUnitProducts
     }
 }

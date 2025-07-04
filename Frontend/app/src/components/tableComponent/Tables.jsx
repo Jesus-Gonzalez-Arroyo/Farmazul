@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 
 export function TableComponent({ heads, items, onEdit, onDelete, actions = true, IdView = false, elementForPage, pageActual }) {
     const [pageSlice, setPageSlice] = useState([])
-    console.log('table', items)
-    console.log('head', heads)
 
     useEffect(() => {
         const elementosPorPagina = elementForPage;

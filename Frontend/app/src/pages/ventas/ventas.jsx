@@ -6,8 +6,9 @@ import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
 import { useVentas } from '../../hooks/index'
-import { TableFooter } from '../../components/TableFooter.jsx'
 import { ShoppingCart } from '../../components/ShoppingCart/ShoppingCart.jsx'
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import "./ventas.css";
 
 export function Ventas() {
@@ -19,6 +20,7 @@ export function Ventas() {
         methodsPay,
         open,
         form,
+        filters,
         totalPages,
         paginaActual,
         setTotalPages,
@@ -51,6 +53,15 @@ export function Ventas() {
         productsGet()
     }, [setProducts, setLoader, setTotalPages])
 
+    const actionAddProductTemplate = (producto) => {
+        console.log('fu', producto)
+        return (
+            <div key={producto._id} className='d-flex justify-content-center align-items-center'>
+                <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />
+            </div>
+        )
+    }
+
     return (
         <Navigation>
             {
@@ -62,48 +73,71 @@ export function Ventas() {
                             <div className="w-75">
                                 <p className="m-0 my-3 h5">Tus productos disponibles</p>
                                 <div className="shadow p-3 position-relative rounded overflow-auto h-100">
-                                    <div class="input-group mb-4 w-50">
-                                        <input type="text" className="form-control w-75" placeholder="Nombre del producto" aria-label="Nombre del producto" aria-describedby="button-addon2" />
-                                    </div>
-                                    <table className="table position-relative">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Id</th>
-                                                <th scope="col">Nombre</th>
-                                                <th scope="col">Precio</th>
-                                                <th scope="col">Cantidad</th>
-                                                <th scope="col">Estancia</th>
-                                                <th scope="col">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {products.map((producto) => (
-                                                <tr key={producto._id}>
-                                                    <td>{producto.idProduct}</td>
-                                                    <td>{producto.name.toUpperCase()}</td>
-                                                    <td>$
-                                                        {modifyMoney(producto.price_venta)}
-                                                    </td>
-                                                    <td>{producto.cantidad}</td>
-                                                    <td>{producto.estancia.toUpperCase()}</td>
-                                                    <td>
-                                                        <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                    <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
+                                    <DataTable
+                                        value={products}
+                                        filters={filters}
+                                        paginator
+                                        rows={10}
+                                        dataKey="id"
+                                        filterDisplay="row"
+                                        emptyMessage="No customers found."
+                                    >
+                                        <Column
+                                            field="idProduct"
+                                            header="Id producto"
+                                            filter
+                                            showFilterMenu={false}
+                                            filterPlaceholder="Search by id"
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="name"
+                                            header="Nombre"
+                                            sortable
+                                            body={(rowData) => rowData.name.toUpperCase()}
+                                            filter
+                                            showFilterMenu={false}
+                                            filterPlaceholder="Search by name"
+                                            style={{ minWidth: '350px' }}
+                                        />
+                                        <Column
+                                            field="price_venta"
+                                            header="Precio de venta"
+                                            sortable
+                                            body={(rowData) => `$${modifyMoney(rowData.price_venta)}`}
+                                            style={{ minWidth: '9rem' }}
+                                        />
+                                        <Column
+                                            field="cantidad"
+                                            header="Cantidad"
+                                            sortable
+                                            style={{ minWidth: '8rem' }}
+                                        />
+                                        <Column
+                                            field="estancia"
+                                            header="Estancia"
+                                            filter
+                                            showFilterMenu={false}
+                                            filterPlaceholder="Search by estante"
+                                            body={(rowData) => rowData.estancia.toUpperCase()}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            header="Acciones"
+                                            style={{ minWidth: '8rem' }}
+                                            body={(rowData) => actionAddProductTemplate(rowData)}
+                                        />
+                                    </DataTable>
                                 </div>
                             </div>
                             <div className="w-25">
                                 <p className="h5 m-0 my-3">Carrito de compras</p>
                                 <div className="p-3 shadow rounded h-100">
                                     <p className="h6 mb-3">Productos agregados</p>
-                                    <ShoppingCart 
-                                        carProducts={carProducts} 
-                                        deleteProduct={handleDeleteProduct} 
-                                        moreCant={handleMoreCant} 
+                                    <ShoppingCart
+                                        carProducts={carProducts}
+                                        deleteProduct={handleDeleteProduct}
+                                        moreCant={handleMoreCant}
                                         setCar={setCarProducts}
                                     />
                                 </div>
