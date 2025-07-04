@@ -1,31 +1,35 @@
 import { useEffect } from "react";
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
-import { AlertComponent } from "../../components/alert.jsx"
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
 import { keys, modifyMoney } from "../../utils/index";
 import { consumServices } from '../../contexts/execute'
 import { useInventary } from "../../hooks/index";
+import { TableFooter } from '../../components/TableFooter.jsx'
 import "./inventary.css";
 
 export function Inventary() {
     const {
-        setProducts,
-        setAllProducts,
         products,
-        handleSearchProduct,
-        updateProduct,
-        handleIdProductDelete,
-        newProduct,
-        handleChange,
-        handleChangeUpdate,
         infoUpdateProduct,
-        updateProductService,
-        deleteProduct,
-        setLoader,
         loader,
         form,
-        infoAlert
+        paginaActual,
+        totalPages,
+        newProduct,
+        updateProductService,
+        handleIdProductDelete,
+        handleChangeUpdate,
+        updateProduct,
+        handleSearchProduct,
+        handleChange,
+        setProducts,
+        setAllProducts,
+        setLoader,
+        deleteProduct,
+        nextPage,
+        previuosPage,
+        setTotalPages
     } = useInventary();
 
     useEffect(() => {
@@ -34,13 +38,15 @@ export function Inventary() {
             if (responseProducts.error) return console.error(responseProducts.info);
             setProducts(responseProducts.info);
             setAllProducts(responseProducts.info);
+            const totalPaginas = Math.ceil(responseProducts.info.length / 10);
+            setTotalPages(totalPaginas)
             setTimeout(() => {
                 setLoader(false);
             }, 500);
         };
 
         productsGet();
-    }, [setProducts, setAllProducts, setLoader]);
+    }, [setProducts, setAllProducts, setLoader, setTotalPages]);
 
     return (
         <div>
@@ -48,7 +54,7 @@ export function Inventary() {
                 {loader ? (
                     <Loader />
                 ) : (
-                    <div className="h-100 position-relative">
+                    <div className="h-98 position-relative">
                         <div className="d-flex justify-content-between align-items-center">
                             <div>
                                 <p className="m-0 h5">Inventario de productos</p>
@@ -65,8 +71,8 @@ export function Inventary() {
                             </div>
                         </div>
                         <div className="h-90">
-                            <div className="shadow p-3 rounded overflow-auto h-100">
-                                <div class="input-group mb-4 w-50">
+                            <div className="shadow p-3 rounded overflow-auto position-relative h-100">
+                                <div class="input-group mb-2 w-50">
                                     <input
                                         type="text"
                                         className="form-control w-100"
@@ -83,15 +89,18 @@ export function Inventary() {
                                         { label: "Precio compra", key: "price", render: (val) => `$${modifyMoney(val)}` },
                                         { label: "Precio venta", key: "price_venta", render: (val) => `$${modifyMoney(val)}` },
                                         { label: "Cantidad", key: "cantidad" },
-                                        { label: "Ganancia x unidad", key: "ganancia", render: (val) => `$${modifyMoney(val)}`},
+                                        { label: "Ganancia x unidad", key: "ganancia", render: (val) => `$${modifyMoney(val)}` },
                                         { label: "Proveedor", key: "proveedor" },
                                         { label: "Estancia", key: "estancia" }
                                     ]}
                                     items={products}
                                     onEdit={(item) => updateProduct(item)}
                                     onDelete={(item) => handleIdProductDelete(item)}
-                                    IdView={true} 
+                                    IdView={true}
+                                    elementForPage={10}
+                                    pageActual={1}
                                 />
+                                <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
                             </div>
                         </div>
 
@@ -193,13 +202,6 @@ export function Inventary() {
                                 </div>
                             </div>
                         </div>
-
-                        <AlertComponent
-                            show={infoAlert.show}
-                            message={infoAlert.message}
-                            type={infoAlert.type}
-                            error={infoAlert.error}
-                        />
                     </div>
                 )}
             </Navigation>

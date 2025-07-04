@@ -4,23 +4,29 @@ import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { useGastos } from '../../hooks/useGastos.js';
-import { AlertComponent } from '../../components/alert.jsx';
 import { consumServices } from '../../contexts/execute.js';
+import { TableFooter } from '../../components/TableFooter.jsx'
 
 export function Gastos() {
 
     const {
         loader,
         gastos,
-        open,
-        openState,
         types,
         typeState,
+        open,
+        openState,
         form,
         type,
         state,
         dataRegisterUpdate,
-        infoAlert,
+        totalPages,
+        paginaActual,
+        setTotalPages,
+        setLoader,
+        setGastos,
+        setOpen,
+        setOpenState,
         handleSelect,
         handleSelectState,
         handleIdGastoDelete,
@@ -30,10 +36,8 @@ export function Gastos() {
         updateGasto,
         handleChange,
         handleChangeUpdate,
-        setOpen,
-        setOpenState,
-        setGastos,
-        setLoader
+        nextPage,
+        previuosPage
     } = useGastos()
 
     useEffect(() => {
@@ -41,13 +45,17 @@ export function Gastos() {
             const response = await consumServices(keys.getGastos, "GET");
             if (response.error) return console.error(response.info);
             setGastos(response.info);
+            const totalPaginas = Math.ceil(response.info.length / 10);
+            setTotalPages(totalPaginas)
             setTimeout(() => {
                 setLoader(false);
             }, 500);
         };
 
         gastosGet();
-    }, [setGastos, setLoader])
+    }, [setGastos, setLoader, setTotalPages])
+
+
 
     return (
         <div>
@@ -66,7 +74,7 @@ export function Gastos() {
                                 </div>
                             </div>
                             <div className='h-90'>
-                                <div className="shadow p-3 rounded overflow-auto h-100">
+                                <div className="shadow p-3 rounded overflow-auto position-relative h-100">
                                     <TableComponent
                                         heads={[
                                             { label: "Nombre", key: "name" },
@@ -86,7 +94,10 @@ export function Gastos() {
                                         items={gastos}
                                         onEdit={(item) => updateGasto(item)}
                                         onDelete={(item) => handleIdGastoDelete(item)}
+                                        pageActual={1}
+                                        elementForPage={10}
                                     />
+                                    <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
                                 </div>
                             </div>
 
@@ -281,13 +292,6 @@ export function Gastos() {
                                     </div>
                                 </div>
                             </div>
-
-                            <AlertComponent
-                                show={infoAlert.show}
-                                message={infoAlert.message}
-                                type={infoAlert.type}
-                                error={infoAlert.error}
-                            />
                         </div>
                     )
                 }

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { GastosInfoModel, GastosInfoUpdateModel } from "../models";
 import { consumServices } from "../contexts/execute";
 import { keys } from "../utils";
+import { Alerts } from "../utils/alerts";
 
 export const useGastos = () => {
   const [loader, setLoader] = useState(true);
@@ -11,15 +12,23 @@ export const useGastos = () => {
   const [state, setState] = useState("");
   const [open, setOpen] = useState(false);
   const [openState, setOpenState] = useState(false);
-  const [infoAlert, setInfoAlert] = useState({ show: false, message: "", type: "success", error: false });
-
   const form = useRef();
-
   const types = ["Pago", "Compra"];
   const typeState = ["Pagado", "En deuda"];
-
   const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
   const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalPages, setTotalPages] = useState([])
+
+  const nextPage = () => {
+    if (paginaActual === totalPages) return
+    setPaginaActual(paginaActual + 1)
+  }
+
+  const previuosPage = () => {
+    if (paginaActual === 1) return
+    setPaginaActual(paginaActual - 1)
+  }
 
   const handleSelect = (value) => {
     setType(value);
@@ -31,13 +40,6 @@ export const useGastos = () => {
     setOpenState(false);
   };
 
-  const updateInfoAlert = (message, type = "success", error=false) => {
-    setInfoAlert({ show: true, message, type, error });
-    setTimeout(() => {
-      setInfoAlert((prev) => ({ ...prev, show: false }));
-    }, 5000);
-  };
-
   const registerGasto = async () => {
     const payload = {
       ...dataRegister,
@@ -47,11 +49,11 @@ export const useGastos = () => {
     };
 
     const res = await consumServices(keys.registerGastos, "POST", "", payload);
-    if (res.error) return updateInfoAlert("Ha ocurrido un error", "danger", true);
+    if (res.error) return console.error(res)
 
+    Alerts('Completado', 'Nuevo gastos registrado con exito')
     setGastos((prev) => [...prev, res.info[0]]);
     form.current?.reset();
-    updateInfoAlert("Se ha añadido un nuevo gasto con éxito");
   };
 
   const updateGastoService = async () => {
@@ -63,20 +65,21 @@ export const useGastos = () => {
     };
 
     const res = await consumServices(keys.updateGasto, "POST", "", payload);
-    if (res.error) return updateInfoAlert("Ha ocurrido un error", "danger", true);
+    if (res.error) return console.error(res)
 
+    Alerts('Completado', 'Gastos actualizado con exito')
     setGastos((prev) =>
       prev.map((gasto) => (gasto._id === dataRegisterUpdate.id ? res.info[0] : gasto))
     );
-    updateInfoAlert("Se ha actualizado un gasto con éxito");
   };
 
   const deleteGasto = async () => {
     const res = await consumServices(keys.deleteGasto, "DELETE", "", productId);
-    if (res.error) return updateInfoAlert("Ha ocurrido un error", "danger", true);
+    console.log(res)
+    if (res.error) return console.error(res)
 
     setGastos((prev) => prev.filter((gasto) => gasto._id !== res.info.product._id));
-    updateInfoAlert("Se ha eliminado un gasto con éxito");
+    Alerts('Completado', 'Gasto eliminado con exito')
   };
 
   const updateGasto = (info) => {
@@ -91,7 +94,10 @@ export const useGastos = () => {
   const handleChangeUpdate = ({ target: { name, value } }) =>
     setDataRegisterUpdate((prev) => ({ ...prev, [name]: value }));
 
-  const handleIdGastoDelete = ({ _id }) => setProductId({ id: _id });
+  const handleIdGastoDelete = async ({ _id }) => {
+    setProductId({ id: _id })
+    /* await Dialog(deleteGasto) */
+  };
 
   return {
     loader,
@@ -104,7 +110,9 @@ export const useGastos = () => {
     type,
     state,
     dataRegisterUpdate,
-    infoAlert,
+    totalPages,
+    paginaActual,
+    setTotalPages,
     setLoader,
     setGastos,
     setOpen,
@@ -118,5 +126,7 @@ export const useGastos = () => {
     updateGasto,
     handleChange,
     handleChangeUpdate,
+    nextPage,
+    previuosPage
   };
 };

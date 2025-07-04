@@ -5,8 +5,8 @@ import { Loader } from '../../components/Loader';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
-import { AlertComponent } from '../../components/alert.jsx';
 import { consumServices } from '../../contexts/execute.js';
+import { TableFooter } from '../../components/TableFooter.jsx'
 
 export function Users() {
 
@@ -19,7 +19,12 @@ export function Users() {
         rol,
         dataUpdateUser,
         form,
-        infoAlert,
+        paginaActual,
+        paginaActualUsers,
+        totalPages,
+        totalPagesUser,
+        setTotalPages,
+        setTotalPagesUser,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,
@@ -31,7 +36,11 @@ export function Users() {
         setOpen,
         setUsers,
         setResumenVentas,
-        setLoader
+        setLoader,
+        nextPage,
+        nextPageUser,
+        previuosPage,
+        previuosPageUser
     } = UseUsers()
 
     useEffect(() => {
@@ -41,15 +50,20 @@ export function Users() {
 
             if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
 
+            const totalPaginas = Math.ceil(resVentas.info.length / 14);
+            const totalPaginasUser = Math.ceil(res.info.length / 14);
+            setTotalPagesUser(totalPaginasUser)
+            setTotalPages(totalPaginas)
+
             setUsers(res.info)
-            setResumenVentas(resVentas.info)
+            setResumenVentas(resVentas.info.reverse())
             setTimeout(() => {
                 setLoader(false)
             }, 500);
         }
 
         getUsers()
-    }, [setLoader, setResumenVentas, setUsers])
+    }, [setLoader, setResumenVentas, setUsers, setTotalPages, setTotalPagesUser])
 
     return (
         <Navigation>
@@ -67,7 +81,7 @@ export function Users() {
                             </div>
                         </div>
                         <div className='h-90 d-flex gap-3'>
-                            <div className="shadow p-3 rounded overflow-auto w-60 h-100">
+                            <div className="shadow p-3 rounded overflow-auto w-60 h-100 position-relative">
                                 <p className='h6'>Usuarios activos</p>
                                 <TableComponent
                                     heads={[
@@ -78,9 +92,12 @@ export function Users() {
                                     items={users}
                                     onEdit={(item) => getInfoUserUpdate(item)}
                                     onDelete={(item) => getIdUser(item)}
+                                    pageActual={paginaActualUsers}
+                                    elementForPage={10}
                                 />
+                                <TableFooter nextPage={nextPageUser} previuosPage={previuosPageUser} totalPages={totalPagesUser} paginaActual={paginaActualUsers} />
                             </div>
-                            <div className='shadow p-3 rounded overflow-auto w-40 h-100'>
+                            <div className='shadow p-3 rounded overflow-auto w-40 h-100 position-relative'>
                                 <p className='h6'>Ventas realizadas</p>
                                 <div>
                                     <TableComponent
@@ -91,8 +108,11 @@ export function Users() {
                                         ]}
                                         items={resumeVentas}
                                         actions={false}
+                                        pageActual={paginaActual}
+                                        elementForPage={14}
                                     />
                                 </div>
+                                <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
                             </div>
                         </div>
 
@@ -218,13 +238,6 @@ export function Users() {
                                 </div>
                             </div>
                         </div>
-
-                        <AlertComponent
-                            show={infoAlert.show}
-                            message={infoAlert.message}
-                            type={infoAlert.type}
-                            error={infoAlert.error}
-                        />
                     </div>
                 )
             }

@@ -2,6 +2,7 @@ import { useRef, useState } from "react"
 import { consumServices } from "../contexts/execute"
 import { NewUser, NewUserUpdate } from "../models"
 import { keys } from "../utils"
+import { Alerts } from "../utils/alerts"
 
 export const UseUsers = () => {
     const [users, setUsers] = useState([])
@@ -12,13 +13,11 @@ export const UseUsers = () => {
     const [dataNewUser, setDataNewUser] = useState(new NewUser())
     const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
     const [productID, setProductID] = useState({})
-    const [infoAlert, setInfoAlert] = useState({
-        show: false,
-        message: '',
-        type: 'success',
-        error: false
-    });
     const roles = ["Admin", "Usuario"]
+    const [totalPages, setTotalPages] = useState([])
+    const [totalPagesUser, setTotalPagesUser] = useState([])
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [paginaActualUsers, setPaginaActualUsers] = useState(1);
     const form = useRef()
 
     const handleSelect = (value) => {
@@ -51,10 +50,10 @@ export const UseUsers = () => {
         dataNewUser.rol = rol
 
         const registerUser = await consumServices(keys.registerUser, 'POST', '', dataNewUser)
-        if (registerUser.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if (registerUser.error) return console.error(registerUser)
 
         setUsers((prev) => [...prev, registerUser.info[0]])
-        updateInfoAlert('Se ha agregado un nuevo usuario con exito')
+        Alerts('Completado', 'Nuevo usuario agregado con exito')
         form.current.reset()
     }
 
@@ -62,30 +61,43 @@ export const UseUsers = () => {
         dataUpdateUser.rol = rol
 
         const resUpdate = await consumServices(keys.updateUser, 'POST', '', dataUpdateUser)
-        if (resUpdate.error) return updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if (resUpdate.error) return console.error(resUpdate)
 
         setUsers((prev) =>
             prev.map((user) =>
                 user._id === dataUpdateUser.id ? resUpdate.info[0] : user
             )
         );
-        updateInfoAlert('Se ha actualizado un usuario con exito')
-
+        Alerts('Completado', 'Usuario actualizado con exito')
+        form.current.reset()
     }
 
     const deleteUser = async () => {
         const res = await consumServices(keys.deleteUser, 'DELETE', '', productID)
-        if (res.error) updateInfoAlert('Ha ocurrido un error', 'danger', true)
+        if (res.error) console.error(res)
 
         setUsers((prev) => prev.filter((user) => user._id !== res.info._id))
-        updateInfoAlert('Se ha eliminado un usuario con exito', 'danger')
+        Alerts('Completado', 'Usuario eliminado con exito')
     }
 
-    const updateInfoAlert = (message, type='success', error=false) => {
-        setInfoAlert({show: true, message, type, error})
-         setTimeout(() => {
-            setInfoAlert({...infoAlert, show: false})
-        }, 5000);
+    const nextPage = () => {
+        if (paginaActual === totalPages) return
+        setPaginaActual(paginaActual + 1)
+    }
+
+    const previuosPage = () => {
+        if (paginaActual === 1) return
+        setPaginaActual(paginaActual - 1)
+    }
+
+    const nextPageUser = () => {
+        if (paginaActualUsers === totalPagesUser) return
+        setPaginaActualUsers(paginaActualUsers + 1)
+    }
+
+    const previuosPageUser = () => {
+        if (paginaActualUsers === 1) return
+        setPaginaActualUsers(paginaActualUsers - 1)
     }
 
     return {
@@ -97,7 +109,12 @@ export const UseUsers = () => {
         rol,
         dataUpdateUser,
         form,
-        infoAlert,
+        paginaActual,
+        paginaActualUsers,
+        totalPages,
+        totalPagesUser,
+        setTotalPages,
+        setTotalPagesUser,
         handleSelect,
         handleChangeNewUser,
         handleChangeUpdateUser,
@@ -109,6 +126,10 @@ export const UseUsers = () => {
         setOpen,
         setUsers,
         setResumenVentas,
-        setLoader
+        setLoader,
+        nextPage,
+        nextPageUser,
+        previuosPage,
+        previuosPageUser
     }
 }
