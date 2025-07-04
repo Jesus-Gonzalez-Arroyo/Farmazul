@@ -137,7 +137,7 @@ export function VentasRealizadas() {
                                             filterElement={statusRowFilterTemplate}
                                             filter
                                             filterPlaceholder="Search by price"
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '15rem' }}
                                         />
                                         <Column
                                             field='products'
@@ -160,10 +160,12 @@ export function VentasRealizadas() {
                                     <div class="modal-body">
                                         <TableComponent
                                             heads={[
+                                                { label: "Id", key: "id" },
                                                 { label: 'Producto', key: 'name' },
                                                 { label: 'Cantidad', key: 'cantidad' },
                                                 { label: 'Precio', key: 'price', render: (val) => `$${modifyMoney(val)}` }
                                             ]}
+                                            IdView={true}
                                             items={productsVendidos}
                                             elementForPage={5}
                                             pageActual={1}
@@ -173,7 +175,6 @@ export function VentasRealizadas() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 )
             }
