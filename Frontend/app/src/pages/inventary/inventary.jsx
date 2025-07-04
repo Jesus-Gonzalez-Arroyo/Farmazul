@@ -1,11 +1,13 @@
+import { keys, modifyMoney } from "../../utils/index";
 import { useEffect } from "react";
-import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { Navigation } from "../../layouts/Navigation";
 import { Loader } from "../../components/Loader";
-import { keys, modifyMoney } from "../../utils/index";
 import { consumServices } from '../../contexts/execute'
 import { useInventary } from "../../hooks/index";
-import { TableFooter } from '../../components/TableFooter.jsx'
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import ActionsTemplate from '../../templates/Actions'
+import { unitBodyTemplate } from '../../templates/Inventary'
 import "./inventary.css";
 
 export function Inventary() {
@@ -14,39 +16,31 @@ export function Inventary() {
         infoUpdateProduct,
         loader,
         form,
-        paginaActual,
-        totalPages,
+        filters,
         newProduct,
         updateProductService,
         handleIdProductDelete,
         handleChangeUpdate,
         updateProduct,
-        handleSearchProduct,
         handleChange,
         setProducts,
-        setAllProducts,
         setLoader,
         deleteProduct,
-        nextPage,
-        previuosPage,
-        setTotalPages
+        getUnitProducts
     } = useInventary();
 
     useEffect(() => {
         const productsGet = async () => {
             const responseProducts = await consumServices(keys.getProducts, "GET");
             if (responseProducts.error) return console.error(responseProducts.info);
-            setProducts(responseProducts.info);
-            setAllProducts(responseProducts.info);
-            const totalPaginas = Math.ceil(responseProducts.info.length / 10);
-            setTotalPages(totalPaginas)
+            setProducts(responseProducts.info.reverse());
             setTimeout(() => {
                 setLoader(false);
             }, 500);
         };
 
         productsGet();
-    }, [setProducts, setAllProducts, setLoader, setTotalPages]);
+    }, [setLoader, setProducts]);
 
     return (
         <div>
@@ -70,37 +64,84 @@ export function Inventary() {
                                 </button>
                             </div>
                         </div>
-                        <div className="h-90">
+                        <div>
                             <div className="shadow p-3 rounded overflow-auto position-relative h-100">
-                                <div class="input-group mb-2 w-50">
-                                    <input
-                                        type="text"
-                                        className="form-control w-100"
-                                        placeholder="Nombre del producto"
-                                        aria-label="Nombre del producto"
-                                        aria-describedby="button-addon2"
-                                        onChange={handleSearchProduct}
+                                <DataTable
+                                    value={products}
+                                    filters={filters}
+                                    paginator
+                                    rows={10}
+                                    dataKey="id"
+                                    filterDisplay="row"
+                                    emptyMessage="No customers found."
+                                >
+                                    <Column
+                                        field="idProduct"
+                                        header="Id producto"
+                                        filter
+                                        showFilterMenu={false}
+                                        filterPlaceholder="Search by id"
+                                        style={{ minWidth: '12rem' }}
                                     />
-                                </div>
-                                <TableComponent
-                                    heads={[
-                                        { label: "Id", key: "idProduct" },
-                                        { label: "Nombre", key: "name" },
-                                        { label: "Precio compra", key: "price", render: (val) => `$${modifyMoney(val)}` },
-                                        { label: "Precio venta", key: "price_venta", render: (val) => `$${modifyMoney(val)}` },
-                                        { label: "Cantidad", key: "cantidad" },
-                                        { label: "Ganancia x unidad", key: "ganancia", render: (val) => `$${modifyMoney(val)}` },
-                                        { label: "Proveedor", key: "proveedor" },
-                                        { label: "Estancia", key: "estancia" }
-                                    ]}
-                                    items={products}
-                                    onEdit={(item) => updateProduct(item)}
-                                    onDelete={(item) => handleIdProductDelete(item)}
-                                    IdView={true}
-                                    elementForPage={10}
-                                    pageActual={1}
-                                />
-                                <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
+                                    <Column
+                                        field="name"
+                                        header="Nombre"
+                                        sortable
+                                        body={(rowData) => rowData.name.toUpperCase()}
+                                        filter
+                                        showFilterMenu={false}
+                                        filterPlaceholder="Search by name"
+                                        style={{ minWidth: '350px' }}
+                                    />
+                                    <Column
+                                        field="price"
+                                        header="Precio de compra"
+                                        sortable
+                                        body={(rowData) => `$${modifyMoney(rowData.price)}`}
+                                        style={{ minWidth: '17rem' }}
+                                    />
+                                    <Column
+                                        field="price_venta"
+                                        header="Precio de venta"
+                                        sortable
+                                        body={(rowData) => `$${modifyMoney(rowData.price_venta)}`}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        field="cantidad"
+                                        header="Cantidad"
+                                        body={(rowData)=>unitBodyTemplate(rowData, getUnitProducts)}
+                                        sortable
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        field="ganancia"
+                                        header="Ganancias"
+                                        sortable
+                                        body={(rowData) => `$${modifyMoney(rowData.ganancia)}`}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        field="proveedor"
+                                        header="Proveedor"
+                                        body={(rowData) => rowData.proveedor.toUpperCase()}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        field="estancia"
+                                        header="Estancia"
+                                        filter
+                                        showFilterMenu={false}
+                                        filterPlaceholder="Search by estante"
+                                        body={(rowData) => rowData.estancia.toUpperCase()}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        header="Acciones"
+                                        body={(rowData) => ActionsTemplate(updateProduct, handleIdProductDelete, rowData)}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                </DataTable>
                             </div>
                         </div>
 

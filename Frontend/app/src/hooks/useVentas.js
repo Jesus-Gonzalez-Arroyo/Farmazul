@@ -3,6 +3,7 @@ import { getDate, keys } from '../utils'
 import { consumServices } from '../contexts/execute'
 import { VentaInfo } from '../models'
 import { Alerts } from '../utils/alerts'
+import { FilterMatchMode } from 'primereact/api'
 
 export const useVentas = () => {
     const [products, setProducts] = useState([])
@@ -14,6 +15,11 @@ export const useVentas = () => {
     const methodsPay = ["Efectivo", "Transferencia"]
     const [paginaActual, setPaginaActual] = useState(1);
     const [totalPages, setTotalPages] = useState([])
+    const [filters] = useState({
+        idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        estancia: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    });
     const form = useRef()
 
     function handleSelectMethodPay(value) {
@@ -32,7 +38,10 @@ export const useVentas = () => {
     }
 
     function handleAddProductCar(product) {
+        console.log('fuera', product)
+        console.log('car', carProducts)
         const productExist = carProducts.find((item) => item.id === product.id)
+
         if (product.cantidad === '0') {
             return Alerts('Accion no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
         }
@@ -48,6 +57,8 @@ export const useVentas = () => {
                 )
             )
         } else {
+            console.log('entro 2')
+            console.log('else', product)
             setCarProducts([...carProducts, { ...product, cantidad: 1 }])
         }
     }
@@ -117,6 +128,7 @@ export const useVentas = () => {
         form,
         totalPages,
         paginaActual,
+        filters,
         setTotalPages,
         setOpen,
         setInfoVenta,
