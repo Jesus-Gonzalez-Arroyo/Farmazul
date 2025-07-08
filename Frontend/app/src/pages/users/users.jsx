@@ -7,6 +7,10 @@ import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
 import { consumServices } from '../../contexts/execute.js';
 import { TableFooter } from '../../components/TableFooter.jsx'
+import ActionsTemplate from '../../templates/Actions.jsx';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dropdown } from 'primereact/dropdown';
 
 export function Users() {
 
@@ -23,6 +27,7 @@ export function Users() {
         paginaActualUsers,
         totalPages,
         totalPagesUser,
+        filters,
         setTotalPages,
         setTotalPagesUser,
         handleSelect,
@@ -43,17 +48,26 @@ export function Users() {
         previuosPageUser
     } = UseUsers()
 
+    const statusRowFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={roles}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select One"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: '12rem' }}
+            />
+        );
+    };
+
     useEffect(() => {
         async function getUsers() {
             const res = await consumServices(keys.getUsers, 'GET')
             const resVentas = await consumServices(keys.getVentas, 'GET')
 
             if (res.error || resVentas.error) return console.error(res.error ? res : resVentas)
-
-            const totalPaginas = Math.ceil(resVentas.info.length / 14);
-            const totalPaginasUser = Math.ceil(res.info.length / 14);
-            setTotalPagesUser(totalPaginasUser)
-            setTotalPages(totalPaginas)
 
             setUsers(res.info)
             setResumenVentas(resVentas.info.reverse())
@@ -71,7 +85,7 @@ export function Users() {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div className='h-100 position-relative'>
+                    <div className='position-relative'>
                         <div className='d-flex justify-content-between align-items-center'>
                             <div>
                                 <p className='m-0 h5'>Gestor de usuarios</p>
@@ -80,39 +94,79 @@ export function Users() {
                                 <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo usuario</button>
                             </div>
                         </div>
-                        <div className='h-90 d-flex gap-3'>
-                            <div className="shadow p-3 rounded overflow-auto w-60 h-100 position-relative">
-                                <p className='h6'>Usuarios activos</p>
-                                <TableComponent
-                                    heads={[
-                                        { label: "Nombre", key: "name" },
-                                        { label: "Usuario", key: "email", },
-                                        { label: "Rol", key: "rol" }
-                                    ]}
-                                    items={users}
-                                    onEdit={(item) => getInfoUserUpdate(item)}
-                                    onDelete={(item) => getIdUser(item)}
-                                    pageActual={paginaActualUsers}
-                                    elementForPage={10}
-                                />
-                                <TableFooter nextPage={nextPageUser} previuosPage={previuosPageUser} totalPages={totalPagesUser} paginaActual={paginaActualUsers} />
+                        <div className='d-flex gap-3'>
+                            <div className="shadow p-3 rounded overflow-auto w-60 position-relative">
+                                <p className='h6 mb-3'>Usuarios activos</p>
+                                <DataTable
+                                    value={users}
+                                    paginator
+                                    rows={10}
+                                    dataKey="id"
+                                    filters={filters}
+                                    filterDisplay="row"
+                                    emptyMessage="No customers found."
+                                >
+                                    <Column
+                                        field="name"
+                                        header="Nombre"
+                                        filter
+                                        filterPlaceholder="Search by name"
+                                        showFilterMenu={false}
+                                        style={{ minWidth: '15rem' }}
+                                    />
+                                    <Column
+                                        field="email"
+                                        header="Usuario"
+                                        filter
+                                        filterPlaceholder="Search by email"
+                                        showFilterMenu={false}
+                                        style={{ minWidth: '12rem' }}
+                                    />
+                                    <Column
+                                        field="rol"
+                                        header="Rol"
+                                        filter
+                                        filterElement={(rowData) => statusRowFilterTemplate(rowData)}
+                                        filterPlaceholder="Search by rol"
+                                        showFilterMenu={false}
+                                        style={{ minWidth: '150px' }}
+                                    />
+                                    <Column
+                                        header="Acciones"
+                                        body={(rowData) => ActionsTemplate(getInfoUserUpdate, getIdUser, rowData)}
+                                        style={{ minWidth: '100px' }}
+                                    />
+                                </DataTable>
                             </div>
                             <div className='shadow p-3 rounded overflow-auto w-40 h-100 position-relative'>
-                                <p className='h6'>Ventas realizadas</p>
+                                <p className='h6 mb-3'>Ventas realizadas</p>
                                 <div>
-                                    <TableComponent
-                                        heads={[
-                                            { label: "Nombre", key: "usuario" },
-                                            { label: "Valor venta", key: "valor", render: (val) => `$${modifyMoney(val)}` },
-                                            { label: "Fecha", key: "fecha" }
-                                        ]}
-                                        items={resumeVentas}
-                                        actions={false}
-                                        pageActual={paginaActual}
-                                        elementForPage={14}
-                                    />
+                                    <DataTable
+                                        value={resumeVentas}
+                                        paginator
+                                        rows={10}
+                                        dataKey="id"
+                                        filterDisplay="row"
+                                        emptyMessage="No customers found."
+                                    >
+                                        <Column
+                                            field="usuario"
+                                            header="Nombre"
+                                            style={{ minWidth: '200px' }}
+                                        />
+                                        <Column
+                                            field="valor"
+                                            header="Valor venta"
+                                            body={(rowData) => `$${modifyMoney(rowData.valor)}`}
+                                            style={{ minWidth: '150px' }}
+                                        />
+                                        <Column
+                                            field="fecha"
+                                            header="Fecha"
+                                            style={{ minWidth: '150px' }}
+                                        />
+                                    </DataTable>
                                 </div>
-                                <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
                             </div>
                         </div>
 

@@ -3,8 +3,10 @@ import { Navigation } from "../../layouts/Navigation";
 import { CardsDates } from "../../components/Cards/CardsDates/card-dates-dashboard";
 import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { Loader } from "../../components/Loader";
-import "./home.css";
 import { UseHome } from "../../hooks/useHome";
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import "./home.css";
 
 export function Home() {
   const {
@@ -67,44 +69,75 @@ export function Home() {
                 className="shadow p-3 rounded overflow-auto table-responsive"
               >
                 <p className="h6 mb-4">Productos mas vendidos ({mes})</p>
-                <TableComponent
-                  heads={[{ label: "Nombre", key: "name" }]}
-                  actions={false}
-                  items={productMasVendidos}
-                  pageActual={1}
-                  elementForPage={10}
-                />
+                <DataTable
+                  value={productMasVendidos}
+                  paginator
+                  rows={5}
+                  dataKey="id"
+                  filterDisplay="row"
+                  emptyMessage="No customers found."
+                >
+                  <Column
+                    field="name"
+                    header="Nombre"
+                    body={(rowData) => rowData.name.toUpperCase()}
+                    style={{ minWidth: '12rem' }}
+                  />
+                </DataTable>
               </div>
               <div
                 className="shadow p-3 rounded overflow-auto table-responsive"
               >
                 <p className="h6 mb-4">Productos en agotamiento</p>
-                <TableComponent
-                  heads={[
-                    { label: "Nombre", key: "name" },
-                    { label: "Cantidad", key: "cantidad" },
-                  ]}
-                  actions={false}
-                  items={info.resumLowUnits}
-                   pageActual={1}
-                  elementForPage={10}
-                />
+                <DataTable
+                  value={info.resumLowUnits}
+                  paginator
+                  rows={5}
+                  dataKey="id"
+                  filterDisplay="row"
+                  emptyMessage="No customers found."
+                >
+                  <Column
+                    field="name"
+                    header="Nombre"
+                     body={(rowData) => rowData.name.toUpperCase()}
+                    style={{ minWidth: '12rem' }}
+                  />
+                  <Column
+                    field="cantidad"
+                    header="Cantidad"
+                    style={{ minWidth: '12rem' }}
+                  />
+                </DataTable>
               </div>
               <div
                 className="shadow p-3 rounded overflow-auto table-responsive-1"
               >
                 <p className="h6 mb-4">Usuarios activos</p>
-                <TableComponent
-                  heads={[
-                    { label: "Nombre", key: "name" },
-                    { label: "Usuario", key: "email" },
-                    { label: "Rol", key: "rol" },
-                  ]}
-                  actions={false}
-                  items={info.users}
-                   pageActual={1}
-                  elementForPage={10}
-                />
+                <DataTable
+                  value={info.users}
+                  paginator
+                  rows={6}
+                  dataKey="id"
+                  filterDisplay="row"
+                  emptyMessage="No customers found."
+                >
+                  <Column
+                    field="name"
+                    header="Nombre"
+                    style={{ minWidth: '12rem' }}
+                  />
+                  <Column
+                    field="email"
+                    header="Usuario"
+                    style={{ minWidth: '12rem' }}
+                  />
+                  <Column
+                    field="rol"
+                    header="Rol"
+                    style={{ minWidth: '12rem' }}
+                  />
+                </DataTable>
               </div>
             </div>
           </div>

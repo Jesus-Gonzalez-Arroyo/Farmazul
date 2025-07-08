@@ -2,10 +2,13 @@ import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
-import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { useGastos } from '../../hooks/useGastos.js';
 import { consumServices } from '../../contexts/execute.js';
-import { TableFooter } from '../../components/TableFooter.jsx'
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dropdown } from 'primereact/dropdown';
+import {statusBodyTemplate} from '../../templates/Gastos.jsx'
+import ActionsTemplate from '../../templates/Actions.jsx';
 
 export function Gastos() {
 
@@ -20,15 +23,14 @@ export function Gastos() {
         type,
         state,
         dataRegisterUpdate,
-        totalPages,
-        paginaActual,
+        filters,
         setTotalPages,
+        handleSelect,
+        handleSelectState,
         setLoader,
         setGastos,
         setOpen,
         setOpenState,
-        handleSelect,
-        handleSelectState,
         handleIdGastoDelete,
         registerGasto,
         updateGastoService,
@@ -36,17 +38,15 @@ export function Gastos() {
         updateGasto,
         handleChange,
         handleChangeUpdate,
-        nextPage,
-        previuosPage
+        getStatusGastos,
     } = useGastos()
 
     useEffect(() => {
         const gastosGet = async () => {
             const response = await consumServices(keys.getGastos, "GET");
             if (response.error) return console.error(response.info);
-            setGastos(response.info);
-            const totalPaginas = Math.ceil(response.info.length / 10);
-            setTotalPages(totalPaginas)
+            setGastos(response.info.reverse());
+
             setTimeout(() => {
                 setLoader(false);
             }, 500);
@@ -55,7 +55,19 @@ export function Gastos() {
         gastosGet();
     }, [setGastos, setLoader, setTotalPages])
 
-
+    const statusRowFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={['Pagado', 'En deuda']}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select One"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: '12rem' }}
+            />
+        );
+    };
 
     return (
         <div>
@@ -73,31 +85,74 @@ export function Gastos() {
                                     <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#register">Nuevo gasto</button>
                                 </div>
                             </div>
-                            <div className='h-90'>
+                            <div>
                                 <div className="shadow p-3 rounded overflow-auto position-relative h-100">
-                                    <TableComponent
-                                        heads={[
-                                            { label: "Nombre", key: "name" },
-                                            { label: "Precio", key: "price", render: (val) => `$${modifyMoney(val)}` },
-                                            { label: "Tipo", key: "type" },
-                                            {
-                                                label: "Estado", key: "estado", render: (estado) => (
-                                                    <div className={`m-0 p-1 rounded w-75 text-center ${estado === 'Pagado' ? "bg-success" : "bg-danger"}`}>
-                                                        <p className='m-0'>{estado}</p>
-                                                    </div>
-                                                )
-                                            },
-                                            { label: "Valor deuda", key: "valordeuda", render: (val) => `$${modifyMoney(val)}` },
-                                            { label: "Fecha", key: "fecha" },
-                                            { label: "Descripcion", key: "descripcion" }
-                                        ]}
-                                        items={gastos}
-                                        onEdit={(item) => updateGasto(item)}
-                                        onDelete={(item) => handleIdGastoDelete(item)}
-                                        pageActual={1}
-                                        elementForPage={10}
-                                    />
-                                    <TableFooter nextPage={nextPage} previuosPage={previuosPage} totalPages={totalPages} paginaActual={paginaActual} />
+                                    <DataTable
+                                        value={gastos}
+                                        paginator
+                                        rows={10}
+                                        dataKey="id"
+                                        filters={filters}
+                                        filterDisplay="row"
+                                        emptyMessage="No customers found."
+                                    >
+                                        <Column
+                                            field="name"
+                                            header="Nombre"
+                                            filter
+                                            filterPlaceholder="Search by name"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="price"
+                                            header="Precio"
+                                            body={(rowData) => `$${modifyMoney(rowData.price)}`}
+                                            sortable
+                                            filter
+                                            filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="estado"
+                                            header="Estado"
+                                            filter
+                                            body={(rowData) => statusBodyTemplate(rowData, getStatusGastos)}
+                                            filterElement={(options) => statusRowFilterTemplate(options)}
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="valordeuda"
+                                            header="Valor deuda"
+                                            body={(rowData) => `$${modifyMoney(rowData.valordeuda)}`}
+                                            sortable
+                                            filter
+                                            filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="fecha"
+                                            header="Fecha"
+                                            sortable
+                                            filter
+                                            filterPlaceholder="Search by date"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            field="descripcion"
+                                            header="Descripcion"
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            header="Acciones"
+                                            body={(rowData) => ActionsTemplate(updateGasto, handleIdGastoDelete, rowData)}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                    </DataTable>
                                 </div>
                             </div>
 

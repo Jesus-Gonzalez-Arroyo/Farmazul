@@ -38,30 +38,33 @@ export const useVentas = () => {
     }
 
     function handleAddProductCar(product) {
-        console.log('fuera', product)
-        console.log('car', carProducts)
-        const productExist = carProducts.find((item) => item.id === product.id)
+        console.log('Producto recibido:', product);
+
+        const productExist = carProducts.find((item) => item.id === product.id);
 
         if (product.cantidad === '0') {
-            return Alerts('Accion no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+            return Alerts('Acción no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
         }
 
-        if (productExist !== undefined && Number(productExist.cantidad + 1) > Number(product.cantidad)) {
-            return Alerts('Accion no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        if (productExist && Number(productExist.cantidad + 1) > Number(product.cantidad)) {
+            return Alerts('Acción no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
         }
 
         if (productExist) {
+            console.log('Producto ya existe, actualizando cantidad...');
             setCarProducts(
                 carProducts.map((item) =>
-                    item.id === product.id ? { ...product, cantidad: Number(item.cantidad) + 1 } : item
+                    item.id === product.id
+                        ? { ...item, cantidad: Number(item.cantidad) + 1 }
+                        : item
                 )
-            )
+            );
         } else {
-            console.log('entro 2')
-            console.log('else', product)
-            setCarProducts([...carProducts, { ...product, cantidad: 1 }])
+            console.log('Producto nuevo, agregando al carrito...');
+            setCarProducts([...carProducts, { ...product, cantidad: 1 }]);
         }
     }
+
 
     function handleMoreCant(product, valueInput) {
         const productExist = products.find((item) => item._id === product.id)

@@ -53,14 +53,9 @@ export function Ventas() {
         productsGet()
     }, [setProducts, setLoader, setTotalPages])
 
-    const actionAddProductTemplate = (producto) => {
-        console.log('fu', producto)
-        return (
-            <div key={producto._id} className='d-flex justify-content-center align-items-center'>
-                <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />
-            </div>
-        )
-    }
+    const actionAddProductTemplate = (producto) => (
+        <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />
+    )
 
     return (
         <Navigation>
@@ -68,8 +63,8 @@ export function Ventas() {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div className='h-100 position-relative'>
-                        <div className="d-flex w-100 h-15 gap-4">
+                    <div className='position-relative'>
+                        <div className="d-flex w-100 gap-4">
                             <div className="w-75">
                                 <p className="m-0 my-3 h5">Tus productos disponibles</p>
                                 <div className="shadow p-3 position-relative rounded overflow-auto h-100">

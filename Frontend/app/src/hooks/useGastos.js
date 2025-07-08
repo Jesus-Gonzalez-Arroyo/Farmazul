@@ -3,6 +3,7 @@ import { GastosInfoModel, GastosInfoUpdateModel } from "../models";
 import { consumServices } from "../contexts/execute";
 import { keys } from "../utils";
 import { Alerts } from "../utils/alerts";
+import { FilterMatchMode } from "primereact/api";
 
 export const useGastos = () => {
   const [loader, setLoader] = useState(true);
@@ -17,28 +18,13 @@ export const useGastos = () => {
   const typeState = ["Pagado", "En deuda"];
   const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
   const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [totalPages, setTotalPages] = useState([])
-
-  const nextPage = () => {
-    if (paginaActual === totalPages) return
-    setPaginaActual(paginaActual + 1)
-  }
-
-  const previuosPage = () => {
-    if (paginaActual === 1) return
-    setPaginaActual(paginaActual - 1)
-  }
-
-  const handleSelect = (value) => {
-    setType(value);
-    setOpen(false);
-  };
-
-  const handleSelectState = (value) => {
-    setState(value);
-    setOpenState(false);
-  };
+  const [filters] = useState({
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    price: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    estado: { value: null, matchMode: FilterMatchMode.EQUALS },
+    valordeuda: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    fecha: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  });
 
   const registerGasto = async () => {
     const payload = {
@@ -75,7 +61,7 @@ export const useGastos = () => {
 
   const deleteGasto = async () => {
     const res = await consumServices(keys.deleteGasto, "DELETE", "", productId);
-    console.log(res)
+
     if (res.error) return console.error(res)
 
     setGastos((prev) => prev.filter((gasto) => gasto._id !== res.info.product._id));
@@ -96,7 +82,25 @@ export const useGastos = () => {
 
   const handleIdGastoDelete = async ({ _id }) => {
     setProductId({ id: _id })
-    /* await Dialog(deleteGasto) */
+  };
+
+  const handleSelect = (value) => {
+    setType(value);
+    setOpen(false);
+  };
+
+  const handleSelectState = (value) => {
+    setState(value);
+    setOpenState(false);
+  };
+
+  const getStatusGastos = (descript) => {
+    switch (descript) {
+      case 'Pagado':
+        return 'success'
+      default:
+        return 'danger'
+    }
   };
 
   return {
@@ -110,15 +114,11 @@ export const useGastos = () => {
     type,
     state,
     dataRegisterUpdate,
-    totalPages,
-    paginaActual,
-    setTotalPages,
+    filters,
     setLoader,
     setGastos,
     setOpen,
     setOpenState,
-    handleSelect,
-    handleSelectState,
     handleIdGastoDelete,
     registerGasto,
     updateGastoService,
@@ -126,7 +126,8 @@ export const useGastos = () => {
     updateGasto,
     handleChange,
     handleChangeUpdate,
-    nextPage,
-    previuosPage
+    getStatusGastos,
+    handleSelect,
+    handleSelectState
   };
 };
