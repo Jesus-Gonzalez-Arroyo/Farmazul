@@ -11,7 +11,7 @@ export function ShoppingCart({carProducts, deleteProduct, moreCant, setCar }) {
                         <div>No hay productos agregados</div>
                     ) : (
                         carProducts.map((product) => (
-                            <div className='position-relative'>
+                            <div className='position-relative' key={product.id}>
                                 <XCircleIcon style={{ cursor: "pointer" }} onClick={() => deleteProduct(product)} className='position-absolute top-0 end-0 m-2' size={16}></XCircleIcon>
                                 <div key={product.id} className="w-100 shadow-sm p-3 mb-2 rounded m-auto d-flex gap-4">
                                     <div className="w-75 border-end">

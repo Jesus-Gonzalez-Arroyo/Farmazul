@@ -3,8 +3,10 @@ import { consumServices } from "../contexts/execute"
 import { NewUser, NewUserUpdate } from "../models"
 import { keys } from "../utils"
 import { Alerts } from "../utils/alerts"
+import { FilterMatchMode } from "primereact/api"
 
 export const UseUsers = () => {
+    const roles = ["Admin", "Usuario"]
     const [users, setUsers] = useState([])
     const [resumeVentas, setResumenVentas] = useState([])
     const [loader, setLoader] = useState(true)
@@ -13,11 +15,13 @@ export const UseUsers = () => {
     const [dataNewUser, setDataNewUser] = useState(new NewUser())
     const [dataUpdateUser, setDataUpdateUser] = useState(new NewUserUpdate({}))
     const [productID, setProductID] = useState({})
-    const roles = ["Admin", "Usuario"]
     const [totalPages, setTotalPages] = useState([])
     const [totalPagesUser, setTotalPagesUser] = useState([])
-    const [paginaActual, setPaginaActual] = useState(1);
-    const [paginaActualUsers, setPaginaActualUsers] = useState(1);
+    const [filters] = useState({
+        name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        rol: { value: null, matchMode: FilterMatchMode.EQUALS }
+    })
     const form = useRef()
 
     const handleSelect = (value) => {
@@ -80,26 +84,6 @@ export const UseUsers = () => {
         Alerts('Completado', 'Usuario eliminado con exito')
     }
 
-    const nextPage = () => {
-        if (paginaActual === totalPages) return
-        setPaginaActual(paginaActual + 1)
-    }
-
-    const previuosPage = () => {
-        if (paginaActual === 1) return
-        setPaginaActual(paginaActual - 1)
-    }
-
-    const nextPageUser = () => {
-        if (paginaActualUsers === totalPagesUser) return
-        setPaginaActualUsers(paginaActualUsers + 1)
-    }
-
-    const previuosPageUser = () => {
-        if (paginaActualUsers === 1) return
-        setPaginaActualUsers(paginaActualUsers - 1)
-    }
-
     return {
         users,
         resumeVentas,
@@ -109,10 +93,9 @@ export const UseUsers = () => {
         rol,
         dataUpdateUser,
         form,
-        paginaActual,
-        paginaActualUsers,
         totalPages,
         totalPagesUser,
+        filters,
         setTotalPages,
         setTotalPagesUser,
         handleSelect,
@@ -126,10 +109,6 @@ export const UseUsers = () => {
         setOpen,
         setUsers,
         setResumenVentas,
-        setLoader,
-        nextPage,
-        nextPageUser,
-        previuosPage,
-        previuosPageUser
+        setLoader
     }
 }
