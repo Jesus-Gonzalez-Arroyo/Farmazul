@@ -48,10 +48,11 @@ export function Inventary() {
                 {loader ? (
                     <Loader />
                 ) : (
-                    <div className="h-98 position-relative">
+                    <div className="position-relative">
                         <div className="d-flex justify-content-between align-items-center">
                             <div>
-                                <p className="m-0 h5">Inventario de productos</p>
+                                <p className="m-0 h5 mt-3">Inventario de productos</p>
+                                <p className="mt-2 mb-3 m-0">Lleva un control sobre tus productos a la venta, teniendo una vision general de cada uno.</p>
                             </div>
                             <div>
                                 <button
@@ -91,28 +92,28 @@ export function Inventary() {
                                         filter
                                         showFilterMenu={false}
                                         filterPlaceholder="Search by name"
-                                        style={{ minWidth: '350px' }}
+                                        style={{ minWidth: '17rem' }}
                                     />
                                     <Column
                                         field="price"
                                         header="Precio de compra"
                                         sortable
                                         body={(rowData) => `$${modifyMoney(rowData.price)}`}
-                                        style={{ minWidth: '17rem' }}
+                                        style={{ minWidth: '11rem' }}
                                     />
                                     <Column
                                         field="price_venta"
                                         header="Precio de venta"
                                         sortable
                                         body={(rowData) => `$${modifyMoney(rowData.price_venta)}`}
-                                        style={{ minWidth: '12rem' }}
+                                        style={{ minWidth: '11rem' }}
                                     />
                                     <Column
                                         field="cantidad"
                                         header="Cantidad"
                                         body={(rowData)=>unitBodyTemplate(rowData, getUnitProducts)}
                                         sortable
-                                        style={{ minWidth: '12rem' }}
+                                        style={{ minWidth: '11rem' }}
                                     />
                                     <Column
                                         field="ganancia"
@@ -125,6 +126,9 @@ export function Inventary() {
                                         field="proveedor"
                                         header="Proveedor"
                                         body={(rowData) => rowData.proveedor.toUpperCase()}
+                                        filter
+                                        showFilterMenu={false}
+                                        filterPlaceholder="Search by proveedor"
                                         style={{ minWidth: '12rem' }}
                                     />
                                     <Column
@@ -139,7 +143,7 @@ export function Inventary() {
                                     <Column
                                         header="Acciones"
                                         body={(rowData) => ActionsTemplate(updateProduct, handleIdProductDelete, rowData)}
-                                        style={{ minWidth: '12rem' }}
+                                        style={{ minWidth: '5rem' }}
                                     />
                                 </DataTable>
                             </div>

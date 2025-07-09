@@ -6,13 +6,11 @@ import { Loader } from '../../components/Loader';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FilterMatchMode } from 'primereact/api';
-import { Dropdown } from 'primereact/dropdown';
-import { FileIcon } from '@primer/octicons-react';
-import { ProductsVendidosModel } from '../../models/productsVendidosModel.js';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
-import { Calendar } from 'primereact/calendar';
+import {methodBodyTemplate, calendarFilterTemplate, productsTemplate} from '../../templates/ventas-realizadas.template.jsx'
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import "./ventas-realizadas.css";
+import { Dropdown } from 'primereact/dropdown';
 
 export function VentasRealizadas() {
     const [date, setDate] = useState(null)
@@ -25,50 +23,11 @@ export function VentasRealizadas() {
     const [loader, setLoader] = useState(true)
     const [filters] = useState({
         usuario: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        fecha: { value: null, matchMode: FilterMatchMode.BETWEEN },
+        fecha: { value: null, matchMode: FilterMatchMode.DATE_IS },
         valor: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         recibido: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         method: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
-
-    const methodPaymentTemplate = (rowData) => (
-        <div className={`p-2 rounded text-white ${rowData.method === 'Efectivo' ? 'bg-success' : 'bg-primary'}`}>
-            {rowData.method}
-        </div>
-    )
-
-    const calendarFilterTemplate = () => {
-        return (
-            <Calendar value={date} onChange={(e) => setDate(e.value)} dateFormat='dd/mm/yy' />
-        )
-    }
-
-    const statusRowFilterTemplate = (options) => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={methodsPay}
-                onChange={(e) => options.filterApplyCallback(e.value)}
-                placeholder="Select One"
-                className="p-column-filter"
-                showClear
-                style={{ minWidth: '12rem' }}
-            />
-        );
-    };
-
-    const productsTemplate = (rowData) => (
-        <div className='d-flex justify-content-center align-items-center'>
-            <FileIcon
-                onClick={() => setProductsVendidos(rowData.products.map((item) => (
-                    new ProductsVendidosModel(item)
-                )))}
-                size={24}
-                data-bs-toggle="modal"
-                data-bs-target="#showProducts"
-            />
-        </div>
-    )
 
     useEffect(() => {
         const productsGet = async () => {
@@ -84,6 +43,20 @@ export function VentasRealizadas() {
         productsGet()
     }, [])
 
+    const statusRowFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={methodsPay}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select One"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: '12rem' }}
+            />
+        );
+    };
+
     return (
         <Navigation>
             {
@@ -93,7 +66,8 @@ export function VentasRealizadas() {
                     <div>
                         <div className="d-flex w-100 h-15 gap-4 mb-10">
                             <div className="w-100">
-                                <p className="m-0 my-3 h5">Ventas realizadas</p>
+                                <p className="m-0 mt-3 h5">Ventas realizadas</p>
+                                <p className='m-0 mt-2 mb-3'>Revisa las ventas que se han realizado en los ultimos dias.</p>
                                 <div className="shadow p-3 rounded">
                                     <DataTable
                                         value={products}
@@ -118,7 +92,7 @@ export function VentasRealizadas() {
                                             header="Fecha"
                                             filter
                                             filterPlaceholder="Search by date"
-                                            filterElement={calendarFilterTemplate}
+                                            filterElement={calendarFilterTemplate(date, setDate)}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
@@ -145,7 +119,7 @@ export function VentasRealizadas() {
                                         <Column
                                             field='method'
                                             header="Metodo de pago"
-                                            body={(rowData) => methodPaymentTemplate(rowData)}
+                                            body={(rowData) => methodBodyTemplate(rowData)}
                                             filterElement={statusRowFilterTemplate}
                                             filter
                                             filterPlaceholder="Search by price"
@@ -155,8 +129,8 @@ export function VentasRealizadas() {
                                         <Column
                                             field='products'
                                             header="Productos vendidos"
-                                            body={(rowData) => productsTemplate(rowData)}
-                                            style={{ minWidth: '12rem' }}
+                                            body={(rowData) => productsTemplate(rowData, setProductsVendidos)}
+                                            style={{ minWidth: '5rem' }}
                                         />
                                     </DataTable>
                                 </div>
