@@ -79,6 +79,7 @@ export function Gastos() {
                 placeholder="Select One"
                 className="p-column-filter"
                 showClear
+                hideOverlaysOnDocumentScrolling={true}
                 style={{ minWidth: '12rem' }}
             />
         );
@@ -94,7 +95,7 @@ export function Gastos() {
                         <div className='position-relative'>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div>
-                                    <p className='m-0 mt-3 h5'>Gestor de gastos</p>
+                                    <p className='m-0 mt-3 h5'>Gestor de gastos e inversiones</p>
                                     <p className='m-0 mt-2 mb-3'>Lleva un mejor control sobre tus gastos e inversiones.</p>
                                 </div>
                                 <div>
