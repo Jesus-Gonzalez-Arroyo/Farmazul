@@ -21,7 +21,6 @@ export function Ventas() {
         open,
         form,
         filters,
-        setTotalPages,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -39,15 +38,14 @@ export function Ventas() {
             const responseProducts = await consumServices(keys.getProducts, 'GET')
             if (responseProducts.error) return console.error(responseProducts.info);
             setProducts(responseProducts.info)
-            const totalPaginas = Math.ceil(responseProducts.info.length / 10);
-            setTotalPages(totalPaginas)
+
             setTimeout(() => {
                 setLoader(false)
             }, 500);
         }
 
         productsGet()
-    }, [setProducts, setLoader, setTotalPages])
+    }, [setProducts, setLoader])
 
     const actionAddProductTemplate = (producto) => (
         <PlusCircleIcon style={{ cursor: "pointer" }} onClick={() => handleAddProductCar(new ProductInfoCar(producto))} size={16} />

@@ -12,30 +12,18 @@ export const useVentas = () => {
     const [methodPay, setMethodPay] = useState("")
     const [open, setOpen] = useState(false)
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
-    const methodsPay = ["Efectivo", "Transferencia"]
-    const [paginaActual, setPaginaActual] = useState(1);
-    const [totalPages, setTotalPages] = useState([])
     const [filters] = useState({
         idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         estancia: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
+    const methodsPay = ["Efectivo", "Transferencia"]
     const form = useRef()
 
     function handleSelectMethodPay(value) {
         setMethodPay(value)
         setOpen(false)
     };
-
-    const nextPage = () => {
-        if (paginaActual === totalPages) return
-        setPaginaActual(paginaActual + 1)
-    }
-
-    const previuosPage = () => {
-        if (paginaActual === 1) return
-        setPaginaActual(paginaActual - 1)
-    }
 
     function handleAddProductCar(product) {
         console.log('Producto recibido:', product);
@@ -129,10 +117,7 @@ export const useVentas = () => {
         methodsPay,
         open,
         form,
-        totalPages,
-        paginaActual,
         filters,
-        setTotalPages,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,
@@ -143,8 +128,6 @@ export const useVentas = () => {
         handleMoreCant,
         handleDeleteProduct,
         handleRegisterVenta,
-        handleChange,
-        nextPage,
-        previuosPage
+        handleChange
     }
 }
