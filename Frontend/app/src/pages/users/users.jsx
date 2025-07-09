@@ -2,15 +2,13 @@ import { useEffect } from 'react'
 import { Navigation } from '../../layouts/Navigation'
 import { keys, modifyMoney } from '../../utils';
 import { Loader } from '../../components/Loader';
-import { TableComponent } from '../../components/tableComponent/Tables.jsx';
-import './users.css'
 import { UseUsers } from '../../hooks/useUsers';
 import { consumServices } from '../../contexts/execute.js';
-import { TableFooter } from '../../components/TableFooter.jsx'
 import ActionsTemplate from '../../templates/Actions.jsx';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
+import './users.css'
 
 export function Users() {
 
@@ -23,10 +21,6 @@ export function Users() {
         rol,
         dataUpdateUser,
         form,
-        paginaActual,
-        paginaActualUsers,
-        totalPages,
-        totalPagesUser,
         filters,
         setTotalPages,
         setTotalPagesUser,
@@ -41,11 +35,7 @@ export function Users() {
         setOpen,
         setUsers,
         setResumenVentas,
-        setLoader,
-        nextPage,
-        nextPageUser,
-        previuosPage,
-        previuosPageUser
+        setLoader
     } = UseUsers()
 
     const statusRowFilterTemplate = (options) => {
@@ -88,7 +78,8 @@ export function Users() {
                     <div className='position-relative'>
                         <div className='d-flex justify-content-between align-items-center'>
                             <div>
-                                <p className='m-0 h5'>Gestor de usuarios</p>
+                                <p className='m-0 h5 mt-3'>Gestor de usuarios</p>
+                                <p className='m-0 mt-2 mb-3'>Registra, actualiza y elimina los usuarios que pueden acceder a la plataforma.</p>
                             </div>
                             <div>
                                 <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Nuevo usuario</button>

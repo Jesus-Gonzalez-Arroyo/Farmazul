@@ -23,7 +23,8 @@ export const useGastos = () => {
     price: { value: null, matchMode: FilterMatchMode.CONTAINS },
     estado: { value: null, matchMode: FilterMatchMode.EQUALS },
     valordeuda: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    fecha: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    fecha: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    type: { value: null, matchMode: FilterMatchMode.EQUALS }
   });
 
   const registerGasto = async () => {
@@ -103,6 +104,15 @@ export const useGastos = () => {
     }
   };
 
+  const getTypeGastos = (descript) => {
+    switch (descript) {
+      case 'Compra':
+        return 'info'
+      default:
+        return 'danger'
+    }
+  };
+
   return {
     loader,
     gastos,
@@ -127,6 +137,7 @@ export const useGastos = () => {
     handleChange,
     handleChangeUpdate,
     getStatusGastos,
+    getTypeGastos,
     handleSelect,
     handleSelectState
   };

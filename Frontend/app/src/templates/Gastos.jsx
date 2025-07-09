@@ -4,4 +4,8 @@ const statusBodyTemplate = (rowData, getStatusGastos) => {
     return <Tag value={rowData.estado} severity={getStatusGastos(rowData.estado)} />;
 };
 
-export {statusBodyTemplate}
+const typeBodyTemplate = (rowData, getStatusGastos) => {
+    return <Tag value={rowData.type} severity={getStatusGastos(rowData.type)} />;
+};
+
+export {statusBodyTemplate, typeBodyTemplate}

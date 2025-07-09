@@ -7,7 +7,7 @@ import { consumServices } from '../../contexts/execute.js';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
-import {statusBodyTemplate} from '../../templates/Gastos.jsx'
+import {statusBodyTemplate, typeBodyTemplate} from '../../templates/Gastos.jsx'
 import ActionsTemplate from '../../templates/Actions.jsx';
 
 export function Gastos() {
@@ -39,6 +39,7 @@ export function Gastos() {
         handleChange,
         handleChangeUpdate,
         getStatusGastos,
+        getTypeGastos
     } = useGastos()
 
     useEffect(() => {
@@ -59,7 +60,21 @@ export function Gastos() {
         return (
             <Dropdown
                 value={options.value}
-                options={['Pagado', 'En deuda']}
+                options={typeState}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select One"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: '12rem' }}
+            />
+        );
+    };
+
+    const typeRowFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={types}
                 onChange={(e) => options.filterApplyCallback(e.value)}
                 placeholder="Select One"
                 className="p-column-filter"
@@ -76,10 +91,11 @@ export function Gastos() {
                     loader ? (
                         <Loader />
                     ) : (
-                        <div className='h-100 position-relative'>
+                        <div className='position-relative'>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div>
-                                    <p className='m-0 h5'>Gestor de gastos</p>
+                                    <p className='m-0 mt-3 h5'>Gestor de gastos</p>
+                                    <p className='m-0 mt-2 mb-3'>Lleva un mejor control sobre tus gastos e inversiones.</p>
                                 </div>
                                 <div>
                                     <button className='btn btn-success my-3' type="button" data-bs-toggle="modal" data-bs-target="#register">Nuevo gasto</button>
@@ -102,7 +118,7 @@ export function Gastos() {
                                             filter
                                             filterPlaceholder="Search by name"
                                             showFilterMenu={false}
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '18rem' }}
                                         />
                                         <Column
                                             field="price"
@@ -115,13 +131,22 @@ export function Gastos() {
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
+                                            field="type"
+                                            header="Tipo"
+                                            filter
+                                            body={(rowData) => typeBodyTemplate(rowData, getTypeGastos)}
+                                            filterElement={(options) => typeRowFilterTemplate(options)}
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '2rem' }}
+                                        />
+                                        <Column
                                             field="estado"
                                             header="Estado"
                                             filter
                                             body={(rowData) => statusBodyTemplate(rowData, getStatusGastos)}
                                             filterElement={(options) => statusRowFilterTemplate(options)}
                                             showFilterMenu={false}
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '100px' }}
                                         />
                                         <Column
                                             field="valordeuda"
@@ -150,7 +175,7 @@ export function Gastos() {
                                         <Column
                                             header="Acciones"
                                             body={(rowData) => ActionsTemplate(updateGasto, handleIdGastoDelete, rowData)}
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '100px' }}
                                         />
                                     </DataTable>
                                 </div>

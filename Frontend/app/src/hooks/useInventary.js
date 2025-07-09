@@ -14,7 +14,8 @@ export const useInventary = () => {
     const [filters] = useState({
         idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        estancia: { value: null, matchMode: FilterMatchMode.CONTAINS }
+        estancia: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        proveedor: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     });
     const form = useRef()
 

@@ -21,8 +21,6 @@ export function Ventas() {
         open,
         form,
         filters,
-        totalPages,
-        paginaActual,
         setTotalPages,
         setOpen,
         handleSelectMethodPay,
@@ -33,9 +31,7 @@ export function Ventas() {
         handleMoreCant,
         handleDeleteProduct,
         handleRegisterVenta,
-        handleChange,
-        nextPage,
-        previuosPage
+        handleChange
     } = useVentas()
 
     useEffect(() => {
@@ -66,8 +62,9 @@ export function Ventas() {
                     <div className='position-relative'>
                         <div className="d-flex w-100 gap-4">
                             <div className="w-75">
-                                <p className="m-0 my-3 h5">Tus productos disponibles</p>
-                                <div className="shadow p-3 position-relative rounded overflow-auto h-100">
+                                <p className="m-0 mt-3 h5">Tus productos disponibles</p>
+                                <p className='mb-3 mt-2 m-0'>Realiza y registra tus ventas del dia.</p>
+                                <div className="shadow p-3 position-relative rounded overflow-auto">
                                     <DataTable
                                         value={products}
                                         filters={filters}
@@ -126,8 +123,8 @@ export function Ventas() {
                                 </div>
                             </div>
                             <div className="w-25">
-                                <p className="h5 m-0 my-3">Carrito de compras</p>
-                                <div className="p-3 shadow rounded h-100">
+                                <p className="h5 m-0 mt-3 mb-5">Carrito de compras</p>
+                                <div className="p-3 shadow rounded h-90">
                                     <p className="h6 mb-3">Productos agregados</p>
                                     <ShoppingCart
                                         carProducts={carProducts}
