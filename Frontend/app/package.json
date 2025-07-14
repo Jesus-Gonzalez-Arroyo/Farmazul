@@ -6,6 +6,7 @@
     "@primer/octicons-react": "^19.15.1",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
+    "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

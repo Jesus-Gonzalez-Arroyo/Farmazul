@@ -10,6 +10,7 @@ import { Inventary } from './pages/inventary/inventary'
 import { Gastos } from './pages/gastos/gastos'
 import { Users } from './pages/users/users'
 import {VentasRealizadas} from './pages/ventas-realizadas/ventas-realizadas'
+import { Box } from './pages/box/box'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -24,6 +25,7 @@ root.render(
       <Route path='/gastos' element={<Gastos />} />
       <Route path='/users' element={<Users />} />
       <Route path='/ventas-realizadas' element={<VentasRealizadas />} />
+      <Route path='/box' element={<Box />} />
     </Routes>
   </BrowserRouter>
 );

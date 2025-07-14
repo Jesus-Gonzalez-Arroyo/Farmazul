@@ -5,6 +5,7 @@ from routes.users import get_users, user_register, userUpdate, userDelete
 from routes.products import get_products_all, register_product, delete_product, update_products, descuentUnitsProducts
 from routes.ventas import get_all_ventas, register_venta
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
+from routes.box import get_deposits_all, register_deposit
 from routes.init import init
 from flask_cors import cross_origin
 from flask import request, jsonify
@@ -133,3 +134,16 @@ def updateInfoGasto():
 def gasto_delete():
     if request.method == 'DELETE':
         return delete_gasto(request.json)
+
+""" ------------------- Box routes -----------------------"""
+@api_bp.route('/box')
+def get_deposits_box():
+    if request.method == 'GET':
+        return get_deposits_all()
+
+@api_bp.route('/box', methods=['POST', 'OPTIONS']) 
+def deposit_register():
+    if(request.method == 'POST'):
+        return register_deposit(request.json)
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
