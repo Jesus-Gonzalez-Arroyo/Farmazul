@@ -16,5 +16,7 @@ export const keys = {
     'deleteGasto': 'https://farmazul-1.onrender.com/index/API/v1/gastos/delete',
     'registerUser': 'https://farmazul-1.onrender.com/index/API/v1/users/register',
     'updateUser': 'https://farmazul-1.onrender.com/index/API/v1/users/update',
-    'deleteUser': 'https://farmazul-1.onrender.com/index/API/v1/users/delete'
+    'deleteUser': 'https://farmazul-1.onrender.com/index/API/v1/users/delete',
+    'getDepositsBox': 'http://127.0.0.1:5000/index/API/v1/box',
+    'registerDeposits': 'http://127.0.0.1:5000/index/API/v1/box'
 }

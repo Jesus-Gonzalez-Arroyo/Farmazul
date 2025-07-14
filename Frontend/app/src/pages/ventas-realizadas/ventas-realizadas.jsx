@@ -88,6 +88,7 @@ export function VentasRealizadas() {
                 }}
                 dateFormat="dd/mm/yy"
                 placeholder="Seleccione fecha"
+                appendTo={document.body}
             />
         );
     };
@@ -141,7 +142,7 @@ export function VentasRealizadas() {
                                             header="Fecha"
                                             filter
                                             filterPlaceholder="Search by date"
-                                            filterElement={calendarFilterTemplate(date, setDate)}
+                                            filterElement={calendarFilterTemplate}
                                             body={(rowData) => dateBodyTemplate(rowData)}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}

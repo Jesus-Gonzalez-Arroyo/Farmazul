@@ -95,6 +95,13 @@ export function Navigation(props) {
                   <ChevronRightIcon size={16} />
                 </li>
               </a>
+              <a href="/box" className='text-decoration-none text-dark'>
+                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
+                  <PeopleIcon size={16}></PeopleIcon>
+                  <p className="m-0 h6 w-50">Caja</p>
+                  <ChevronRightIcon size={16} />
+                </li>
+              </a>
             </ul>
           </div>
           <div
