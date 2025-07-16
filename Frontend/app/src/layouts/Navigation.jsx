@@ -45,6 +45,11 @@ export function Navigation(props) {
       path: "/box",
       label: "Caja",
       icon: <PeopleIcon size={16} />
+    },
+    {
+      path:'/reports',
+      label: "Reportes",
+      icon: <GraphIcon size={16} />,
     }
   ];
 
@@ -106,7 +111,7 @@ export function Navigation(props) {
             .filter(item => item.visible ? item.visible(UserInfo.rol) : true)
             .map((item, index) => (
               <a key={index} href={item.path} className='text-decoration-none text-dark'>
-                <li className="py-3 d-flex align-items-center align-content-center justify-content-around">
+                <li className="mb-4 d-flex align-items-center align-content-center justify-content-around">
                   {item.icon}
                   <p className="m-0 h6 w-50">{item.label}</p>
                   <ChevronRightIcon size={16} />
