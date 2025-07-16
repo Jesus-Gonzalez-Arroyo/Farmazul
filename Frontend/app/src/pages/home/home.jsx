@@ -100,12 +100,12 @@ export function Home() {
                     field="name"
                     header="Nombre"
                      body={(rowData) => rowData.name.toUpperCase()}
-                    style={{ minWidth: '12rem' }}
+                    style={{ minWidth: '15rem' }}
                   />
                   <Column
                     field="cantidad"
                     header="Cantidad"
-                    style={{ minWidth: '12rem' }}
+                    style={{ minWidth: '5rem' }}
                   />
                 </DataTable>
               </div>

@@ -5,6 +5,7 @@
   "dependencies": {
     "@primer/octicons-react": "^19.15.1",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.5.0",
     "cra-template": "1.2.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
