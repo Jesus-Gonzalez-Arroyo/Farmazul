@@ -9,8 +9,9 @@ export const useVentas = () => {
     const [products, setProducts] = useState([])
     const [carProducts, setCarProducts] = useState([])
     const [loader, setLoader] = useState(true)
-    const [methodPay, setMethodPay] = useState("")
     const [open, setOpen] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [methodPay, setMethodPay] = useState("")
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const [filters] = useState({
         idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -31,14 +32,18 @@ export const useVentas = () => {
         const productExist = carProducts.find((item) => item.id === product.id);
 
         if (product.cantidad === '0') {
-            return Alerts('Acción no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
+            Alerts('Acción no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
+            return setVisible(false);
         }
 
         if (productExist && Number(productExist.cantidad + 1) > Number(product.cantidad)) {
-            return Alerts('Acción no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
+            Alerts('Acción no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
+            return setVisible(false);
         }
 
-        if (productExist) {
+        carProducts.push({ ...product, cantidad: 1 });
+
+        /* if (productExist) {
             console.log('Producto ya existe, actualizando cantidad...');
             setCarProducts(
                 carProducts.map((item) =>
@@ -50,14 +55,17 @@ export const useVentas = () => {
         } else {
             console.log('Producto nuevo, agregando al carrito...');
             setCarProducts([...carProducts, { ...product, cantidad: 1 }]);
-        }
+        } */
+
+        Alerts('Producto agregado', `El producto ${product.name.toUpperCase()} ha sido agregado al carrito`, 'success');
     }
 
 
     function handleMoreCant(product, valueInput) {
         const productExist = products.find((item) => item._id === product.id)
         if (Number(valueInput) > Number(productExist.cantidad)) {
-            return Alerts('Accion no permitida', `Solo existen ${productExist.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+            Alerts('Accion no permitida', `Solo existen ${productExist.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+            return setVisible(false)
         }
 
         setCarProducts(
@@ -118,6 +126,7 @@ export const useVentas = () => {
         open,
         form,
         filters,
+        visible,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,
@@ -128,6 +137,7 @@ export const useVentas = () => {
         handleMoreCant,
         handleDeleteProduct,
         handleRegisterVenta,
-        handleChange
+        handleChange,
+        setVisible
     }
 }
