@@ -27,39 +27,58 @@ export const useVentas = () => {
     };
 
     function handleAddProductCar(product) {
-        console.log('Producto recibido:', product);
+        setCarProducts((prevCarProducts) => {
+            const productExist = prevCarProducts.find((item) => item.id === product.id);
 
-        const productExist = carProducts.find((item) => item.id === product.id);
+            const stockDisponible = Number(product.cantidad);
 
-        if (product.cantidad === '0') {
-            Alerts('Acción no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
-            return setVisible(false);
-        }
+            if (stockDisponible === 0) {
+                Alerts(
+                    'Acción no permitida',
+                    `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`,
+                    'warning'
+                );
+                setVisible(false);
+                return prevCarProducts;
+            }
 
-        if (productExist && Number(productExist.cantidad + 1) > Number(product.cantidad)) {
-            Alerts('Acción no permitida', `Solo existen ${product.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning');
-            return setVisible(false);
-        }
+            if (productExist) {
+                const cantidadRegistrada = Number(productExist.cantidad);
 
-        carProducts.push({ ...product, cantidad: 1 });
+                if (cantidadRegistrada + 1 > stockDisponible) {
+                    Alerts(
+                        'Acción no permitida',
+                        `Solo existen ${stockDisponible} unidades disponibles para el producto ${product.name.toUpperCase()}`,
+                        'warning'
+                    );
+                    setVisible(false);
+                    return prevCarProducts;
+                }
 
-        /* if (productExist) {
-            console.log('Producto ya existe, actualizando cantidad...');
-            setCarProducts(
-                carProducts.map((item) =>
+                Alerts(
+                    'Producto agregado',
+                    `El producto ${product.name.toUpperCase()} ha sido actualizado en el carrito`,
+                    'success'
+                );
+
+                return prevCarProducts.map((item) =>
                     item.id === product.id
-                        ? { ...item, cantidad: Number(item.cantidad) + 1 }
+                        ? { ...item, cantidad: cantidadRegistrada + 1 }
                         : item
-                )
+                );
+            }
+
+            Alerts(
+                'Producto agregado',
+                `El producto ${product.name.toUpperCase()} ha sido agregado al carrito`,
+                'success'
             );
-        } else {
-            console.log('Producto nuevo, agregando al carrito...');
-            setCarProducts([...carProducts, { ...product, cantidad: 1 }]);
-        } */
 
-        Alerts('Producto agregado', `El producto ${product.name.toUpperCase()} ha sido agregado al carrito`, 'success');
+            return [...prevCarProducts, { ...product, cantidad: 1 }];
+        });
+
+        setVisible(false);
     }
-
 
     function handleMoreCant(product, valueInput) {
         const productExist = products.find((item) => item._id === product.id)
@@ -82,15 +101,16 @@ export const useVentas = () => {
 
     async function handleRegisterVenta() {
         const infoUser = JSON.parse(localStorage.getItem('infoUser'))
-        const valorCompra = String(carProducts.reduce((total, item) => total + item.price * item.cantidad, 0))
+        const valorCompra = String(carProducts.reduce((total, item) => total + Number(item.price) * Number(item.cantidad), 0))
         const validateDescuent = infoVenta.descuent !== '' || infoVenta.descuent !== '0'
+        const valueAplyDescuent = validateDescuent ? String(valorCompra - Number(infoVenta.descuent)) : valorCompra
 
         infoVenta.fecha = getDate()
         infoVenta.products = carProducts
-        infoVenta.valor = validateDescuent ? String(valorCompra - Number(infoVenta.descuent)) : valorCompra
+        infoVenta.valor = valueAplyDescuent
         infoVenta.name = infoUser.name
         infoVenta.method = methodPay
-        infoVenta.recibido = methodPay === methodsPay[0] ? infoVenta.recibido : valorCompra
+        infoVenta.recibido = methodPay === methodsPay[0] ? infoVenta.recibido : valueAplyDescuent
 
         const responseRegisterVenta = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
         const responseDescuentUnits = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
