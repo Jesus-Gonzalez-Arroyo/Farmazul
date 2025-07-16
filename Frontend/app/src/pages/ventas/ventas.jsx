@@ -9,6 +9,8 @@ import { useVentas } from '../../hooks/index'
 import { ShoppingCart } from '../../components/ShoppingCart/ShoppingCart.jsx'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { SideBar } from '../../components/sideBar/sideBar'
+import {ArrowLeftIcon} from '@primer/octicons-react'
 import "./ventas.css";
 
 export function Ventas() {
@@ -21,6 +23,7 @@ export function Ventas() {
         open,
         form,
         filters,
+        visible,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -30,7 +33,8 @@ export function Ventas() {
         handleMoreCant,
         handleDeleteProduct,
         handleRegisterVenta,
-        handleChange
+        handleChange,
+        setVisible
     } = useVentas()
 
     useEffect(() => {
@@ -58,10 +62,17 @@ export function Ventas() {
                     <Loader />
                 ) : (
                     <div className='position-relative'>
-                        <div className="d-flex w-100 gap-4">
-                            <div className="w-75">
-                                <p className="m-0 mt-3 h5">Tus productos disponibles</p>
-                                <p className='mb-3 mt-2 m-0'>Realiza y registra tus ventas del dia.</p>
+                        <div className="w-100 gap-4">
+                            <div className="w-100">
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div>
+                                        <p className="m-0 mt-3 h5">Tus productos disponibles</p>
+                                        <p className='mb-3 mt-2 m-0'>Realiza y registra tus ventas del dia.</p>
+                                    </div>
+                                    <div onClick={() => setVisible(true)}>
+                                        <ArrowLeftIcon size={24} />
+                                    </div>
+                                </div>
                                 <div className="shadow p-3 position-relative rounded overflow-auto">
                                     <DataTable
                                         value={products}
@@ -120,19 +131,19 @@ export function Ventas() {
                                     </DataTable>
                                 </div>
                             </div>
-                            <div className="w-25">
-                                <p className="h5 m-0 mt-3 mb-5">Carrito de compras</p>
-                                <div className="p-3 shadow rounded h-90">
-                                    <p className="h6 mb-3">Productos agregados</p>
-                                    <ShoppingCart
-                                        carProducts={carProducts}
-                                        deleteProduct={handleDeleteProduct}
-                                        moreCant={handleMoreCant}
-                                        setCar={setCarProducts}
-                                    />
-                                </div>
-                            </div>
                         </div>
+
+                        <SideBar isVentas={true} position='right' visible={visible} setVisible={setVisible}>
+                            <div className="p-1 h-90">
+                                <p className="h6 mb-3">Productos agregados</p>
+                                <ShoppingCart
+                                    carProducts={carProducts}
+                                    deleteProduct={handleDeleteProduct}
+                                    moreCant={handleMoreCant}
+                                    setCar={setCarProducts}
+                                />
+                            </div>
+                        </SideBar>
 
                         <div class="modal fade modal-lg h-30" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">

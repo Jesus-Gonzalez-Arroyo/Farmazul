@@ -158,6 +158,13 @@ export function VentasRealizadas() {
                                             style={{ minWidth: '12rem' }}
                                         />
                                         <Column
+                                            field='descuent'
+                                            header="Descuento"
+                                            body={(rowData) => `$${modifyMoney(rowData.descuent)}`}
+                                            sortable
+                                            style={{ minWidth: '10rem' }}
+                                        />
+                                        <Column
                                             field='recibido'
                                             header="Recibido"
                                             body={(rowData) => `$${modifyMoney(rowData.recibido)}`}
@@ -181,7 +188,7 @@ export function VentasRealizadas() {
                                             field='products'
                                             header="Productos vendidos"
                                             body={(rowData) => productsTemplate(rowData, setProductsVendidos)}
-                                            style={{ minWidth: '5rem' }}
+                                            style={{ minWidth: '8rem' }}
                                         />
                                     </DataTable>
                                 </div>

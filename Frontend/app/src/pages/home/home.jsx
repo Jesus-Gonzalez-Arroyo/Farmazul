@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Navigation } from "../../layouts/Navigation";
 import { CardsDates } from "../../components/Cards/CardsDates/card-dates-dashboard";
-import { TableComponent } from "../../components/tableComponent/Tables.jsx";
 import { Loader } from "../../components/Loader";
 import { UseHome } from "../../hooks/useHome";
 import { Column } from 'primereact/column';
