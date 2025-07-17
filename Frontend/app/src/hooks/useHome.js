@@ -48,7 +48,7 @@ export const UseHome = () => {
 
     function getInfoVentasInDay(info) {
         const ventasForDay = []
-
+        
         info.resumVentas.forEach((venta) => {
             if (venta.fecha === getDate()) {
                 ventasForDay.push(venta)
@@ -60,7 +60,15 @@ export const UseHome = () => {
                 total + parseInt(product.ganancia * product.cantidad, 10), 0)
         ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
 
-        setInfoDay({ gananciaDay: `$${ventasForDay.length === 0 ? '0' : modifyMoney(totalGananciasForDay)}`, productDay: ventasForDay.length })
+        const totalIngresosForDay = ventasForDay.reduce((total, venta) => {
+            return total + parseInt(venta.valor);
+        }, 0);
+
+        setInfoDay({ 
+            gananciaDay: `$${ventasForDay.length === 0 ? '0' : modifyMoney(totalGananciasForDay)}`, 
+            productDay: ventasForDay.length,
+            ingresosDay: `$${modifyMoney(totalIngresosForDay + totalGananciasForDay)}`
+        })
     }
 
     function getProductVendidos(info) {

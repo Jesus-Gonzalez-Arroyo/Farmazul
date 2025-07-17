@@ -33,7 +33,7 @@ export function Home() {
           <div>
             <div className="d-flex flex-wrap justify-content-around my-4 resum gap-4">
               <CardsDates
-                title="Ventas realizadas"
+                title="Ventas"
                 date={info.resumVentas.length}
               />
               <CardsDates title="Productos vendidos" date={cantProduct} />
@@ -46,6 +46,12 @@ export function Home() {
                 title="Ganancias"
                 date={totalGanancias}
                 changeStyle={true}
+              />
+               <CardsDates
+                title="Ingresos"
+                date={infoDay.ingresosDay}
+                changeStyle={true}
+                isDay={true}
               />
               <CardsDates
                 title="Ganancias"
