@@ -7,8 +7,9 @@ import { consumServices } from '../../contexts/execute.js';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
-import {statusBodyTemplate, typeBodyTemplate} from '../../templates/Gastos.jsx'
+import { statusBodyTemplate, typeBodyTemplate } from '../../templates/Gastos.jsx'
 import ActionsTemplate from '../../templates/Actions.jsx';
+import { Calendar } from 'primereact/calendar';
 
 export function Gastos() {
 
@@ -83,6 +84,28 @@ export function Gastos() {
                 style={{ minWidth: '12rem' }}
             />
         );
+    };
+
+    const formatDate = (value) => {
+        if (!value) return '';
+
+        const date = new Date(value);
+
+        if (isNaN(date.getTime())) {
+            console.warn('Fecha inválida:', value);
+            return '';
+        }
+
+        return new Intl.DateTimeFormat('es-CO', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+        }).format(date);
+    };
+
+
+    const dateBodyTemplate = (rowData) => {
+        return formatDate(rowData.fecha);
     };
 
     return (
@@ -162,9 +185,8 @@ export function Gastos() {
                                         <Column
                                             field="fecha"
                                             header="Fecha"
-                                            sortable
                                             filter
-                                            filterPlaceholder="Search by date"
+                                            body={(rowData) => dateBodyTemplate(rowData)}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />

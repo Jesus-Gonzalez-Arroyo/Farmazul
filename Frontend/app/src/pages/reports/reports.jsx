@@ -1,32 +1,41 @@
 import { Chart } from 'primereact/chart'
 import { Navigation } from '../../layouts/Navigation'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { consumServices } from '../../contexts/execute';
 import { keys } from '../../utils';
 import { Calendar } from 'primereact/calendar'
+import { UseReports } from '../../hooks/useReports';
 
 export function Reports() {
-    const [dataVentas, setDataVentas] = useState([])
-    const [date, setDate] = useState(null)
-    const [week, setWeek] = useState(null)
-    const [month, setMonth] = useState(null)
-    const [chartData, setChartData] = useState({});
-    const [chartDataMonth, setChartDataMonth] = useState({});
-    const [chartDataMonthTorta, setChartDataMonthTorta] = useState({});
-    const [chartOptions, setChartOptions] = useState({});
-    const mesesNombres = [
-        "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
-    ];
+
+    const {
+        week,
+        month,
+        chartData,
+        chartDataMonth,
+        chartDataWeek,
+        chartOptions,
+        chartDataMonthTorta,
+        date,
+        dataVentas,
+        setChartDataMonthTorta,
+        setChartOptions,
+        getTotalVentas,
+        getDateMonth,
+        getDateWeek
+    } = UseReports()
 
     useEffect(() => {
+        const day = new Date();
+        const oneDayMonth = new Date(day.getFullYear(), day.getMonth(), 1);
 
         async function getInfoReports() {
             const getInfo = await consumServices(keys.getVentas)
 
             if (getInfo.error) return console.error(getInfo)
 
-            getTotalVentas(getInfo.info)
+            getTotalVentas(getInfo.info, new Date())
+            getDateMonth(oneDayMonth, getInfo.info)
         }
 
         getInfoReports()
@@ -63,140 +72,6 @@ export function Reports() {
         setChartOptions(options);
     }, []);
 
-    async function getTotalVentas(info, value) {
-        const months = Array.from({ length: 12 }, (_, i) => {
-            const mes = String(i + 1).padStart(2, '0');
-            const anioActual = new Date()
-            const anioSelect = new Date(value)
-            return `${mes}/${date === null ? anioActual.getFullYear() : anioSelect.getFullYear()}`;
-        });
-
-        const ventasForMonth = info.reduce((acc, venta) => {
-            const [, mes, anio] = venta.fecha.split('/');
-            const key = `${mes}/${anio}`;
-
-            if (!acc[key]) {
-                acc[key] = {
-                    ventas: [],
-                    total: 0
-                };
-            }
-
-            acc[key].ventas.push(venta);
-            acc[key].total += parseInt(venta.valor);
-            return acc;
-        }, {});
-
-        const resume = months.map((mes) => {
-            return {
-                mes,
-                total: ventasForMonth[mes]?.total || 0
-            };
-        });
-
-        const dataMonthsGeneral = resume.map((item) => item.total)
-
-        const data = {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            datasets: [
-                {
-                    label: 'Ventas',
-                    data: dataMonthsGeneral,
-                    backgroundColor: [
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 159, 64)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)'
-                    ],
-                    borderWidth: 1
-                }
-            ]
-        };
-
-        setDate(value)
-        setChartData(data)
-        setDataVentas(info)
-    }
-
-    function getDateMonth(value) {
-        const dateSelect = new Date(value)
-        const monthSelect = `${dateSelect.getMonth() + 1 < 10 ? '0' : ''}${dateSelect.getMonth() + 1}`
-        const anioSelect = dateSelect.getFullYear()
-
-        const months = [
-            `${dateSelect.getMonth() + 1 < 10 ? '0' : ''}${monthSelect === '01' ? '12' : Number(monthSelect) - 1}/${monthSelect === '01' ? Number(anioSelect) - 1 : anioSelect}`,
-            `${monthSelect}/${anioSelect}`,
-            `${dateSelect.getMonth() + 1 < 10 ? '0' : ''}${monthSelect === '12' ? '01' : Number(monthSelect) + 1}/${monthSelect === '12' ? Number(anioSelect) + 1 : anioSelect}`,
-        ]
-
-        console.log('dATE', months)
-
-        const ventasForMonth = dataVentas.reduce((acc, venta) => {
-            const [, mes, anio] = venta.fecha.split('/');
-            const key = `${mes}/${anio}`;
-
-            if (!acc[key]) {
-                acc[key] = {
-                    ventas: [],
-                    total: 0
-                };
-            }
-
-            acc[key].ventas.push(venta);
-            acc[key].total += parseInt(venta.valor);
-            return acc;
-        }, {});
-
-        const resume = months.map((mes) => {
-            return {
-                mes,
-                total: ventasForMonth[mes]?.total || 0
-            };
-        });
-
-        const resultado = resume.map(item => ({
-            ...item,
-            nameMonth: converterMonth(item.mes)
-        }));
-
-        const dataMonths = resume.map((item) => item.total)
-        const dataNameMonths = resultado.map((item) => item.nameMonth)
-
-        const dataVentasMonth = {
-            labels: dataNameMonths,
-            datasets: [
-                {
-                    label: 'Ventas',
-                    data: dataMonths,
-                    backgroundColor: [
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 159, 64)',
-                        'rgb(75, 192, 192)'
-                    ],
-                    borderWidth: 1
-                }
-            ]
-        };
-
-        setChartDataMonth(dataVentasMonth);
-        setMonth(value)
-    }
-
-    const converterMonth = (mesAnio) => {
-        const [mes] = mesAnio.split('/');
-        const nombreMes = mesesNombres[parseInt(mes, 10) - 1];
-        return `${nombreMes}`;
-    };
-
     return (
         <div>
             <Navigation>
@@ -215,7 +90,7 @@ export function Reports() {
                 <div className='rounded p-3 mt-3' style={{ background: '#F0F4F8' }}>
                     <div>
                         <p>Selecciona el mes que deseas visualizar</p>
-                        <Calendar value={month} onChange={(e) => getDateMonth(e.value)} view="month" dateFormat="mm/yy" />
+                        <Calendar value={month} onChange={(e) => getDateMonth(e.value, dataVentas)} view="month" dateFormat="mm/yy" />
                     </div>
                     <div className='w-100 mt-4 d-flex justify-content-between align-items-center gap-5'>
                         <div className="w-50 h-25">
@@ -231,29 +106,12 @@ export function Reports() {
                 <div className='rounded p-3 mt-3' style={{ background: '#F0F4F8' }}>
                     <div>
                         <p>Selecciona la semana que deseas visualizar</p>
-                        <Calendar value={week} onChange={(e) => setWeek(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection />
+                        <Calendar value={week} onChange={(e) => getDateWeek(e.value)} selectionMode="range" readOnlyInput hideOnRangeSelection />
                     </div>
                     <div className='w-100 mt-4 d-flex justify-content-between align-items-center gap-5'>
                         <div className="w-50 h-25">
                             <p className='h5'>Tus ventas</p>
-                            <Chart className='w-100' type="bar" data={{
-                                labels: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
-                                datasets: [
-                                    {
-                                        label: 'Ventas',
-                                        data: [54000, 32500, 20000, 180000, 95000, 100000, 19000],
-                                        backgroundColor: [
-                                            'rgba(255, 159, 64, 0.2)',
-                                            'rgba(75, 192, 192, 0.2)'
-                                        ],
-                                        borderColor: [
-                                            'rgb(255, 159, 64)',
-                                            'rgb(75, 192, 192)'
-                                        ],
-                                        borderWidth: 1
-                                    }
-                                ]
-                            }} options={chartOptions} />
+                            <Chart className='w-100' type="bar" data={chartDataWeek} options={chartOptions} />
                         </div>
                     </div>
                 </div>

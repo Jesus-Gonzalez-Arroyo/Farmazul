@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from "react-router";
 import { PersonIcon, SignOutIcon, ThreeBarsIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon, ChevronRightIcon } from '@primer/octicons-react'
-import { keys } from '../utils/index'
+import { keys, modifyMoney } from '../utils/index'
 import { consumServices } from '../contexts/execute'
 import { SideBar } from '../components/sideBar/sideBar'
 
 export function Navigation(props) {
   const [UserInfo, setUserInfo] = useState('')
+  const [infoBox, setInfoBox] = useState('0')
   const [visible, setVisible] = useState(false)
   const navigate = useNavigate()
   const menuItems = [
@@ -47,21 +48,37 @@ export function Navigation(props) {
       icon: <PeopleIcon size={16} />
     },
     {
-      path:'/reports',
+      path: '/reports',
       label: "Reportes",
       icon: <GraphIcon size={16} />,
     }
   ];
 
   useEffect(() => {
-    const user = localStorage.getItem('infoUser')
+    const getBoxInfo = async () => {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayDashFormat = `${yyyy}-${mm}-${dd}`;
+      const infoBox = await consumServices(keys.getDepositsBox)
+      
+      const valueBox = infoBox.info.filter(item => item.date === todayDashFormat );
+      
+      setInfoBox(modifyMoney(valueBox[0]?.value || 0))
+    }
 
+    getBoxInfo()
+    
+    const user = localStorage.getItem('infoUser')
     if (user) return setUserInfo(JSON.parse(user))
 
     const InfoUserGet = async () => {
       const token = localStorage.getItem('TOKEN')
       const userData = await consumServices(keys.getInfoUser, 'GET', { "Authorization": `Bearer ${token}` })
-      if (userData.error) return console.error(userData.info);
+      
+      if (userData.error) return console.error(userData.error);
+    
       setUserInfo(userData.info)
       localStorage.setItem('infoUser', JSON.stringify(userData.info))
     }
@@ -85,6 +102,9 @@ export function Navigation(props) {
           <p className="m-0 white">Farmazul</p>
         </div>
         <div className="d-flex gap-4 px-4">
+          <div>
+            <p className='m-0'>En caja: ${infoBox}</p>
+          </div>
           <div className='d-flex align-items-center gap-2'>
             <div>
               <PersonIcon size={24} />
