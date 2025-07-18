@@ -6,6 +6,7 @@ import { Alerts } from "../utils/alerts";
 import { FilterMatchMode } from "primereact/api";
 
 export const useGastos = () => {
+  const [date, setDate] = useState(null)
   const [loader, setLoader] = useState(true);
   const [productId, setProductId] = useState({});
   const [gastos, setGastos] = useState([]);
@@ -18,7 +19,7 @@ export const useGastos = () => {
   const typeState = ["Pagado", "En deuda"];
   const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
   const [dataRegisterUpdate, setDataRegisterUpdate] = useState(new GastosInfoUpdateModel({}));
-  const [filters] = useState({
+  const [filters, setFilters] = useState({
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     price: { value: null, matchMode: FilterMatchMode.CONTAINS },
     estado: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -125,6 +126,8 @@ export const useGastos = () => {
     state,
     dataRegisterUpdate,
     filters,
+    date,
+    setDate,
     setLoader,
     setGastos,
     setOpen,
@@ -139,6 +142,7 @@ export const useGastos = () => {
     getStatusGastos,
     getTypeGastos,
     handleSelect,
-    handleSelectState
+    handleSelectState,
+    setFilters
   };
 };
