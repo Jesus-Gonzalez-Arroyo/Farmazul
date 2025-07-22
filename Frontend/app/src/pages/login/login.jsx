@@ -27,7 +27,8 @@ export function Login() {
     if (data.error) return Alerts('Error', `${data.info}`, 'error')
 
     localStorage.setItem("TOKEN", data.info.access_token)
-    navigate("/home")
+
+    navigate(data.info.rol_user === 'Admin' ? '/home' : '/ventas')
   };
 
   return (

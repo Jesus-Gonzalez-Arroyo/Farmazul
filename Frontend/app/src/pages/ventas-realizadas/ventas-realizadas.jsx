@@ -53,6 +53,16 @@ export function VentasRealizadas() {
         productsGet()
     }, [])
 
+    const focusCalendar = () => {
+        const container = document.querySelector('#scroll')
+        container.style.overflow = 'hidden'
+    }
+
+    const onfocusCalendar = () => {
+        const container = document.querySelector('#scroll')
+        container.style.overflow = ''
+    }
+
     const statusRowFilterTemplate = (options) => {
         return (
             <Dropdown
@@ -89,6 +99,8 @@ export function VentasRealizadas() {
                 dateFormat="dd/mm/yy"
                 placeholder="Seleccione fecha"
                 appendTo={document.body}
+                onFocus={() => focusCalendar()}
+                onBlur={()=> onfocusCalendar()}
             />
         );
     };
@@ -113,7 +125,7 @@ export function VentasRealizadas() {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div>
+                    <div className='mb-2'>
                         <div className="d-flex w-100 h-15 gap-4 mb-10">
                             <div className="w-100">
                                 <p className="m-0 mt-3 h5">Ventas realizadas</p>
@@ -196,7 +208,7 @@ export function VentasRealizadas() {
                         </div>
 
                         <div class="modal fade" id="showProducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="staticBackdropLabel">Productos vendidos</h5>

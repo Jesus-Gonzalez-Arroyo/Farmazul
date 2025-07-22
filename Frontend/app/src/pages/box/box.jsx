@@ -44,7 +44,7 @@ export function Box() {
 
         if(response.error) return console.error(response)
 
-        setInfoDeposits((prev) => [...prev, response.info])
+        setInfoDeposits((prev) => [response.info, ...prev])
         Alerts('Completado', 'Deposito registrado con exito')
         form.current.reset()
     }
@@ -57,10 +57,12 @@ export function Box() {
                         <Loader />
                     ) : (
                         <div className='position-relative'>
+                            <div>
+                                <p className="m-0 mt-3 h5">Depositos en caja</p>
+                                <p className='mb-3 mt-2 m-0'>Registra y revisa los depositos en efectivo de la caja.</p>
+                            </div>
                             <div className="d-flex w-100 gap-4">
                                 <div className="w-25">
-                                    <p className="m-0 mt-3 h5">Depositos en caja</p>
-                                    <p className='mb-3 mt-2 m-0'>Registra y revisa los depositos en efectivo de la caja.</p>
                                     <div className="shadow p-3 position-relative rounded overflow-auto">
                                         <form ref={form} onSubmit={handleSubmitForm}>
                                             <div className="mb-4">
@@ -68,7 +70,7 @@ export function Box() {
                                             </div>
                                             <div className="mb-3">
                                                 <label className="d-block mb-2" htmlFor="">Valor</label>
-                                                <input name="value" placeholder="Ingresa el valor" className="w-100 form-control" value={infoForm.value} onChange={(e) => handleChangeForm(e)} />
+                                                <input name="value" placeholder="Ingresa el valor" className="w-100 form-control" onChange={(e) => handleChangeForm(e)} />
                                             </div>
                                             <div>
                                                 <label className="d-block mb-2" htmlFor="">Fecha</label>
@@ -80,7 +82,7 @@ export function Box() {
                                 </div>
 
                                 <div className="w-75">
-                                    <div className="p-3 shadow rounded mt-5">
+                                    <div className="p-3 shadow rounded">
                                         <p className="h6 mb-3">Ultimos depositos</p>
                                         <DataTable
                                             value={infoDeposits}
