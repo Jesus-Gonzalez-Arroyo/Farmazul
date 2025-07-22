@@ -40,7 +40,7 @@ export const useGastos = () => {
     if (res.error) return console.error(res)
 
     Alerts('Completado', 'Nuevo gastos registrado con exito')
-    setGastos((prev) => [...prev, res.info[0]]);
+    setGastos((prev) => [res.info[0], ...prev]);
     form.current?.reset();
   };
 

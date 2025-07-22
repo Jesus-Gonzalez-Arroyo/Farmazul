@@ -38,7 +38,7 @@ export const useInventary = () => {
 
         if (res.error) return console.error(res)
 
-        setProducts((prev) => [...prev, res.info[0]])
+        setProducts((prev) => [res.info[0], ...prev])
 
         Alerts('Completado', 'Producto agregado con exito')
         form.current.reset()

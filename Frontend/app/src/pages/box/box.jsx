@@ -2,7 +2,7 @@ import { DataTable } from "primereact/datatable";
 import { Loader } from "../../components/Loader";
 import { Navigation } from "../../layouts/Navigation";
 import { Column } from "primereact/column";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { keys, modifyMoney } from "../../utils";
 import { consumServices } from "../../contexts/execute";
 import { Alerts } from "../../utils/alerts";
@@ -14,6 +14,7 @@ export function Box() {
         date: ''
     })
     const [infoDeposits, setInfoDeposits] = useState([])
+    const form = useRef()
 
     useEffect(() => {
         async function getDeposits () {
@@ -43,9 +44,9 @@ export function Box() {
 
         if(response.error) return console.error(response)
 
-        Alerts('Completado', 'Deposito registrado con exito')
-
         setInfoDeposits((prev) => [...prev, response.info])
+        Alerts('Completado', 'Deposito registrado con exito')
+        form.current.reset()
     }
 
     return (
@@ -61,7 +62,7 @@ export function Box() {
                                     <p className="m-0 mt-3 h5">Depositos en caja</p>
                                     <p className='mb-3 mt-2 m-0'>Registra y revisa los depositos en efectivo de la caja.</p>
                                     <div className="shadow p-3 position-relative rounded overflow-auto">
-                                        <form onSubmit={handleSubmitForm}>
+                                        <form ref={form} onSubmit={handleSubmitForm}>
                                             <div className="mb-4">
                                                 <p className="h5">Regitrar deposito</p>
                                             </div>
