@@ -11,7 +11,7 @@ from flask_cors import cross_origin
 from flask import request, jsonify
 
 api_bp = Blueprint('index', __name__, url_prefix="/index/API/v1")
-const_origins = ["http://localhost:3000", "https://farmazul.vercel.app/"]
+const_origins = ["http://localhost:3000", "https://farmazul.vercel.app"]
 
 @api_bp.route('/init', methods=['GET'])
 def initDate():
