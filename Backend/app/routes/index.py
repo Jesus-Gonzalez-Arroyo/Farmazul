@@ -31,7 +31,6 @@ def register():
     if request.method == 'POST':
         return user_register(request.json)
 
-@cross_origin(origins='*')
 @api_bp.route('/users/update', methods=['POST'])
 def updateInfoUser():
     if request.method == 'OPTIONS':
@@ -46,7 +45,6 @@ def userInfoDelete():
 
 """ ----Login routes---- """
 
-@cross_origin(origins='*')
 @api_bp.route('/login', methods=['POST', 'OPTIONS'])
 def login():
     if request.method == 'OPTIONS':
@@ -54,7 +52,6 @@ def login():
     if request.method == 'POST':
         return login_user(request.get_json())
 
-@cross_origin(origins='*')
 @api_bp.route('/getInfoUser', methods=['GET', 'OPTIONS'])
 @jwt_required()
 def protect():
