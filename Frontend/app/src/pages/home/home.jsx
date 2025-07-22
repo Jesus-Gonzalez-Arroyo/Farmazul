@@ -10,7 +10,6 @@ import "./home.css";
 export function Home() {
   const {
     info,
-    cantProduct,
     totalIngresos,
     totalGanancias,
     productMasVendidos,
