@@ -11,6 +11,7 @@ from flask_cors import cross_origin
 from flask import request, jsonify
 
 api_bp = Blueprint('index', __name__, url_prefix="/index/API/v1")
+const_origins = ["http://localhost:3000", "https://farmazul.vercel.app/"]
 
 @api_bp.route('/init', methods=['GET'])
 def initDate():
@@ -31,6 +32,7 @@ def register():
     if request.method == 'POST':
         return user_register(request.json)
 
+@cross_origin(origins=const_origins)
 @api_bp.route('/users/update', methods=['POST'])
 def updateInfoUser():
     if request.method == 'OPTIONS':
@@ -45,6 +47,7 @@ def userInfoDelete():
 
 """ ----Login routes---- """
 
+@cross_origin(origins=const_origins)
 @api_bp.route('/login', methods=['POST', 'OPTIONS'])
 def login():
     if request.method == 'OPTIONS':
@@ -52,6 +55,7 @@ def login():
     if request.method == 'POST':
         return login_user(request.get_json())
 
+@cross_origin(origins=const_origins)
 @api_bp.route('/getInfoUser', methods=['GET', 'OPTIONS'])
 @jwt_required()
 def protect():
