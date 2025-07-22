@@ -112,7 +112,7 @@ export const UseHome = () => {
             (a, b) => b.cantidad_total - a.cantidad_total
         );
 
-        setProductMasVendidos(productOrdenDesc);
+        setProductMasVendidos(productOrdenDesc.slice(0, 5));
     }
 
     return {

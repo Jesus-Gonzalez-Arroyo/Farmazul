@@ -56,6 +56,8 @@ export const UseUsers = () => {
         const registerUser = await consumServices(keys.registerUser, 'POST', '', dataNewUser)
         if (registerUser.error) return console.error(registerUser)
 
+        console.log('user', registerUser)
+
         setUsers((prev) => [registerUser.info[0], ...prev])
         Alerts('Completado', 'Nuevo usuario agregado con exito')
         form.current.reset()
