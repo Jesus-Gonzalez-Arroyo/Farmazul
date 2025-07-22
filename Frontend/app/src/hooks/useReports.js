@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 export const UseReports = () => {
+    const [loader, setLoader] = useState(true)
     const [dataVentas, setDataVentas] = useState([])
     const [date, setDate] = useState(null)
     const [week, setWeek] = useState(null)
@@ -99,14 +100,18 @@ export const UseReports = () => {
 
     function getDateMonth(value, info) {
         const selectedDate = new Date(value);
+        const month = `${String(selectedDate.getMonth() + 1).padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
         const months = getSurroundingMonths(selectedDate);
         const groupedSales = groupSalesByMonth(info);
         const monthlySummary = buildMonthlySummary(months, groupedSales);
         const chartData = buildMonthChartData(monthlySummary);
+        const dataMonthTorta = getProductsTop(groupedSales[month]?.ventas || [])
+        const chartDataProductsTop = buildChartDataProductsTop(dataMonthTorta);
 
         setChartDataMonth(chartData);
         setMonth(value);
+        setChartDataMonthTorta(chartDataProductsTop);
     }
 
     function formatMonth(month) {
@@ -131,6 +136,7 @@ export const UseReports = () => {
     }
 
     function buildMonthlySummary(months, groupedSales) {
+        console.log('groupedSales1', groupedSales);
         return months.map((mes) => ({
             mes,
             total: groupedSales[mes]?.total || 0,
@@ -159,11 +165,65 @@ export const UseReports = () => {
         };
     }
 
+    function buildChartDataProductsTop(infoProducts) {
+        const documentStyle = getComputedStyle(document.documentElement);
+        return {
+            labels: infoProducts.map((item) => item.name.toUpperCase()),
+            datasets: [
+                {
+                    data: infoProducts.map((item) => item.cantidad_total),
+                    backgroundColor: [
+                        documentStyle.getPropertyValue('--blue-500'),
+                        documentStyle.getPropertyValue('--yellow-500'),
+                        documentStyle.getPropertyValue('--green-500'),
+                        documentStyle.getPropertyValue('--red-500'),
+                        documentStyle.getPropertyValue('--purple-500')
+                    ],
+                    hoverBackgroundColor: [
+                        documentStyle.getPropertyValue('--blue-400'),
+                        documentStyle.getPropertyValue('--yellow-400'),
+                        documentStyle.getPropertyValue('--green-400'),
+                        documentStyle.getPropertyValue('--red-500'),
+                        documentStyle.getPropertyValue('--purple-500')
+                    ]
+                }
+            ]
+        }
+    }
+
     const converterMonth = (mesAnio) => {
         const [mes] = mesAnio.split('/');
         const nombreMes = monthsName[parseInt(mes, 10) - 1];
         return `${nombreMes}`;
     };
+
+    function getProductsTop(info) {
+        const conteo = {};
+
+        info.forEach((venta) => {
+            venta.products.forEach((producto) => {
+                const id = producto.id;
+                const cantidad = parseInt(producto.cantidad, 10);
+                const name = producto.name;
+
+                if (!conteo[id]) {
+                    conteo[id] = {
+                        id,
+                        name,
+                        cantidad_total: 0,
+                    };
+                }
+
+                conteo[id].cantidad_total += cantidad;
+            });
+        });
+
+        const productOrdenDesc = Object.values(conteo).sort(
+            (a, b) => b.cantidad_total - a.cantidad_total
+        );
+
+        return productOrdenDesc.slice(0, 5);
+    }
 
     //#endregion getInfoMonth
 
@@ -256,6 +316,7 @@ export const UseReports = () => {
     }
 
     return {
+        loader,
         week,
         month,
         chartData,
@@ -265,6 +326,7 @@ export const UseReports = () => {
         chartDataMonthTorta,
         date,
         dataVentas,
+        setLoader,
         setChartDataMonthTorta,
         setChartOptions,
         getTotalVentas,
