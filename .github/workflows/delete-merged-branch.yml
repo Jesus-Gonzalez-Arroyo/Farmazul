@@ -17,8 +17,7 @@ jobs:
         run: |
           echo "Rama mergeada: $BRANCH_NAME"
           
-          # Validar que la rama no sea 'main' o 'master'
-          if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "master" ]]; then
+          if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "dev" ]]; then
             echo "No se puede eliminar la rama principal ($BRANCH_NAME)."
             exit 0
           fi
