@@ -5,5 +5,6 @@ export class ProductInfoCar {
         this.name = info.name
         this.ganancia = info.ganancia
         this.cantidad = info.cantidad
+        this.idProduct = info.idProduct
     }
 }
