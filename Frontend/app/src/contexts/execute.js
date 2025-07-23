@@ -1,9 +1,11 @@
 import { Alerts } from '../utils/alerts'
+import {ENVIRONMENT, keysApi} from '../config'
 
 export async function consumServices(endpoint, method = 'GET', headers = '', body = '') {
     try {
+        const urlEndpoint = `${ENVIRONMENT.isProd ? keysApi.prod : keysApi.dev}${endpoint}`
         const defaultHeaders = { "Content-Type": "application/json" };
-        const response = await fetch(endpoint, {
+        const response = await fetch(urlEndpoint, {
             method,
             headers: headers === '' ? defaultHeaders : headers,
             ...(method !== "GET" && body ? { body: JSON.stringify(body) } : {})
