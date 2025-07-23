@@ -37,7 +37,7 @@ export const UseHome = () => {
 
             setMes(getMounth());
             setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
-            setTotalIngresos(`$${modifyMoney(totalValor)}`);
+            setTotalIngresos(`$${modifyMoney(totalValor + totalGanancias)}`);
         } catch (error) {
             console.error(error);
         } finally {
