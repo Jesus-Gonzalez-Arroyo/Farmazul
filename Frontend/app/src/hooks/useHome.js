@@ -37,7 +37,7 @@ export const UseHome = () => {
 
             setMes(getMounth());
             setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
-            setTotalIngresos(`$${modifyMoney(totalValor)}`);
+            setTotalIngresos(`$${modifyMoney(totalValor + totalGanancias)}`);
         } catch (error) {
             console.error(error);
         } finally {
@@ -112,7 +112,7 @@ export const UseHome = () => {
             (a, b) => b.cantidad_total - a.cantidad_total
         );
 
-        setProductMasVendidos(productOrdenDesc);
+        setProductMasVendidos(productOrdenDesc.slice(0, 5));
     }
 
     return {

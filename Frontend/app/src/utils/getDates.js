@@ -8,7 +8,7 @@ export function getDate() {
     const fecha = new Date();
     const yyyy = fecha.getFullYear();
     const mm = String(fecha.getMonth() + 1).padStart(2, '0');
-    const dd = String(fecha.getDate() + 1).padStart(2, '0');
+    const dd = String(fecha.getDate()).padStart(2, '0');
 
     return `${dd}/${mm}/${yyyy}`
 }

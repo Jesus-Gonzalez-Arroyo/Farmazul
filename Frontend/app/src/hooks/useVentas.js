@@ -31,6 +31,7 @@ export const useVentas = () => {
     }
 
     function handleAddProductCar(product) {
+        console.log('products', product)
         setCarProducts((prevCarProducts) => {
             const productExist = prevCarProducts.find((item) => item.id === product.id);
 

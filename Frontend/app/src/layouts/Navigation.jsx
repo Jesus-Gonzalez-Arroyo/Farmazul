@@ -14,43 +14,51 @@ export function Navigation(props) {
     {
       path: "/home",
       label: "Inicio",
-      icon: <HomeIcon size={16} />
+      icon: <HomeIcon size={16} />,
+      visible: (rol) => rol === 'Admin'
     },
     {
       path: "/ventas",
       label: "Ventas",
-      icon: <CreditCardIcon size={16} />
+      icon: <CreditCardIcon size={16} />,
+      visible: (rol) => rol === 'Admin' || rol === 'Usuario'
     },
     {
       path: "/inventario",
       label: "Inventario",
       icon: <PackageIcon size={16} />,
-      visible: (rol) => rol === 'admin'
+      visible: (rol) => rol === 'Admin'
     },
     {
       path: "/gastos",
       label: "Gastos",
-      icon: <GraphIcon size={16} />
+      icon: <GraphIcon size={16} />,
+      visible: (rol) => rol === 'Admin'
     },
     {
       path: "/users",
       label: "Usuarios",
-      icon: <PeopleIcon size={16} />
+      icon: <PeopleIcon size={16} />,
+      visible: (rol) => rol === 'Admin'
     },
     {
       path: "/ventas-realizadas",
       label: "Ventas realizadas",
-      icon: <ChecklistIcon size={16} />
+      icon: <ChecklistIcon size={16} />,
+      visible: (rol) => rol === 'Admin'
     },
     {
       path: "/box",
       label: "Caja",
-      icon: <PeopleIcon size={16} />
+      icon: <PeopleIcon size={16} />, 
+      visible: (rol) => rol === 'Admin' || rol === 'Usuario'
+
     },
     {
       path: '/reports',
       label: "Reportes",
       icon: <GraphIcon size={16} />,
+      visible: (rol) => rol === 'Admin'
     }
   ];
 
@@ -117,8 +125,9 @@ export function Navigation(props) {
       <div className="d-block">
         <div className="d-flex">
           <div
-            className="px-4 pt-2 pb-5 overflow-auto"
-            style={{ width: "100%", height: "calc(100vh - 70px)" }}
+            id='scroll'
+            className="px-4 pt-2 pb-5"
+            style={{ width: "100%", height: "calc(100vh - 70px)", overflow: 'auto'}}
           >
             {props.children}
           </div>

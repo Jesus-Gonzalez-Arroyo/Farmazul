@@ -8,13 +8,11 @@ import { Column } from 'primereact/column';
 import { FilterMatchMode } from 'primereact/api';
 import { TableComponent } from '../../components/tableComponent/Tables.jsx';
 import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { methodBodyTemplate, productsTemplate } from '../../templates/ventas-realizadas.template.jsx'
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import "./ventas-realizadas.css";
 
 export function VentasRealizadas() {
-    const [date, setDate] = useState(null)
     const [products, setProducts] = useState([])
     const [methodsPay] = useState([
         'Efectivo',
@@ -22,27 +20,19 @@ export function VentasRealizadas() {
     ]);
     const [productsVendidos, setProductsVendidos] = useState([])
     const [loader, setLoader] = useState(true)
-    const [filters, setFilters] = useState({
+    const [filters] = useState({
         usuario: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        fecha: { value: null, matchMode: FilterMatchMode.DATE_IS },
+        fecha: { value: null, matchMode: FilterMatchMode.CONTAINS },
         valor: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         recibido: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         method: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
-
-    const parseDate = (str) => {
-        const [day, month, year] = str.split('/');
-        return new Date(`${year}-${month}-${day}`);
-    };
 
     useEffect(() => {
         const productsGet = async () => {
             const resVentas = await consumServices(keys.getVentas, 'GET')
             if (resVentas.error) return console.error(resVentas.info);
 
-            resVentas.info.forEach((item) => {
-                item.fecha = parseDate(item.fecha)
-            })
             setProducts(resVentas.info.reverse())
 
             setTimeout(() => {
@@ -67,53 +57,13 @@ export function VentasRealizadas() {
         );
     };
 
-    const onCalendarChange = (e, field) => {
-        const selectedDate = e.value;
-        setDate(selectedDate);
-
-        const _filters = { ...filters };
-        _filters[field].value = selectedDate;
-        setFilters(_filters);
-    };
-
-    const calendarFilterTemplate = (options) => {
-        return (
-            <Calendar
-                value={date}
-                onChange={(e) => {
-                    onCalendarChange(e, options?.field || 'fecha');
-                    if (options?.filterApplyCallback) {
-                        options.filterApplyCallback(e.value);
-                    }
-                }}
-                dateFormat="dd/mm/yy"
-                placeholder="Seleccione fecha"
-                appendTo={document.body}
-            />
-        );
-    };
-
-
-    const formatDate = (value) => {
-        if (!value) return '';
-        return new Intl.DateTimeFormat('es-CO', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        }).format(value);
-    };
-
-    const dateBodyTemplate = (rowData) => {
-        return formatDate(rowData.fecha);
-    };
-
     return (
         <Navigation>
             {
                 loader ? (
                     <Loader />
                 ) : (
-                    <div>
+                    <div className='mb-2'>
                         <div className="d-flex w-100 h-15 gap-4 mb-10">
                             <div className="w-100">
                                 <p className="m-0 mt-3 h5">Ventas realizadas</p>
@@ -142,8 +92,6 @@ export function VentasRealizadas() {
                                             header="Fecha"
                                             filter
                                             filterPlaceholder="Search by date"
-                                            filterElement={calendarFilterTemplate}
-                                            body={(rowData) => dateBodyTemplate(rowData)}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
@@ -196,7 +144,7 @@ export function VentasRealizadas() {
                         </div>
 
                         <div class="modal fade" id="showProducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="staticBackdropLabel">Productos vendidos</h5>

@@ -237,10 +237,15 @@ export const UseReports = () => {
         const ventasFiltradas = filterSalesByDateRange(dataVentas, startDate, endDate);
         const ventasAgrupadas = groupSalesByDay(ventasFiltradas);
         const rangoDias = getDateRange(startDate, endDate);
+        const ventasArray = Object.entries(ventasAgrupadas).map(([fecha, data]) => ({
+            fecha,
+            ...data
+        }));
+        const gananciasTotal = getTotalGananciasDays(ventasArray)
 
         const resumenSemana = rangoDias.map((dia) => ({
             day: dia,
-            total: ventasAgrupadas[dia.date]?.total || 0
+            total: ventasAgrupadas[dia.date]?.total + gananciasTotal[dia.date] || 0
         }));
 
         const chartData = dataWeekGrafic(resumenSemana);
@@ -293,6 +298,29 @@ export const UseReports = () => {
             return acc;
         }, {});
     }
+
+    function getTotalGananciasDays(sales) {
+        const result = {};
+
+        for (const fecha in sales) {
+            const infoDia = sales[fecha];
+            const ventas = infoDia.ventas || [];
+
+            let totalGananciaDia = 0;
+
+            ventas.forEach(venta => {
+                venta.products.forEach(producto => {
+                    const ganancia = parseInt(producto.ganancia * producto.cantidad, 10) || 0;
+                    totalGananciaDia += ganancia;
+                });
+            });
+
+            result[sales[fecha].fecha] = totalGananciaDia;
+        }
+
+        return result;
+    }
+
 
     function dataWeekGrafic(summary) {
         return {
