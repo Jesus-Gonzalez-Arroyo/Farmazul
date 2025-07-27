@@ -26,6 +26,10 @@ export const useVentas = () => {
         setOpen(false)
     };
 
+    function closeCarComplete () {
+        setVisible(false)
+    }
+
     function handleAddProductCar(product) {
         setCarProducts((prevCarProducts) => {
             const productExist = prevCarProducts.find((item) => item.id === product.id);
@@ -158,6 +162,7 @@ export const useVentas = () => {
         handleDeleteProduct,
         handleRegisterVenta,
         handleChange,
-        setVisible
+        setVisible,
+        closeCarComplete
     }
 }
