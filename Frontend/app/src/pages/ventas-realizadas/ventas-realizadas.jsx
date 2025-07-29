@@ -33,6 +33,8 @@ export function VentasRealizadas() {
             const resVentas = await consumServices(keys.getVentas, 'GET')
             if (resVentas.error) return console.error(resVentas.info);
 
+            console.log('resVentas', resVentas.info);
+
             setProducts(resVentas.info.reverse())
 
             setTimeout(() => {
@@ -56,6 +58,12 @@ export function VentasRealizadas() {
             />
         );
     };
+
+    const gananciasForVentas = (rowData) => {
+        return rowData.products.reduce((acc, product) => {
+            return acc + (Number(product.ganancia) * Number(product.cantidad));
+        }, 0);
+    }
 
     return (
         <Navigation>
@@ -119,6 +127,12 @@ export function VentasRealizadas() {
                                             sortable
                                             filter
                                             filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            header="Ganancia"
+                                            body={(rowData) => `$${modifyMoney(gananciasForVentas(rowData))}`}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
