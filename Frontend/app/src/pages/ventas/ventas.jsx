@@ -35,7 +35,8 @@ export function Ventas() {
         handleDeleteProduct,
         handleRegisterVenta,
         handleChange,
-        setVisible
+        setVisible,
+        closeCarComplete
     } = useVentas()
 
     useEffect(() => {
@@ -150,6 +151,7 @@ export function Ventas() {
                             <div className="p-1 h-90">
                                 <p className="h6 mb-3">Productos agregados</p>
                                 <ShoppingCart
+                                    closeModal={closeCarComplete}
                                     carProducts={carProducts}
                                     deleteProduct={handleDeleteProduct}
                                     moreCant={handleMoreCant}

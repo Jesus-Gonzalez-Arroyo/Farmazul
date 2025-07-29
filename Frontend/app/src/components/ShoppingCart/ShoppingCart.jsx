@@ -2,7 +2,7 @@ import { XCircleIcon } from '@primer/octicons-react'
 import { modifyMoney } from '../../utils'
 import './ShoppingCart.css'
 
-export function ShoppingCart({carProducts, deleteProduct, moreCant, setCar }) {
+export function ShoppingCart({carProducts, deleteProduct, moreCant, setCar, closeModal }) {
     return (
         <>
             <div className="h-80 position-relative custom-scroll">
@@ -56,7 +56,7 @@ export function ShoppingCart({carProducts, deleteProduct, moreCant, setCar }) {
                     </div>
                 </div>
                 <div className="end-0">
-                    <button className="btn btn-success d-block mb-3" type="button" data-bs-toggle="modal" disabled={carProducts.length === 0} data-bs-target="#exampleModal">Comprar</button>
+                    <button className="btn btn-success d-block mb-3" onClick={closeModal} type="button" data-bs-toggle="modal" disabled={carProducts.length === 0} data-bs-target="#exampleModal">Comprar</button>
                     <button onClick={() => setCar([])} className="btn btn-danger">Cancelar</button>
                 </div>
             </div>

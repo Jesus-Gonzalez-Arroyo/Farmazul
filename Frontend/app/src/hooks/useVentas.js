@@ -26,6 +26,10 @@ export const useVentas = () => {
         setOpen(false)
     };
 
+    function closeCarComplete () {
+        setVisible(false)
+    }
+
     function handleAddProductCar(product) {
         console.log('products', product)
         setCarProducts((prevCarProducts) => {
@@ -159,6 +163,7 @@ export const useVentas = () => {
         handleDeleteProduct,
         handleRegisterVenta,
         handleChange,
-        setVisible
+        setVisible,
+        closeCarComplete
     }
 }
