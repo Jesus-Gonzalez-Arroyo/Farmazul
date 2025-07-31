@@ -5,6 +5,7 @@ connect = Connect()
 collection_users = connect['Users']
 collection_products = connect['Products']
 collection_ventas = connect['Ventas']
+collection_gastos = connect['Gastos']
 
 class InitService:
     @staticmethod
@@ -41,8 +42,20 @@ class InitService:
                 print(KeyError)
                 continue
 
+        gastos_mes = []
+        for venta in collection_gastos.find({}, {"descripcion": 0, "estado": 0, "valordeuda": 0, "type": 0}):
+            try:
+                fecha_venta = datetime.strptime(venta["fecha"], "%Y-%m-%d")
+                if primer_dia_mes <= fecha_venta < primer_dia_proximo_mes:
+                    venta['_id'] = str(venta['_id'])
+                    gastos_mes.append(venta)
+            except (KeyError, ValueError):
+                print(KeyError)
+                continue
+
         return {
             'resumVentas': ventas_mes,
             'resumLowUnits': products_low_stock,
-            'users': users
+            'users': users,
+            'gastosMonth': gastos_mes
         }

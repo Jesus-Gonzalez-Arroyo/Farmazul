@@ -14,12 +14,12 @@ import "./ventas-realizadas.css";
 
 export function VentasRealizadas() {
     const [products, setProducts] = useState([])
+    const [productsVendidos, setProductsVendidos] = useState([])
+    const [loader, setLoader] = useState(true)
     const [methodsPay] = useState([
         'Efectivo',
         'Transferencia'
     ]);
-    const [productsVendidos, setProductsVendidos] = useState([])
-    const [loader, setLoader] = useState(true)
     const [filters] = useState({
         usuario: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         fecha: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -32,8 +32,6 @@ export function VentasRealizadas() {
         const productsGet = async () => {
             const resVentas = await consumServices(keys.getVentas, 'GET')
             if (resVentas.error) return console.error(resVentas.info);
-
-            console.log('resVentas', resVentas.info);
 
             setProducts(resVentas.info.reverse())
 
