@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { getDate, keys } from '../utils'
+import { getDate, keys, modifyMoney } from '../utils'
 import { consumServices } from '../contexts/execute'
 import { VentaInfo } from '../models'
 import { Alerts } from '../utils/alerts'
@@ -9,9 +9,11 @@ export const useVentas = () => {
     const [products, setProducts] = useState([])
     const [carProducts, setCarProducts] = useState([])
     const [loader, setLoader] = useState(true)
+    const [loaderModal, setLoaderModal] = useState(true)
     const [open, setOpen] = useState(false)
     const [visible, setVisible] = useState(false)
     const [methodPay, setMethodPay] = useState("")
+    const [infoDay, setInfoDay] = useState({})
     const [infoVenta, setInfoVenta] = useState(new VentaInfo({}))
     const [filters] = useState({
         idProduct: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -26,7 +28,7 @@ export const useVentas = () => {
         setOpen(false)
     };
 
-    function closeCarComplete () {
+    function closeCarComplete() {
         setVisible(false)
     }
 
@@ -137,6 +139,40 @@ export const useVentas = () => {
         form.current.reset()
     }
 
+    
+    async function getInfoDay() {
+        const resInfo = await consumServices(keys.getInfoSystem, "GET");
+        
+        if(resInfo.error) return console.error(resInfo.info)
+            
+        getInfoVentasInDay(resInfo.info)
+        setLoaderModal(false)
+    }
+    
+    function getInfoVentasInDay(info) {
+        const ventasForDay = []
+
+        info.resumVentas.forEach((venta) => {
+            if (venta.fecha === getDate()) {
+                ventasForDay.push(venta)
+            }
+        })
+
+        const totalGananciasForDay = ventasForDay.map(venta =>
+            venta.products.reduce((total, product) =>
+                total + parseInt(product.ganancia * product.cantidad, 10), 0)
+        ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
+
+        const totalIngresosForDay = ventasForDay.reduce((total, venta) => {
+            return total + parseInt(venta.valor);
+        }, 0);
+
+        setInfoDay({
+            ingresosDay: `$${modifyMoney(totalIngresosForDay + totalGananciasForDay)}`,
+            salesDay: ventasForDay.length,
+        })
+    }
+
     function handleChange(e) {
         const { name, value } = e.target;
         setInfoVenta((prev) => ({ ...prev, [name]: value }));
@@ -152,6 +188,9 @@ export const useVentas = () => {
         form,
         filters,
         visible,
+        infoDay,
+        loaderModal,
+        setInfoDay,
         setOpen,
         setInfoVenta,
         handleSelectMethodPay,
@@ -164,6 +203,7 @@ export const useVentas = () => {
         handleRegisterVenta,
         handleChange,
         setVisible,
-        closeCarComplete
+        closeCarComplete,
+        getInfoDay
     }
 }

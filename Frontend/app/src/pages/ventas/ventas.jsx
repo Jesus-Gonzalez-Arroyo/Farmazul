@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { PlusCircleIcon } from '@primer/octicons-react'
+import { PlusCircleIcon, GraphIcon, ArrowLeftIcon } from '@primer/octicons-react'
 import { Navigation } from "../../layouts/Navigation";
-import { keys, modifyMoney } from '../../utils/index'
+import { getDate, keys, modifyMoney } from '../../utils/index'
 import { consumServices } from '../../contexts/execute'
 import { Loader } from '../../components/Loader';
 import { ProductInfoCar } from '../../models';
@@ -11,7 +11,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { SideBar } from '../../components/sideBar/sideBar'
 import { FinalizeShop } from '../../components/finalizeShop/modalFinalizeShop.jsx'
-import {ArrowLeftIcon} from '@primer/octicons-react'
 import "./ventas.css";
 
 export function Ventas() {
@@ -25,6 +24,8 @@ export function Ventas() {
         form,
         filters,
         visible,
+        infoDay,
+        loaderModal,
         setOpen,
         handleSelectMethodPay,
         setProducts,
@@ -36,13 +37,15 @@ export function Ventas() {
         handleRegisterVenta,
         handleChange,
         setVisible,
-        closeCarComplete
+        closeCarComplete,
+        getInfoDay
     } = useVentas()
 
     useEffect(() => {
         const productsGet = async () => {
             const responseProducts = await consumServices(keys.getProducts, 'GET')
-            if (responseProducts.error) return console.error(responseProducts.info);
+
+            if (responseProducts.error) return console.error(responseProducts.error);
             setProducts(responseProducts.info)
 
             setTimeout(() => {
@@ -71,8 +74,13 @@ export function Ventas() {
                                         <p className="m-0 mt-3 h5">Tus productos disponibles</p>
                                         <p className='mb-3 mt-2 m-0'>Realiza y registra tus ventas del dia.</p>
                                     </div>
-                                    <div onClick={() => setVisible(true)}>
-                                        <ArrowLeftIcon size={24} />
+                                    <div className='d-flex align-items-center gap-4'>
+                                        <div onClick={() => getInfoDay()} data-bs-toggle="modal" data-bs-target="#showVentas">
+                                            <GraphIcon size={24} />
+                                        </div>
+                                        <div onClick={() => setVisible(true)}>
+                                            <ArrowLeftIcon size={24} />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="shadow p-3 position-relative rounded overflow-auto">
@@ -135,7 +143,7 @@ export function Ventas() {
                             </div>
                         </div>
 
-                        <FinalizeShop 
+                        <FinalizeShop
                             carProducts={carProducts}
                             form={form}
                             methodPay={methodPay}
@@ -144,7 +152,7 @@ export function Ventas() {
                             setOpen={setOpen}
                             handleSelectMethodPay={handleSelectMethodPay}
                             handleChange={handleChange}
-                            handleRegisterVenta={handleRegisterVenta} 
+                            handleRegisterVenta={handleRegisterVenta}
                         />
 
                         <SideBar isVentas={true} position='right' visible={visible} setVisible={setVisible}>
@@ -159,6 +167,30 @@ export function Ventas() {
                                 />
                             </div>
                         </SideBar>
+
+                        <div class="modal fade" id="showVentas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Registro ventas realizadas</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    {
+                                        loaderModal ? (
+                                            <Loader />
+                                        ) : (
+                                            <div>
+                                                <div class="modal-body fs-5">
+                                                    <p className=''>Fecha: <strong>{getDate()}</strong></p>
+                                                    <p>Ventas realizadas: <strong>{infoDay.salesDay}</strong></p>
+                                                    <p>Total ingresos: <strong>{infoDay.ingresosDay}</strong></p>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )
             }

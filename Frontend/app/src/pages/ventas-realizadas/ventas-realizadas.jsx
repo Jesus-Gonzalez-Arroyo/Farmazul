@@ -14,12 +14,12 @@ import "./ventas-realizadas.css";
 
 export function VentasRealizadas() {
     const [products, setProducts] = useState([])
+    const [productsVendidos, setProductsVendidos] = useState([])
+    const [loader, setLoader] = useState(true)
     const [methodsPay] = useState([
         'Efectivo',
         'Transferencia'
     ]);
-    const [productsVendidos, setProductsVendidos] = useState([])
-    const [loader, setLoader] = useState(true)
     const [filters] = useState({
         usuario: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         fecha: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -56,6 +56,12 @@ export function VentasRealizadas() {
             />
         );
     };
+
+    const gananciasForVentas = (rowData) => {
+        return rowData.products.reduce((acc, product) => {
+            return acc + (Number(product.ganancia) * Number(product.cantidad));
+        }, 0);
+    }
 
     return (
         <Navigation>
@@ -119,6 +125,12 @@ export function VentasRealizadas() {
                                             sortable
                                             filter
                                             filterPlaceholder="Search by price"
+                                            showFilterMenu={false}
+                                            style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            header="Ganancia"
+                                            body={(rowData) => `$${modifyMoney(gananciasForVentas(rowData))}`}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />

@@ -42,13 +42,37 @@ export const UseReports = () => {
         }, {});
     }
 
+    function getTotalGananciasMonth(sales) {
+        return sales.reduce((acc, venta) => {
+            const [, mes, anio] = venta.fecha.split('/');
+            const key = `${mes}/${anio}`;
+
+            if (!acc[key]) {
+                acc[key] = {
+                    ventas: [],
+                    total: 0
+                };
+            }
+
+            acc[key].ventas.push(venta);
+            acc[key].total += venta.products.reduce((total, product) => {
+                return total + parseInt(product.ganancia * product.cantidad, 10);
+            }, 0);
+
+            return acc;
+        }, {});
+    }
+
     //#region getInfoFullMonths
 
     async function getTotalVentas(info, value) {
         const selectedDate = value ? new Date(value) : new Date();
         const months = getAllMonthsOfYear(selectedDate);
         const groupedSales = groupSalesByMonth(info);
-        const monthlyTotals = buildMonthlyTotals(months, groupedSales);
+        console.log('groupedSales', groupedSales);
+        const gananciasSales = getTotalGananciasMonth(info);
+        console.log('gananciasSales', gananciasSales);
+        const monthlyTotals = buildMonthlyTotals(months, groupedSales, gananciasSales);
         const chartData = buildChartData(monthlyTotals);
 
         setDate(value);
@@ -64,10 +88,10 @@ export const UseReports = () => {
         });
     }
 
-    function buildMonthlyTotals(months, groupedSales) {
+    function buildMonthlyTotals(months, groupedSales, gananciasSales) {
         return months.map((mes) => ({
             mes,
-            total: groupedSales[mes]?.total || 0
+            total: groupedSales[mes]?.total + gananciasSales[mes]?.total || 0
         }));
     }
 
@@ -104,7 +128,8 @@ export const UseReports = () => {
 
         const months = getSurroundingMonths(selectedDate);
         const groupedSales = groupSalesByMonth(info);
-        const monthlySummary = buildMonthlySummary(months, groupedSales);
+        const gananciasSalesMonth = getTotalGananciasMonth(info);
+        const monthlySummary = buildMonthlySummary(months, groupedSales, gananciasSalesMonth);
         const chartData = buildMonthChartData(monthlySummary);
         const dataMonthTorta = getProductsTop(groupedSales[month]?.ventas || [])
         const chartDataProductsTop = buildChartDataProductsTop(dataMonthTorta);
@@ -135,11 +160,10 @@ export const UseReports = () => {
         ];
     }
 
-    function buildMonthlySummary(months, groupedSales) {
-        console.log('groupedSales1', groupedSales);
+    function buildMonthlySummary(months, groupedSales, gananciasSales) {
         return months.map((mes) => ({
             mes,
-            total: groupedSales[mes]?.total || 0,
+            total: groupedSales[mes]?.total + gananciasSales[mes]?.total || 0,
             nameMonth: converterMonth(mes)
         }));
     }

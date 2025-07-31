@@ -16,6 +16,7 @@ export function Home() {
     mes,
     loader,
     infoDay,
+    totalGastos,
     getInfoSystem,
   } = UseHome();
 
@@ -43,6 +44,11 @@ export function Home() {
               <CardsDates
                 title="Ganancias"
                 date={totalGanancias}
+                changeStyle={true}
+              />
+              <CardsDates
+                title="Gastos"
+                date={totalGastos}
                 changeStyle={true}
               />
             </div>

@@ -7,9 +7,10 @@ import { consumServices } from '../../contexts/execute.js';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
+import { FileIcon } from '@primer/octicons-react';
 import { statusBodyTemplate, typeBodyTemplate } from '../../templates/Gastos.jsx'
 import ActionsTemplate from '../../templates/Actions.jsx';
-import { Calendar } from 'primereact/calendar';
+import SuportPayGastos from '../../components/suportPay/suportPay.jsx';
 
 export function Gastos() {
 
@@ -26,6 +27,10 @@ export function Gastos() {
         dataRegisterUpdate,
         filters,
         setTotalPages,
+        contentRef,
+        infoGasto,
+        setInfoGasto,
+        reactToPrintFn,
         handleSelect,
         handleSelectState,
         setLoader,
@@ -57,6 +62,20 @@ export function Gastos() {
         gastosGet();
     }, [setGastos, setLoader, setTotalPages])
 
+    const productsTemplate = (rowData) => (
+        <div className='d-flex justify-content-center align-items-center'>
+            <FileIcon
+                onClick={() => {
+                    setInfoGasto(rowData);
+                    setTimeout(() => {
+                        reactToPrintFn();
+                    }, 100);
+                }}
+                size={24}
+            />
+        </div>
+    )
+
     const statusRowFilterTemplate = (options) => {
         return (
             <Dropdown
@@ -84,28 +103,6 @@ export function Gastos() {
                 style={{ minWidth: '12rem' }}
             />
         );
-    };
-
-    const formatDate = (value) => {
-        if (!value) return '';
-
-        const date = new Date(value);
-
-        if (isNaN(date.getTime())) {
-            console.warn('Fecha inválida:', value);
-            return '';
-        }
-
-        return new Intl.DateTimeFormat('es-CO', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-        }).format(date);
-    };
-
-
-    const dateBodyTemplate = (rowData) => {
-        return formatDate(rowData.fecha);
     };
 
     return (
@@ -186,7 +183,6 @@ export function Gastos() {
                                             field="fecha"
                                             header="Fecha"
                                             filter
-                                            body={(rowData) => dateBodyTemplate(rowData)}
                                             showFilterMenu={false}
                                             style={{ minWidth: '12rem' }}
                                         />
@@ -194,6 +190,11 @@ export function Gastos() {
                                             field="descripcion"
                                             header="Descripcion"
                                             style={{ minWidth: '12rem' }}
+                                        />
+                                        <Column
+                                            header="Imprimir"
+                                            body={(rowData) => productsTemplate(rowData)}
+                                            style={{ minWidth: '3rem' }}
                                         />
                                         <Column
                                             header="Acciones"
@@ -395,6 +396,10 @@ export function Gastos() {
                                     </div>
                                 </div>
                             </div>
+
+                                <div style={{ display: 'none' }}>
+                                    <SuportPayGastos ref={contentRef} info={infoGasto} />
+                                </div>
                         </div>
                     )
                 }

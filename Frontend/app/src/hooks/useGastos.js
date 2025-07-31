@@ -4,8 +4,12 @@ import { consumServices } from "../contexts/execute";
 import { keys } from "../utils";
 import { Alerts } from "../utils/alerts";
 import { FilterMatchMode } from "primereact/api";
+import { useReactToPrint } from "react-to-print";
 
 export const useGastos = () => {
+  const form = useRef();
+  const contentRef = useRef();
+  const [infoGasto, setInfoGasto] = useState({});
   const [date, setDate] = useState(null)
   const [loader, setLoader] = useState(true);
   const [productId, setProductId] = useState({});
@@ -14,7 +18,6 @@ export const useGastos = () => {
   const [state, setState] = useState("");
   const [open, setOpen] = useState(false);
   const [openState, setOpenState] = useState(false);
-  const form = useRef();
   const types = ["Pago", "Compra"];
   const typeState = ["Pagado", "En deuda"];
   const [dataRegister, setDataRegister] = useState(new GastosInfoModel());
@@ -76,6 +79,8 @@ export const useGastos = () => {
     setDataRegisterUpdate(new GastosInfoUpdateModel(info));
   };
 
+  const reactToPrintFn = useReactToPrint({ contentRef });
+
   const handleChange = ({ target: { name, value } }) =>
     setDataRegister((prev) => ({ ...prev, [name]: value }));
 
@@ -127,6 +132,8 @@ export const useGastos = () => {
     dataRegisterUpdate,
     filters,
     date,
+    infoGasto,
+    setInfoGasto,
     setDate,
     setLoader,
     setGastos,
@@ -143,6 +150,8 @@ export const useGastos = () => {
     getTypeGastos,
     handleSelect,
     handleSelectState,
-    setFilters
+    setFilters,
+    reactToPrintFn,
+    contentRef,
   };
 };

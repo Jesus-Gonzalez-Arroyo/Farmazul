@@ -1,5 +1,5 @@
 const ENVIRONMENT = {
-  isProd: true,
+  isProd: false,
 }
 
 const keysApi = {
