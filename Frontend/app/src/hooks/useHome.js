@@ -3,19 +3,21 @@ import { getDate, getMounth, keys, modifyMoney } from "../utils";
 import { consumServices } from "../contexts/execute";
 
 export const UseHome = () => {
-    const [info, setInfo] = useState({
-        resumLowUnits: [],
-        users: [],
-        resumVentas: [],
-    });
     const [cantProduct, setCantProduct] = useState("");
+    const [totalGastos, setTotalGastos] = useState("");
     const [totalIngresos, setTotalIngresos] = useState("");
     const [totalGanancias, setTotalGanancias] = useState("");
     const [productMasVendidos, setProductMasVendidos] = useState([]);
     const [infoDay, setInfoDay] = useState({ gananciaDay: '', productDay: '' })
     const [mes, setMes] = useState("");
     const [loader, setLoader] = useState(true);
-
+    const [info, setInfo] = useState({
+        resumLowUnits: [],
+        users: [],
+        resumVentas: [],
+        gastosMonth: []
+    });
+    
     const getInfoSystem = async () => {
         try {
             const resInfo = await consumServices(keys.getInfoSystem, "GET");
@@ -34,10 +36,11 @@ export const UseHome = () => {
             getInfoVentasInDay(resInfo.info)
             getProductVendidos(resInfo.info)
             getProductsTop(resInfo.info)
+            getGastosMonth(resInfo.info.gastosMonth)
 
             setMes(getMounth());
             setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
-            setTotalIngresos(`$${modifyMoney(totalValor + totalGanancias)}`);
+            setTotalIngresos(`$${modifyMoney((totalValor + totalGanancias) - totalGastos)}`);
         } catch (error) {
             console.error(error);
         } finally {
@@ -115,6 +118,15 @@ export const UseHome = () => {
         setProductMasVendidos(productOrdenDesc.slice(0, 5));
     }
 
+    function getGastosMonth(info) {
+        const totalGastos = info.reduce(
+            (acc, gasto) => acc + Number(gasto.price),
+            0
+        );
+
+        setTotalGastos(totalGastos)
+    }
+
     return {
         info,
         cantProduct,
@@ -124,6 +136,7 @@ export const UseHome = () => {
         mes,
         loader,
         infoDay,
+        totalGastos: `$${modifyMoney(totalGastos)}`,
         getInfoSystem
     }
 }
