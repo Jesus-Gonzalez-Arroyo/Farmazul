@@ -43,12 +43,12 @@ class InitService:
                 continue
 
         gastos_mes = []
-        for venta in collection_gastos.find({}, {"descripcion": 0, "estado": 0, "valordeuda": 0, "type": 0}):
+        for gasto in collection_gastos.find({}, {"descripcion": 0, "estado": 0, "valordeuda": 0, "type": 0}):
             try:
-                fecha_venta = datetime.strptime(venta["fecha"], "%Y-%m-%d")
-                if primer_dia_mes <= fecha_venta < primer_dia_proximo_mes:
-                    venta['_id'] = str(venta['_id'])
-                    gastos_mes.append(venta)
+                fecha_gasto = datetime.strptime(gasto["fecha"], "%Y-%m-%d")
+                if primer_dia_mes <= fecha_gasto < primer_dia_proximo_mes:
+                    gasto['_id'] = str(gasto['_id'])
+                    gastos_mes.append(gasto)
             except (KeyError, ValueError):
                 print(KeyError)
                 continue
