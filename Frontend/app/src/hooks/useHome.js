@@ -18,34 +18,30 @@ export const UseHome = () => {
         gastosMonth: []
     });
     
-    const getInfoSystem = async () => {
-        try {
-            const resInfo = await consumServices(keys.getInfoSystem, "GET");
-            if (resInfo.error) return console.error(resInfo.info);
-            setInfo(resInfo.info);
+    async function getInfoSystem () {
+        const resInfo = await consumServices(keys.getInfoSystem, "GET");
+        if (resInfo.error) return console.error(resInfo.info);
+        setInfo(resInfo.info);
 
-            const totalValor = resInfo.info.resumVentas.reduce((acc, venta) => {
-                return acc + Number(venta.valor);
-            }, 0);
+        const totalValor = resInfo.info.resumVentas.reduce((acc, venta) => {
+            return acc + Number(venta.valor);
+        }, 0);
 
-            const totalGanancias = resInfo.info.resumVentas.map(venta =>
-                venta.products.reduce((total, product) =>
-                    total + parseInt(product.ganancia * product.cantidad, 10), 0)
-            ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
+        const totalGanancias = resInfo.info.resumVentas.map(venta =>
+            venta.products.reduce((total, product) =>
+                total + parseInt(product.ganancia * product.cantidad, 10), 0)
+        ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
 
-            getInfoVentasInDay(resInfo.info)
-            getProductVendidos(resInfo.info)
-            getProductsTop(resInfo.info)
-            getGastosMonth(resInfo.info.gastosMonth)
+        getInfoVentasInDay(resInfo.info)
+        getProductVendidos(resInfo.info)
+        getProductsTop(resInfo.info)
+        const gastosMonth = getGastosMonth(resInfo.info.gastosMonth)
 
-            setMes(getMounth());
-            setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
-            setTotalIngresos(`$${modifyMoney((totalValor + totalGanancias) - totalGastos)}`);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoader(false);
-        }
+        setMes(getMounth());
+        setTotalGanancias(`$${modifyMoney(totalGanancias)}`)
+        setTotalIngresos(`$${modifyMoney((totalValor + totalGanancias) - gastosMonth)}`);
+        setTotalGastos(gastosMonth)
+        setLoader(false);
     };
 
 
@@ -124,7 +120,7 @@ export const UseHome = () => {
             0
         );
 
-        setTotalGastos(totalGastos)
+        return totalGastos
     }
 
     return {

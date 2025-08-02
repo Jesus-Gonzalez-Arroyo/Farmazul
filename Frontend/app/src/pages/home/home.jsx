@@ -22,7 +22,7 @@ export function Home() {
 
   useEffect(() => {
     getInfoSystem();
-  }, [getInfoSystem]);
+  }, []);
 
   return (
     <div>
