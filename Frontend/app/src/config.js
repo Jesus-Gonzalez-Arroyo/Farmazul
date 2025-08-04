@@ -3,8 +3,8 @@ const ENVIRONMENT = {
 }
 
 const keysApi = {
-    dev: 'https://farmazul-dev.onrender.com/',
-    prod: 'https://farmazul-1.onrender.com/'
+    dev: 'https://farmazul-dev-2.onrender.com/',
+    prod: 'https://farmazul.onrender.com/'
 }
 
 export  { ENVIRONMENT, keysApi }
