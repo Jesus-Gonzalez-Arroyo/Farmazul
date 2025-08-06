@@ -14,7 +14,7 @@ class ProductsServices:
     
     @staticmethod
     def register_product(name, price, priceventa, cant, estancia, ganancia, prov, idProduct):
-        if collection_products.find_one({'name': name}):
+        if collection_products.find_one({'name': idProduct }):
             return {'error': 'Producto ya registrado'}
         
         new_product = collection_products.insert_one({'name': name, 'price': price, 'price_venta': priceventa, 'cantidad': cant, 'estancia': estancia, 'ganancia': ganancia, 'proveedor': prov, 'idProduct': idProduct}).inserted_id
@@ -69,7 +69,7 @@ class ProductsServices:
             return None
     
     @staticmethod
-    def descuentUnits(products):
+    def modifyUnitsProducts(products, isReturn):
         updated_products = []
 
         for product in products:
@@ -77,7 +77,12 @@ class ProductsServices:
             cantSold = int(product['cantidad'])
 
             product_found = collection_products.find_one({'_id': product_id})
-            new_cant = int(product_found['cantidad']) - cantSold
+            new_cant = ""
+
+            if isReturn:
+                new_cant = int(product_found['cantidad']) + cantSold
+            else:
+                new_cant = int(product_found['cantidad']) - cantSold
 
             updated = collection_products.find_one_and_update(
                 {'_id': product_id},

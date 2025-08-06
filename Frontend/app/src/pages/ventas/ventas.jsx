@@ -92,6 +92,9 @@ export function Ventas() {
                                         dataKey="id"
                                         filterDisplay="row"
                                         emptyMessage="No customers found."
+                                        rowsPerPageOptions={[5, 10, 25]}
+                                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                                        currentPageReportTemplate="{first} to {last} of {totalRecords}"
                                     >
                                         <Column
                                             field="idProduct"
@@ -99,7 +102,7 @@ export function Ventas() {
                                             filter
                                             showFilterMenu={false}
                                             filterPlaceholder="Search by id"
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '3rem', maxWidth: '10rem' }}
                                         />
                                         <Column
                                             field="name"
@@ -131,7 +134,7 @@ export function Ventas() {
                                             showFilterMenu={false}
                                             filterPlaceholder="Search by estante"
                                             body={(rowData) => rowData.estancia.toUpperCase()}
-                                            style={{ minWidth: '12rem' }}
+                                            style={{ minWidth: '12rem', maxWidth: '2rem' }}
                                         />
                                         <Column
                                             header="Acciones"

@@ -61,6 +61,6 @@ def update_products(data):
     return jsonify(ResponseModel(result))
 
 @safe_response
-def descuentUnitsProducts(data):
-    result = ProductsServices.descuentUnits(data)
+def unitsModifyProducts(data):
+    result = ProductsServices.modifyUnitsProducts(data['products'], data['isReturn'])
     return jsonify(ResponseModel(result))

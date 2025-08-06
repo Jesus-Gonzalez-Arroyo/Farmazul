@@ -132,6 +132,9 @@ export function Gastos() {
                                         filters={filters}
                                         filterDisplay="row"
                                         emptyMessage="No customers found."
+                                        rowsPerPageOptions={[5, 10, 25]}
+                                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                                        currentPageReportTemplate="{first} to {last} of {totalRecords}"
                                     >
                                         <Column
                                             field="name"

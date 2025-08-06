@@ -56,7 +56,7 @@ export function ShoppingCart({carProducts, deleteProduct, moreCant, setCar, clos
                     </div>
                 </div>
                 <div className="end-0">
-                    <button className="btn btn-success d-block mb-3" onClick={closeModal} type="button" data-bs-toggle="modal" disabled={carProducts.length === 0} data-bs-target="#exampleModal">Comprar</button>
+                    <button className="btn btn-success d-block mb-3" onClick={closeModal} type="button" data-bs-toggle="modal" disabled={carProducts.length === 0} data-bs-target="#finalizeShop">Comprar</button>
                     <button onClick={() => setCar([])} className="btn btn-danger">Cancelar</button>
                 </div>
             </div>

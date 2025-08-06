@@ -75,6 +75,9 @@ export function Inventary() {
                                     dataKey="id"
                                     filterDisplay="row"
                                     emptyMessage="No customers found."
+                                    rowsPerPageOptions={[5, 10, 25]}
+                                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
                                 >
                                     <Column
                                         field="idProduct"
@@ -111,7 +114,7 @@ export function Inventary() {
                                     <Column
                                         field="cantidad"
                                         header="Cantidad"
-                                        body={(rowData)=>unitBodyTemplate(rowData, getUnitProducts)}
+                                        body={(rowData) => unitBodyTemplate(rowData, getUnitProducts)}
                                         sortable
                                         style={{ minWidth: '11rem' }}
                                     />
