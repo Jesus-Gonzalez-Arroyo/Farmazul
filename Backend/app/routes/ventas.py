@@ -15,3 +15,9 @@ def register_venta(data):
         return jsonify(ResponseModel('Exito.'))
     except Exception as e:
         return jsonify(ResponseModel(e, True, 401))
+
+def venta_delete(data):
+    try:
+        return jsonify(ResponseModel(VentasServices.delete_venta(data.get('id'))))
+    except Exception as e:
+        return jsonify(ResponseModel(str(e), True, 401))

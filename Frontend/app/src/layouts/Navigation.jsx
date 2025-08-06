@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from "react-router";
-import { PersonIcon, SignOutIcon, ThreeBarsIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon, ChevronRightIcon, ArchiveIcon } from '@primer/octicons-react'
+import { PersonIcon, SignOutIcon, ThreeBarsIcon, HomeIcon, CreditCardIcon, PackageIcon, GraphIcon, PeopleIcon, ChecklistIcon, ChevronRightIcon, ArchiveIcon, SyncIcon } from '@primer/octicons-react'
 import { keys, modifyMoney } from '../utils/index'
 import { consumServices } from '../contexts/execute'
 import { SideBar } from '../components/sideBar/sideBar'
@@ -52,14 +52,19 @@ export function Navigation(props) {
       label: "Caja",
       icon: <ArchiveIcon  size={16} />, 
       visible: (rol) => rol === 'Admin' || rol === 'Usuario'
-
     },
     {
       path: '/reports',
       label: "Reportes",
       icon: <GraphIcon size={16} />,
       visible: (rol) => rol === 'Admin'
-    }
+    },
+    {
+      path: "/devoluciones",
+      label: "Devoluciones",
+      icon: <SyncIcon size={16} />, 
+      visible: (rol) => rol === 'Admin' || rol === 'Usuario'
+    },
   ];
 
   useEffect(() => {

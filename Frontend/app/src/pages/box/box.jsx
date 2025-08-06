@@ -17,7 +17,7 @@ export function Box() {
     const form = useRef()
 
     useEffect(() => {
-        async function getDeposits () {
+        async function getDeposits() {
             const response = await consumServices(keys.getDepositsBox, "GET");
             if (response.error) return console.error(response.info);
             setInfoDeposits(response.info.reverse());
@@ -42,7 +42,7 @@ export function Box() {
         const response = await consumServices(keys.getDepositsBox, "POST", '', infoForm);
         console.log(response)
 
-        if(response.error) return console.error(response)
+        if (response.error) return console.error(response)
 
         setInfoDeposits((prev) => [response.info, ...prev])
         Alerts('Completado', 'Deposito registrado con exito')
@@ -91,6 +91,9 @@ export function Box() {
                                             dataKey="id"
                                             filterDisplay="row"
                                             emptyMessage="No customers found."
+                                            rowsPerPageOptions={[5, 10, 25]}
+                                            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                                            currentPageReportTemplate="{first} to {last} of {totalRecords}"
                                         >
                                             <Column
                                                 field="name"

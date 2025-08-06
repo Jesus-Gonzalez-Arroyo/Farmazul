@@ -2,8 +2,8 @@ from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
 from routes.users import get_users, user_register, userUpdate, userDelete
-from routes.products import get_products_all, register_product, delete_product, update_products, descuentUnitsProducts
-from routes.ventas import get_all_ventas, register_venta
+from routes.products import get_products_all, register_product, delete_product, update_products, unitsModifyProducts
+from routes.ventas import get_all_ventas, register_venta, venta_delete
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
 from routes.box import get_deposits_all, register_deposit
 from routes.init import init
@@ -87,12 +87,12 @@ def products_udpdate():
     if request.method == 'POST':
         return update_products(request.json)
 
-@api_bp.route('products/descuentUnits', methods=['POST', 'OPTIONS'])
+@api_bp.route('products/modifyUnits', methods=['POST', 'OPTIONS'])
 def productUnitDescuent():
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
     if request.method == 'POST':
-        return descuentUnitsProducts(request.json)
+        return unitsModifyProducts(request.json)
     
 """ --------- Ventas routes ----------- """
 @api_bp.route('/ventas', methods=['GET'])
@@ -106,6 +106,11 @@ def ventas_register():
         return register_venta(request.json)
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
+    
+@api_bp.route('ventas/delete', methods=['DELETE'])
+def ventas_delete():
+    if(request.method == 'DELETE'):
+        return venta_delete(request.json)
     
 """  ---------- Gastos routes ---------- """
 

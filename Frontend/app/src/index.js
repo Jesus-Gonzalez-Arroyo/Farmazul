@@ -1,7 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
+import ProtectedRoute from './utils/protectRoutes/protectedRoute';
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { Login } from './pages/login/login';
 import { Home } from './pages/home/home'
@@ -9,10 +8,11 @@ import { Ventas } from './pages/ventas/ventas'
 import { Inventary } from './pages/inventary/inventary'
 import { Gastos } from './pages/gastos/gastos'
 import { Users } from './pages/users/users'
-import {VentasRealizadas} from './pages/ventas-realizadas/ventas-realizadas'
 import { Box } from './pages/box/box'
 import { Reports } from './pages/reports/reports';
-import ProtectedRoute from './utils/protectRoutes/protectedRoute';
+import { Returns } from './pages/returns/returns'
+import { VentasRealizadas } from './pages/ventas-realizadas/ventas-realizadas'
+import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -30,6 +30,7 @@ root.render(
         <Route path='/ventas-realizadas' element={<VentasRealizadas />} />
         <Route path='/box' element={<Box />} />
         <Route path='/reports' element={<Reports />} />
+        <Route path='/devoluciones' element={<Returns />} />
       </Route>
     </Routes>
   </BrowserRouter>

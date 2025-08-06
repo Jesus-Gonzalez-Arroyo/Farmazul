@@ -23,160 +23,132 @@ export const useVentas = () => {
     const methodsPay = ["Efectivo", "Transferencia"]
     const form = useRef()
 
-    function handleSelectMethodPay(value) {
+    const handleSelectMethodPay = (value) => {
         setMethodPay(value)
         setOpen(false)
-    };
+    }
 
-    function closeCarComplete() {
+    const closeCarComplete = () => setVisible(false)
+
+    const showAlert = (title, message, type = 'info') => {
+        Alerts(title, message, type)
         setVisible(false)
     }
 
-    function handleAddProductCar(product) {
-        console.log('products', product)
+    const handleAddProductCar = (product) => {
+        const stockDisponible = Number(product.cantidad);
+
+        if (stockDisponible === 0) {
+            return showAlert('Acción no permitida', `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
+        }
+
         setCarProducts((prevCarProducts) => {
-            const productExist = prevCarProducts.find((item) => item.id === product.id);
-
-            const stockDisponible = Number(product.cantidad);
-
-            if (stockDisponible === 0) {
-                Alerts(
-                    'Acción no permitida',
-                    `No existen unidades disponibles para el producto ${product.name.toUpperCase()}`,
-                    'warning'
-                );
-                setVisible(false);
-                return prevCarProducts;
-            }
+            const productExist = prevCarProducts.find((item) => item.id === product.id)
 
             if (productExist) {
-                const cantidadRegistrada = Number(productExist.cantidad);
+                const cantidadRegistrada = Number(productExist.cantidad)
 
                 if (cantidadRegistrada + 1 > stockDisponible) {
-                    Alerts(
-                        'Acción no permitida',
-                        `Solo existen ${stockDisponible} unidades disponibles para el producto ${product.name.toUpperCase()}`,
-                        'warning'
-                    );
-                    setVisible(false);
-                    return prevCarProducts;
+                    return showAlert('Acción no permitida', `Solo existen ${stockDisponible} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
                 }
 
-                Alerts(
-                    'Producto agregado',
-                    `El producto ${product.name.toUpperCase()} ha sido actualizado en el carrito`,
-                    'success'
-                );
+                showAlert('Producto agregado', `El producto ${product.name.toUpperCase()} ha sido actualizado en el carrito`, 'success')
 
                 return prevCarProducts.map((item) =>
-                    item.id === product.id
-                        ? { ...item, cantidad: cantidadRegistrada + 1 }
-                        : item
-                );
+                    item.id === product.id ? { ...item, cantidad: cantidadRegistrada + 1 } : item
+                )
             }
 
-            Alerts(
-                'Producto agregado',
-                `El producto ${product.name.toUpperCase()} ha sido agregado al carrito`,
-                'success'
-            );
+            showAlert('Producto agregado', `El producto ${product.name.toUpperCase()} ha sido agregado al carrito`, 'success')
 
-            return [...prevCarProducts, { ...product, cantidad: 1 }];
-        });
-
-        setVisible(false);
+            return [...prevCarProducts, { ...product, cantidad: 1 }]
+        })
     }
 
-    function handleMoreCant(product, valueInput) {
+    const handleMoreCant = (product, valueInput) => {
         const productExist = products.find((item) => item._id === product.id)
-        if (Number(valueInput) > Number(productExist.cantidad)) {
-            Alerts('Accion no permitida', `Solo existen ${productExist.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
-            return setVisible(false)
+
+        if (Number(valueInput) > Number(productExist?.cantidad)) {
+            return showAlert('Acción no permitida', `Solo existen ${productExist?.cantidad} unidades disponibles para el producto ${product.name.toUpperCase()}`, 'warning')
         }
 
         setCarProducts(
             carProducts.map((item) =>
                 item.id === product.id ? { ...product, cantidad: Number(valueInput) } : item
             )
-
         )
     }
 
-    function handleDeleteProduct(product) {
+    const handleDeleteProduct = (product) => {
         setCarProducts(carProducts.filter((item) => item.id !== product.id))
     }
 
-    async function handleRegisterVenta() {
+    const handleRegisterVenta = async () => {
+        const valorCompra = carProducts.reduce((total, item) => total + Number(item.price) * Number(item.cantidad), 0)
         const infoUser = JSON.parse(localStorage.getItem('infoUser'))
-        const valorCompra = String(carProducts.reduce((total, item) => total + Number(item.price) * Number(item.cantidad), 0))
-        const validateDescuent = infoVenta.descuent !== '' || infoVenta.descuent !== '0'
-        const valueAplyDescuent = validateDescuent ? String(valorCompra - Number(infoVenta.descuent)) : valorCompra
+        const validateDescuent = infoVenta.descuent !== '' && infoVenta.descuent !== '0'
+        const valueAplyDescuent = validateDescuent ? valorCompra - Number(infoVenta.descuent) : valorCompra
 
-        infoVenta.fecha = getDate()
-        infoVenta.products = carProducts
-        infoVenta.valor = valueAplyDescuent
-        infoVenta.name = infoUser.name
-        infoVenta.method = methodPay
-        infoVenta.recibido = methodPay === methodsPay[0] ? infoVenta.recibido : valueAplyDescuent
+        if (Number(infoVenta.descuent) > valorCompra) {
+            return Alerts('Advertencia', 'El valor de descuento no puede ser mayor al valor de la compra', 'info')
+        }
 
-        const responseRegisterVenta = await consumServices(keys.registerVenta, 'POST', '', infoVenta)
-        const responseDescuentUnits = await consumServices(keys.descuentUnits, 'POST', '', infoVenta.products)
+        const venta = {
+            ...infoVenta,
+            fecha: getDate(),
+            products: carProducts,
+            valor: String(valueAplyDescuent),
+            name: infoUser.name,
+            method: methodPay,
+            recibido: methodPay === methodsPay[0] ? infoVenta.recibido : String(valueAplyDescuent)
+        }
 
-        if (responseRegisterVenta.error || responseDescuentUnits.error) return console.error(responseRegisterVenta.error ? responseRegisterVenta : responseDescuentUnits)
+        const [resVenta, resDescuento] = await Promise.all([
+            consumServices(keys.registerVenta, 'POST', '', venta),
+            consumServices(keys.modifyUnits, 'POST', '', {'products': venta.products, 'isReturn': false})
+        ])
 
-        setProducts((prevProducts) =>
-            prevProducts.map((product) => {
-                const updated = responseDescuentUnits.info.find(
-                    (p) => p._id === product._id
-                );
-                return updated ? updated : product;
+        if (resVenta.error || resDescuento.error) {
+            return console.error(resVenta.error || resDescuento.error)
+        }
+
+        setProducts((prev) =>
+            prev.map((product) => {
+                const updated = resDescuento.info.find((p) => p._id === product._id)
+                return updated ? updated : product
             })
-        );
+        )
 
         setCarProducts([])
-
-        Alerts('Completado', 'Compra registrada con exito')
-        form.current.reset()
+        Alerts('Completado', 'Compra registrada con éxito')
+        form.current?.reset()
     }
 
-    
-    async function getInfoDay() {
-        const resInfo = await consumServices(keys.getInfoSystem, "GET");
-        
-        if(resInfo.error) return console.error(resInfo.info)
-            
-        getInfoVentasInDay(resInfo.info)
-        setLoaderModal(false)
-    }
-    
-    function getInfoVentasInDay(info) {
-        const ventasForDay = []
+    const getInfoVentasInDay = (info) => {
+        const ventasForDay = info.resumVentas.filter((venta) => venta.fecha === getDate())
 
-        info.resumVentas.forEach((venta) => {
-            if (venta.fecha === getDate()) {
-                ventasForDay.push(venta)
-            }
-        })
+        const totalGanancias = ventasForDay.reduce((total, venta) =>
+            total + venta.products.reduce((sub, product) => sub + (product.ganancia * product.cantidad), 0), 0)
 
-        const totalGananciasForDay = ventasForDay.map(venta =>
-            venta.products.reduce((total, product) =>
-                total + parseInt(product.ganancia * product.cantidad, 10), 0)
-        ).reduce((totalVentas, gananciaVentas) => totalVentas + gananciaVentas, 0)
-
-        const totalIngresosForDay = ventasForDay.reduce((total, venta) => {
-            return total + parseInt(venta.valor);
-        }, 0);
+        const totalIngresos = ventasForDay.reduce((total, venta) => total + parseInt(venta.valor), 0)
 
         setInfoDay({
-            ingresosDay: `$${modifyMoney(totalIngresosForDay + totalGananciasForDay)}`,
+            ingresosDay: `$${modifyMoney(totalIngresos + totalGanancias)}`,
             salesDay: ventasForDay.length,
         })
     }
 
-    function handleChange(e) {
-        const { name, value } = e.target;
-        setInfoVenta((prev) => ({ ...prev, [name]: value }));
-    };
+    const getInfoDay = async () => {
+        const res = await consumServices(keys.getInfoSystem, "GET")
+        if (res.error) return console.error(res.info)
+
+        getInfoVentasInDay(res.info)
+        setLoaderModal(false)
+    }
+
+    const handleChange = ({ target: { name, value } }) => {
+        setInfoVenta((prev) => ({ ...prev, [name]: value }))
+    }
 
     return {
         products,
