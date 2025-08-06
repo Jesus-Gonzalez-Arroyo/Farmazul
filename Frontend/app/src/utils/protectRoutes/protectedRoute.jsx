@@ -1,9 +1,9 @@
-import { Navigate, Outlet } from 'react-router'
+import { Navigate, Outlet } from 'react-router';
 
-export default function ProtectRoute ({active, redirect = '/'}) {
-    if(!active) {
-        return <Navigate to={redirect} replace />
-    }
+const ProtectedRoute = () => {
+  const isAuthenticated = !!localStorage.getItem('TOKEN');
 
-    return <Outlet /> 
-}
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+};
+
+export default ProtectedRoute;
