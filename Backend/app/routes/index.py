@@ -7,7 +7,7 @@ from routes.ventas import get_all_ventas, register_venta, venta_delete
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
 from routes.box import get_deposits_all, register_deposit
 from routes.init import init
-from flask_cors import cross_origin
+from routes.returns import get_returns, register_return
 from flask import request, jsonify
 
 api_bp = Blueprint('index', __name__, url_prefix="/index/API/v1")
@@ -148,5 +148,19 @@ def get_deposits_box():
 def deposit_register():
     if(request.method == 'POST'):
         return register_deposit(request.json)
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    
+""" ------------------- Returns routes -----------------------"""
+
+@api_bp.route('/returns', methods=['GET'])
+def returns_get():  
+    if request.method == 'GET':
+        return get_returns()
+
+@api_bp.route('/returns/register', methods=['POST', 'OPTIONS'])
+def returns_register():
+    if request.method == 'POST':
+        return register_return()
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
