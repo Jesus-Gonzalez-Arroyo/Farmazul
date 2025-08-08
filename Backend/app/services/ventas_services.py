@@ -19,6 +19,29 @@ class VentasServices:
         data_new_venta['_id'] = str(data_new_venta['_id'])
 
         return data_new_venta
+
+    def update_ventas(name, fecha, valor, products, descuent, recibido, method, id):
+        venta_update = collection_ventas.find_one_and_update(
+            {'_id': ObjectId(id)},
+            {
+                "$set": {
+                    'fecha': fecha, 
+                    'valor': valor, 
+                    'usuario': name, 
+                    'products': products, 
+                    'descuent': descuent, 
+                    'recibido': recibido, 
+                    'method': method 
+                }
+            },
+            return_document=True
+        )
+
+        if venta_update:
+            venta_update['_id'] = str(venta_update['_id'])             
+            return venta_update
+        else:
+            return None
     
     def delete_venta(id):
         result = collection_ventas.find_one_and_delete({'_id': ObjectId(id)})
