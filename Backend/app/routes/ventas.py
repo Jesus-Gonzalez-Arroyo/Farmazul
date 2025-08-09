@@ -16,6 +16,16 @@ def register_venta(data):
     except Exception as e:
         return jsonify(ResponseModel(e, True, 401))
 
+def venta_update(data):
+    try:
+        result = VentasServices.update_ventas(data.get('usuario'), data.get('fecha'), data.get('valor'), data.get('products'), data.get('descuent'), data.get('recibido'), data.get('method'), data.get('_id'))
+        if result is None:
+            return jsonify(ResponseModel('No se pudo actualizar el producto', True, 404))
+        
+        return jsonify(ResponseModel(result, False, 201))
+    except Exception as e:
+        return jsonify(ResponseModel(e, True, 401))
+
 def venta_delete(data):
     try:
         return jsonify(ResponseModel(VentasServices.delete_venta(data.get('id'))))

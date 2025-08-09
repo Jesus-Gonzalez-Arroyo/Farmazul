@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from routes.login import login_user, protected_user
 from routes.users import get_users, user_register, userUpdate, userDelete
 from routes.products import get_products_all, register_product, delete_product, update_products, unitsModifyProducts
-from routes.ventas import get_all_ventas, register_venta, venta_delete
+from routes.ventas import get_all_ventas, register_venta, venta_update, venta_delete
 from routes.gastos import get_all_gastos, register_gasto, update_gasto, delete_gasto
 from routes.box import get_deposits_all, register_deposit
 from routes.init import init
@@ -104,6 +104,13 @@ def get_ventas():
 def ventas_register():
     if(request.method == 'POST'):
         return register_venta(request.json)
+    if request.method == 'OPTIONS':
+        return jsonify({'message': 'Metodo no permitido'}), 200
+    
+@api_bp.route('ventas/update', methods=['POST', 'OPTIONS'])
+def ventas_update():
+    if(request.method == 'POST'):
+        return venta_update(request.json)
     if request.method == 'OPTIONS':
         return jsonify({'message': 'Metodo no permitido'}), 200
     
